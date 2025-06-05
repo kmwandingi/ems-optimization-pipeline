@@ -1,0 +1,177 @@
+####################################################################################################
+# ⛅  CLOUD-CODE MASTER PROMPT — EMS OPTIMISATION SUITE (v2 – 2025-05-31)
+#
+#  This prompt is THE canonical specification for the Energy-Management-System repository.
+#  It merges every agreement, correction, and extra requirement discussed so far, expanded
+#  for completeness.  Follow it verbatim.  Where code already exists, patch minimally;
+#  where code is missing, create it.  Keep the repo tiny, deterministic, and academic-grade.
+#
+# ───────────────────────────────────────────────────────────────────────────────────────────────────
+# REPO ROOT STRUCTURE  (do NOT add large new folders)
+# ├── scripts/
+# │     build_duckdb.py            # Phase-0 – creates views only, zero-copy
+# │     common.py                  # ALL helper functions cloned from notebooks/utils/helper.py
+# │     01_eda.py                  # Exploratory analysis & fleet context
+# │     02_run.py                  # All optimisation experiments
+# │     compare_modes.py           # Optional fleet-level visual comparison
+# ├── notebooks/agents/            # KEEP logic; bug-fix only with CHANGELOG.md
+# ├── notebooks/data/              # *_processed_data.parquet  (7 buildings)
+# ├── notebooks/probabilities/     # device_hourly_probabilities.parquet
+# ├── notebooks/utils/             # colour palette, device_specs, config
+# ├── results/
+# │     figures/                   # All .png produced by scripts
+# │     output/                    # .csv  .json  .md  RESULT_OK.txt
+# └── CHANGELOG.md                 # only if you touch code in notebooks/agents/
+# ───────────────────────────────────────────────────────────────────────────────────────────────────
+#
+# GLOBAL HARD RULES
+# 1.  *Never* import notebooks/utils/helper.py.  Instead, cherry-pick the logic into scripts/common.py
+# 2.  All data access goes through DuckDB views – NO direct parquet reads after build_duckdb.py
+# 3.  Re-use the colour palette from notebooks/utils/config.py (fallback: define once in common.py)
+# 4.  Figures: call plt.tight_layout(); plt.close('all')   |   lines ≤ 99 chars; file ≤ 400 LOC
+# 5.  Keep memory ≤ 4 GB.  Do not copy data; views are enough.
+# 6.  DRY: if a function is repeated → move to common.py
+# 7.  Any agent bug-fix: change the single offending line, log in CHANGELOG.md
+# 8.  The CI will fail if RESULT_OK.txt is missing or any assertion fails.
+#
+# ───────────────────────────────────────────────────────────────────────────────────────────────────
+# PHASE-0  —  BUILD DUCKDB  (scripts/build_duckdb.py)
+# • Creates ems_data.duckdb with read-only *views* for every *_processed_data.parquet
+# • Also registers priors parquet
+# • Must run (once) before any other script.
+#
+# PHASE-1  —  EDA  (scripts/01_eda.py)
+# • For every building view:
+#     – preprocess()   → add hour, day, weekday, season columns
+#     – summarise()    → kWh/day, mean €/kWh, PV ratio, data-coverage days
+#     – figures:
+#         id_hourly.png           stacked mean 24 h load per device
+#         id_pv.png               PV-vs-Load scatter if PV exists
+#         id_price.png            histogram of price per kWh
+# • Fleet-level figures: fleet_hourly.png, fleet_daily.png, fleet_corr.png
+# • CSV  results/output/building_summary.csv  (+ Markdown twin)
+#
+# PHASE-2  —  EXPERIMENTS  (scripts/02_run.py)
+#   CLI
+#     python scripts/02_run.py --building <ID>
+#                              --mode decentralised|centralised|centralised_phases
+#                              --battery on|off   --ev on|off   --validate
+#
+#   SHARED PREP
+#     con   = common.get_con()         # read-only DuckDB
+#     df    = con.sql(f"select * from {id}_processed_data").df()
+#     full_days        = 24 h complete, real usage
+#     hist_days[:10]   = bootstrap train for ProbabilityModelAgent
+#     live_days[:10]   = ONLY weekdays, used in centralised_phases production pipeline
+#
+#   DEVICES
+#     device_specs = notebooks/utils/device_specs.py   (import once)
+#     Each row drives creation of FlexibleDevice / EVAgent / etc.
+#
+#   BATTERY & EV
+#     BatteryAgent params → notebooks/utils/config.py::BATTERY_PARAMS
+#     EVAgent params      → notebooks/utils/config.py::EV_PARAMS  (plus device_specs["ev"])
+#     EVAgent is BOTH:
+#         * battery-like (SoC, capacity, efficiency)
+#         * device-like  (power_rating, probability, allowed_hours)
+#     Detect EV column: f"{building_id}_ev" in df
+#     Must set ev.must_be_full_by_hour:
+#         – if provided by EV_PARAMS
+#         – else infer: hour with highest probability of usage (from ProbabilityModelAgent)
+#
+#   MODES
+#     • decentralised        – optimise each device independently (implement real optimiser!)
+#     • centralised          – single global optimiser for whole 24 h
+#     • centralised_phases   – four 6-h windows (0-6,6-12,12-18,18-24)  ← production
+#
+#   OPTIMISER  (sketch, implement fully)
+#     cost = Σ kWh × price  (price column in df)
+#     constraints: per-device power limits, allowed_hours; grid max_import; battery/EV SoC
+#     objective: min(cost) + 0.0005 × battery_degradation €  (use config.degradation_cost)
+#
+#   ROLLING LOOP  (centralised_phases)
+#     for live day:
+#         – assign dev.hour_probability  from ProbabilityModelAgent
+#         – run optimiser by phases
+#         – save JSON schedule  results/output/{id}_{mode}_sched.json
+#         – plot heat-map + price   figures/{id}_{day}_{mode}_heat.png
+#         – assertions (see section ASSERTIONS)
+#         – online retrain ProbabilityModelAgent with actual usage
+#
+#   OUTPUT per run
+#     • KPI row appended to results/output/kpis_{id}_{mode}_bat{on/off}_ev{on/off}.csv
+#     • Battery SoC trajectory figure
+#     • EV SoC trajectory if ev_on
+#     • Cost bar plot  '{id}_bat{on/off}_ev{on/off}_cost_bar.png'
+#
+#   AFTER ALL RUNS for a building
+#     – cumulative_savings.png
+#     – battery_cycles histogram
+#
+#   COMPARISON SCRIPT (scripts/compare_modes.py)
+#     – loads KPI CSVs
+#     – draws multi-mode line plot & scatter diagnostics
+#
+# ASSERTIONS  (all in scripts/common.py)
+#   assert_energy_balance(day_df, battery, ev, tol=0.1 kWh)
+#   assert_battery_limits(battery)
+#   assert_ev_window(ev, schedule)
+#   assert_ev_departure(ev, end_soc)
+#   assert_savings(kpi_row, min_savings_pct=0)
+#   Any failure ⇒ RuntimeError, skip day, record in RESULT_OK.txt
+#
+# KPI & TABLES  (write CSV + .md twin)
+#   T1 building_summary.csv                       (from EDA)
+#   T2 kpis_<building>.csv                        (+ ev_energy_kWh, ev_target_met, …)
+#   T3 fleet_kpis.csv
+#   T4 prob_llh.csv  (pre- vs post-training log-likelihood)
+#   plus fleet_ev_kpis.csv
+#
+# FIGURE CATALOGUE  (must be produced, see prev list + F7-F14 additions)
+#   F7  orig_vs_opt line            {id}_{day}_orig_vs_opt.png
+#   F8  cumulative_savings          {id}_cumulative_savings.png
+#   F9  battery_cycle_hist          {id}_{mode}_battery_cycles.png
+#   F10 fleet PV vs savings scatter fleet_pv_vs_savings.png
+#   F11 EV heat-map                 {id}_{day}_{mode}_ev_heat.png
+#   F12 EV SoC trajectory           {id}_ev_soc_trajectory.png
+#   F13 fleet EV gap histogram      fleet_ev_gap_hist.png
+#   F14 fleet EV cost vs savings    fleet_ev_cost_vs_savings.png
+#
+# RESULT HEALTH REPORT
+#   After all buildings processed:
+#     • generate results/output/RESULTS_OK.txt containing:
+#         total runtime, max imbalance, days dropped, mean±CI savings%
+#
+# COLOUR PALETTE
+#   Load dict COLOURS from notebooks/utils/config.py
+#   Keys USED: Original, Decentralised_NoBatt, Decentralised_WithBatt,
+#              Centralised, Centralised_Phases, Battery, EV, PV, Price
+#
+# TIPS & GUARDRAILS
+# • Use cvxpy or pulp for optimisation; keep solver GLPK/ECOS for <4 GB memory
+# • To speed: cache price vector per day
+# • Tight_layout warnings are fine; no need to suppress
+# • test data quickly: DE_KN_residential4 (has PV+EV), DE_KN_industrial3 (big load)
+#
+# CI EXIT CONDITIONS (auto-grader)
+#   ✓ build_duckdb.py runs
+#   ✓ all scripts produce listed artefacts
+#   ✓ RESULT_OK.txt present
+#   ✓ every centralised_phases savings_abs ≥ 0
+#   ✓ no parquet read outside DuckDB
+#
+# ROLE & MINDSET FOR CLOUD CODE
+#   You are an optimisation engineer.  Respect existing agent APIs.
+#   Patch tiny bugs only.  Keep code short, typed, commented.
+#   When in doubt: mimic notebooks/utils/helper.py logic, but place in common.py.
+#
+# ───────────────────────────────────────────────────────────────────────────────────────────────────
+# 🚀  BEGIN IMPLEMENTATION NOW — no further questions, no shortcuts.
+####################################################################################################
+
+ **Begin.*
+
+remove insatnces where you name things like "real" thi or that. also       │
+│   pipeline a or b need to be more explicit so we know what is being spoken   │
+│   about. clean this uo in the h=whole code! DO all tests agsain and again    │
+│   with scenarios to ensure your cleanup does  not break anyhting!            

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kennethmwandingi/ems/mlflow_runs/796639997512492754/ef2777a3b75c4ac289a25925c083909b/artifacts
+end_time: 1749112137331
+entry_point_name: ''
+experiment_id: '796639997512492754'
+lifecycle_stage: active
+run_id: ef2777a3b75c4ac289a25925c083909b
+run_name: lr_optimization_DE_KN_residential1_heat_pump_20250605_1028
+run_uuid: ef2777a3b75c4ac289a25925c083909b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1749112137306
+status: 3
+tags: []
+user_id: kennethmwandingi

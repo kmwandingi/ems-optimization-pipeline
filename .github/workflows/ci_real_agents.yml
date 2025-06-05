@@ -1,0 +1,140 @@
+name: CI - Real Agent Optimizers Compliance
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-real-agents-compliance:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas numpy matplotlib seaborn duckdb pulp scipy scikit-learn
+        
+    - name: Run Real Agent Compliance Checks
+      run: |
+        python test_pipelines_real_agents.py --ci
+        
+    - name: Scan for Manual Optimization Code
+      run: |
+        echo "🔍 Scanning for forbidden manual optimization patterns..."
+        
+        # Check for manual optimization loops
+        if grep -r "for.*hour.*in.*range.*24.*:.*if.*price" scripts/; then
+          echo "❌ Found manual optimization loops in scripts/"
+          exit 1
+        fi
+        
+        # Check for fallback logic
+        if grep -r "fallback.*optimization\|try.*except.*fallback" scripts/; then
+          echo "❌ Found fallback optimization logic in scripts/"
+          exit 1
+        fi
+        
+        # Check for price sorting hacks
+        if grep -r "price.*sort\|sorted.*price.*manual" scripts/; then
+          echo "❌ Found manual price sorting in scripts/"
+          exit 1
+        fi
+        
+        # Check for greedy routines
+        if grep -r "greedy.*loop\|greedy.*optimization" scripts/; then
+          echo "❌ Found greedy optimization routines in scripts/"
+          exit 1
+        fi
+        
+        echo "✅ No forbidden manual optimization patterns found"
+        
+    - name: Verify Required Agent Calls
+      run: |
+        echo "🔍 Verifying required agent method calls..."
+        
+        # Check Pipeline A
+        if [ -f "scripts/02_run.py" ]; then
+          echo "Checking Pipeline A (02_run.py)..."
+          
+          if ! grep -q "FlexibleDevice.*optimize_day\|optimize_day.*FlexibleDevice" scripts/02_run.py; then
+            echo "❌ Pipeline A missing FlexibleDeviceAgent.optimize_day() calls"
+            exit 1
+          fi
+          
+          if ! grep -q "BatteryAgent.*schedule_charging\|schedule_charging.*BatteryAgent" scripts/02_run.py; then
+            echo "❌ Pipeline A missing BatteryAgent.schedule_charging() calls"
+            exit 1
+          fi
+          
+          if ! grep -q "GlobalOptimizer.*optimize_centralized\|optimize_centralized.*GlobalOptimizer" scripts/02_run.py; then
+            echo "❌ Pipeline A missing GlobalOptimizer.optimize_centralized() calls"
+            exit 1
+          fi
+          
+          echo "✅ Pipeline A has required agent method calls"
+        fi
+        
+        # Check Pipeline B
+        if [ -f "scripts/integrated_pipeline.py" ]; then
+          echo "Checking Pipeline B (integrated_pipeline.py)..."
+          
+          if ! grep -q "ProbabilityModelAgent.*train\|train.*ProbabilityModelAgent" scripts/integrated_pipeline.py; then
+            echo "❌ Pipeline B missing ProbabilityModelAgent.train() calls"
+            exit 1
+          fi
+          
+          if ! grep -q "optimize_phases_centralized\|optimize_centralized" scripts/integrated_pipeline.py; then
+            echo "❌ Pipeline B missing GlobalOptimizer optimization calls"
+            exit 1
+          fi
+          
+          echo "✅ Pipeline B has required agent method calls"
+        fi
+        
+        echo "✅ All required agent method calls verified"
+        
+    - name: Check for Simplified Agent Implementations
+      run: |
+        echo "🔍 Checking for simplified agent implementations..."
+        
+        # Check for simplified battery logic
+        if grep -r "simple.*battery\|basic.*battery\|mock.*battery" scripts/; then
+          echo "❌ Found simplified battery implementations"
+          exit 1
+        fi
+        
+        # Check for simplified EV logic  
+        if grep -r "simple.*ev\|basic.*ev\|mock.*ev" scripts/; then
+          echo "❌ Found simplified EV implementations"
+          exit 1
+        fi
+        
+        # Check for simplified optimization
+        if grep -r "simple.*optimization\|basic.*optimization" scripts/; then
+          echo "❌ Found simplified optimization implementations"
+          exit 1
+        fi
+        
+        echo "✅ No simplified agent implementations found"
+        
+    - name: Final Compliance Report
+      run: |
+        echo "📋 REAL AGENT OPTIMIZERS COMPLIANCE REPORT"
+        echo "=========================================="
+        echo "✅ No manual optimization loops detected"
+        echo "✅ No fallback logic detected"
+        echo "✅ No price sorting hacks detected"
+        echo "✅ No greedy routines detected"
+        echo "✅ Required agent method calls verified"
+        echo "✅ No simplified agent implementations detected"
+        echo ""
+        echo "🎉 All pipelines comply with 'USE REAL AGENT OPTIMIZERS' rule!"
