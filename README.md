@@ -56,7 +56,10 @@ A sophisticated **multi-agent energy management system** that optimizes energy c
 ### Prerequisites
 ```bash
 # Install dependencies
-pip install duckdb pandas numpy matplotlib seaborn pulp scipy mlflow
+pip install -r requirements-azure.txt
+
+# Or install individually:
+pip install duckdb pandas numpy matplotlib seaborn pulp scipy mlflow azureml-sdk azureml-mlflow scikit-learn
 ```
 
 ### 1. Database Setup
@@ -123,7 +126,10 @@ python test_pipelines_real_agents.py --ci
 
 ### 5. View MLflow Results
 ```bash
-# Launch MLflow UI
+# Launch MLflow UI (using dedicated launcher)
+python scripts/launch_mlflow.py
+
+# Or directly:
 mlflow ui --backend-store-uri file:./mlflow_runs
 
 # View experiments at http://localhost:5000
@@ -261,7 +267,10 @@ ems/
 │   ├── 02_integrated_pipeline.py # Pipeline B (learning)
 │   ├── 03_probability_learning_optimization.py # Pipeline C (optimization)
 │   ├── common.py                 # Shared utilities
-│   └── mlflow_analysis.py        # MLflow data analysis
+│   ├── mlflow_analysis.py        # MLflow data analysis
+│   ├── launch_mlflow.py          # MLflow UI launcher
+│   ├── create_comprehensive_visualizations.py # Advanced plotting
+│   └── deploy_learning_pipeline.py # Azure ML deployment
 ├── notebooks/
 │   ├── agents/                   # Real Agent classes
 │   │   ├── ProbabilityModelAgent.py
@@ -284,7 +293,11 @@ ems/
 │   ├── visualizations/           # Comprehensive plots
 │   ├── probability_optimization/ # Hyperparameter visualizations
 │   └── figures/                  # Research-grade figures
+├── utils/
+│   └── mlflow_tracker.py         # MLflow integration utilities
 ├── mlflow_runs/                  # MLflow experiment tracking
+├── config.json                   # Azure ML configuration
+├── requirements-azure.txt        # Azure deployment dependencies
 └── ems_data.duckdb              # Main database
 ```
 
@@ -406,7 +419,10 @@ mlflow.log_artifacts("results/visualizations/")
 
 ### Viewing Results
 ```bash
-# Launch MLflow UI
+# Launch MLflow UI (using dedicated launcher)
+python scripts/launch_mlflow.py
+
+# Or directly:
 mlflow ui --backend-store-uri file:./mlflow_runs
 
 # View at http://localhost:5000
@@ -456,6 +472,23 @@ jupyter notebook
 # 03_probability_optimization.ipynb - Hyperparameter tuning with visualizations
 ```
 
+## ☁️ Azure ML Integration
+
+### Cloud Configuration
+The system is configured for Azure ML deployment with:
+- **Subscription ID**: `7e3f49ee-8ccf-440e-a471-a0fd253348b4`
+- **Resource Group**: `ems-resource-group`
+- **Workspace Name**: `ems-ml-workspace`
+
+### Azure Deployment
+```bash
+# Deploy learning pipeline to Azure ML
+python scripts/deploy_learning_pipeline.py
+
+# Azure-specific requirements are in requirements-azure.txt
+pip install -r requirements-azure.txt
+```
+
 ## 🚀 Future Development
 
 ### Current Status: Production Ready
@@ -466,12 +499,13 @@ The system is **fully operational** with:
 - ✅ Comprehensive testing with 100% agent compliance
 - ✅ Space-optimized (no CSV generation)
 - ✅ Advanced probability learning with both uniform and learned priors
+- ✅ Azure ML integration ready for cloud deployment
 
 ### Immediate Enhancements
 1. **Extended Building Portfolio** - Scale testing across all 7 buildings
 2. **Real-time Processing** - Live data integration capabilities
 3. **Fleet Coordination** - Multi-building optimization strategies  
-4. **Cloud Deployment** - Scalable infrastructure for production
+4. **Cloud Deployment** - Scalable Azure ML infrastructure for production
 
 ## 📚 Academic Contributions
 
@@ -524,4 +558,4 @@ Successfully demonstrates:
 
 ---
 
-*Generated: 2025-06-03 | Version: v5.0 | 🤖 Complete Real Agent Implementation | 📊 Zero-Copy DuckDB Architecture | 📈 MLflow Experiment Tracking | 📓 Interactive Jupyter Notebooks*
+*Generated: 2025-06-06 | Version: v5.1 | 🤖 Complete Real Agent Implementation | 📊 Zero-Copy DuckDB Architecture | 📈 MLflow Experiment Tracking | 📓 Interactive Jupyter Notebooks | ☁️ Azure ML Ready*
