@@ -104,9 +104,8 @@ def parse_args():
     parser.add_argument("--ev", type=str, default="off",
                         choices=["on", "off"],
                         help="EV mode (on/off)")
-    parser.add_argument("--mode", type=str, default="centralized_phases",
-                        choices=["centralized", "centralized_phases"],
-                        help="Optimization mode")
+    # Production mode: Always use optimize_phases_centralized
+    # parser.add_argument("--mode") - REMOVED: Production always uses phases
     
     return parser.parse_args()
 
@@ -322,12 +321,12 @@ def run_probability_training(prob_agent, building_id, training_days, df):
     
     return updated_specs, device_probs
 
-def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_agent, grid_agent, weather_agent=None, mode="centralized"):
+def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_agent, grid_agent, weather_agent=None):
     """
-    Run centralized optimization using GlobalOptimizer methods.
-    ENFORCES "USE AGENT OPTIMIZERS" - no MILP optimization allowed.
+    Run centralized optimization using GlobalOptimizer.optimize_phases_centralized().
+    PRODUCTION: Always uses phases optimization - no other modes allowed.
     """
-    print(f"⚙️ Running {mode} optimization...")
+    print(f"⚙️ Running phases centralized optimization...")
     
     # Get prices from day_df
     day_ahead_prices = day_df.groupby('hour')['price_per_kwh'].mean().reindex(range(24), fill_value=0.25).values
@@ -350,23 +349,21 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
         online_iterations=1
     )
     
-    # MANDATORY: Use GlobalOptimizer methods
-    if mode == "centralized_phases":
-        success = optimizer.optimize_phases_centralized(
-            devices=devices,
-            global_layer=global_layer,
-            pv_agent=pv_agent,
-            battery_agent=battery_agent,
-            ev_agent=ev_agent,
-            grid_agent=grid_agent,
-            weather_agent=weather_agent
-        )
-    else:
-        success = optimizer.optimize_centralized()
+    # MANDATORY: Use GlobalOptimizer.optimize_phases_centralized method
+    # Both centralized and centralized_phases modes should use optimize_phases_centralized
+    success = optimizer.optimize_phases_centralized(
+        devices=devices,
+        global_layer=global_layer,
+        pv_agent=pv_agent,
+        battery_agent=battery_agent,
+        ev_agent=ev_agent,
+        grid_agent=grid_agent,
+        weather_agent=weather_agent
+    )
     
     if not success:
         # ERROR: Real agent method failed - no fallbacks allowed
-        raise RuntimeError(f"CRITICAL: GlobalOptimizer.{mode}() returned False - optimization failed. Fix the agent method.")
+        raise RuntimeError(f"CRITICAL: GlobalOptimizer.optimize_phases_centralized() returned False - optimization failed. Fix the agent method.")
     
     # Extract optimized schedules and calculate total cost
     total_cost = 0.0
@@ -383,7 +380,7 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
         elif hasattr(device, 'optimized_schedule'):
             schedule = device.optimized_schedule[:24]
         else:
-            raise ValueError(f"Device {device.device_name} missing optimized schedule after {mode} optimization")
+            raise ValueError(f"Device {device.device_name} missing optimized schedule after optimization")
         
         optimized_schedules[device.device_name] = schedule
         
@@ -405,7 +402,7 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
         optimized_schedules['EV_charging'] = ev_agent.hourly_charge[:24]
         print(f"  EV cost: €{ev_cost:.4f}")
     
-    print(f"✓ {mode} optimization completed. Total cost: €{total_cost:.4f}")
+    print(f"✓ phases centralized optimization completed. Total cost: €{total_cost:.4f}")
     return optimized_schedules, total_cost
 
 def create_comprehensive_visualization(devices, battery_agent, ev_agent, optimized_schedules, day_prices, building_id, day, output_dir):
@@ -536,7 +533,6 @@ def main():
     n_days = args.n_days
     battery_enabled = args.battery == "on"
     ev_enabled = args.ev == "on"
-    mode = args.mode
     
     print("="*80)
     print("LEARNING PIPELINE - AGENT INTEGRATED EMS")
@@ -545,21 +541,21 @@ def main():
     print(f"Days: {n_days}")
     print(f"Battery: {battery_enabled}")
     print(f"EV: {ev_enabled}")
-    print(f"Mode: {mode}")
+    print(f"Mode: PRODUCTION (phases centralized only)")
     print("="*80)
     
     # Initialize MLflow tracking (NON-INTRUSIVE)
     mlflow_tracker = None
     if MLFLOW_AVAILABLE:
         mlflow_tracker = EMS_OptimizationTracker("Learning_Pipeline")
-        run_name = f"learning_{building_id}_{mode}_{datetime.now().strftime('%Y%m%d_%H%M')}"
+        run_name = f"learning_{building_id}_phases_{datetime.now().strftime('%Y%m%d_%H%M')}"
         mlflow_tracker.start_run(run_name)
         
         # Log pipeline parameters
         mlflow_tracker.log_params({
             "building_id": building_id,
             "n_days": n_days,
-            "optimization_mode": mode,
+            "optimization_mode": "phases_centralized",
             "battery_enabled": battery_enabled,
             "ev_enabled": ev_enabled,
             "pipeline": "B",
@@ -680,7 +676,7 @@ def main():
         
         # Run centralized optimization
         optimized_schedules, total_cost = run_centralized_optimization(
-            devices, day_df, battery_agent, ev_agent, pv_agent, grid_agent, weather_agent, mode
+            devices, day_df, battery_agent, ev_agent, pv_agent, grid_agent, weather_agent
         )
         
         # Create comprehensive visualization
@@ -697,7 +693,7 @@ def main():
             'total_cost': total_cost,
             'savings_eur': savings,
             'savings_pct': savings_pct,
-            'mode': mode
+            'mode': 'phases_centralized'
         }
         results.append(result)
         
@@ -707,7 +703,7 @@ def main():
                 "daily_total_cost": total_cost,
                 "daily_savings_eur": savings,
                 "daily_savings_pct": savings_pct,
-                "daily_mode": mode
+                "daily_mode": "phases_centralized"
             }, day=str(day))
         
         print(f"  Total cost: €{total_cost:.4f}")

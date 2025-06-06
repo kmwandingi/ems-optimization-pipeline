@@ -72,21 +72,21 @@ python scripts/build_duckdb.py
 
 #### Pipeline A: Comparison Optimization
 ```bash
-# Compare decentralized vs centralized optimization
-python scripts/01_run.py --building DE_KN_residential1 --mode centralised --n_days 5 --battery on
+# Production optimization (always phases centralized)
+python scripts/01_run.py --building DE_KN_residential1 --n_days 5 --battery on
 
-# Alternative modes
-python scripts/01_run.py --building DE_KN_residential1 --mode decentralised --n_days 3 --battery off
-python scripts/01_run.py --building DE_KN_residential1 --mode centralised_phases --n_days 7 --battery on --ev on
+# Different configurations
+python scripts/01_run.py --building DE_KN_residential1 --n_days 3 --battery off
+python scripts/01_run.py --building DE_KN_residential1 --n_days 7 --battery on --ev on
 ```
 
 #### Pipeline B: Integrated Learning
 ```bash
-# Full learning + optimization pipeline
-python scripts/02_integrated_pipeline.py --building DE_KN_residential1 --n_days 10 --mode centralized_phases
+# Full learning + optimization pipeline (production phases only)
+python scripts/02_integrated_pipeline.py --building DE_KN_residential1 --n_days 10
 
-# Different optimization modes
-python scripts/02_integrated_pipeline.py --building DE_KN_residential1 --n_days 15 --mode centralized
+# Different configurations  
+python scripts/02_integrated_pipeline.py --building DE_KN_residential1 --n_days 15 --battery on --ev on
 ```
 
 #### Pipeline C: Probability Optimization
@@ -99,6 +99,18 @@ python scripts/03_probability_learning_optimization.py --building DE_KN_resident
 
 # Learned priors only
 python scripts/03_probability_learning_optimization.py --building DE_KN_residential1 --n_days 10 --use_learned_priors --target_device dishwasher
+```
+
+#### Pipeline D: Endpoints Testing
+```bash
+# Test deployed Azure ML model endpoints (production phases only)
+python scripts/04_endpoints_pipeline.py --building DE_KN_residential1 --n_days 4 --model_name ems_optimizer --model_version 1
+
+# Different configurations with endpoints
+python scripts/04_endpoints_pipeline.py --building DE_KN_residential1 --n_days 2 --battery true --ev false --model_name ems_optimizer
+
+# Compare endpoints vs direct pipeline results
+python scripts/compare_endpoints_vs_direct.py --building DE_KN_residential1 --n_days 2
 ```
 
 ### 3. Interactive Jupyter Notebooks
@@ -194,6 +206,46 @@ washing_machine: 67 updates, final JS(prior)=0.1102, final JS(step)=0.0115
 - **Output**: Optimal hyperparameters, PMF evolution visualizations, learning curves
 - **MLflow**: Comprehensive parameter-performance tracking across all experiments
 
+### Pipeline D: Endpoints Testing & Validation
+- **Purpose**: Test deployed Azure ML model endpoints for production readiness
+- **Real Agents**: Same as Pipeline B but via endpoint calls (MLflow model inference)
+- **Output**: Endpoint performance validation, equivalence verification with direct pipeline
+- **MLflow**: Endpoint testing metrics, model performance validation
+
+## ⚙️ Production Optimization Policy
+
+### Production Mode: Phases Centralized Only
+**CRITICAL**: All production systems MUST use `GlobalOptimizer.optimize_phases_centralized()` exclusively.
+
+```python
+# ✅ PRODUCTION: Always use phases centralized
+optimizer.optimize_phases_centralized(
+    devices=devices,
+    global_layer=global_layer,
+    pv_agent=pv_agent,
+    battery_agent=battery_agent,
+    ev_agent=ev_agent,
+    grid_agent=grid_agent,
+    weather_agent=weather_agent
+)
+
+# ❌ DEPRECATED: Never use in production
+# optimizer.optimize_centralized()  # Legacy method - removed from production
+```
+
+### Production Standards
+- **Scripts**: All pipeline scripts use phases optimization only (no mode selection)
+- **Endpoints**: Azure ML deployed models use phases optimization exclusively  
+- **Testing**: Comparison tests validate identical results between direct and endpoint calls
+- **Grid Parameters**: Fixed export_price=0.05, import_price=0.25 for consistent arbitrage
+- **No Fallbacks**: Real agent methods only - no simplified alternatives allowed
+
+### Migration Notes
+- Previous `--mode centralized` and `--mode centralized_phases` arguments removed
+- All pipelines now default to phases centralized optimization
+- Endpoint pipeline matches direct pipeline optimization exactly
+- MLflow tracking updated to reflect phases-only production standard
+
 ## 🔋 Smart Energy Storage
 
 ### Battery Optimization
@@ -251,11 +303,11 @@ EV_PARAMS = {
 - **Learning Evidence**: Complete evolution visualizations with real patterns
 
 ### Cost Optimization Performance
-| Pipeline | Mode | Battery | EV | Savings Range | Best Day |
-|----------|------|---------|----|--------------| ---------|
-| A - Comparison | Centralized | On | Off | 200-450% | 452% reduction |
-| B - Learning | Centralized Phases | On | Off | 60-120% | 100% reduction |
-| C - Probability | N/A | N/A | N/A | Learning Score 0.05-0.14 | 0.1397 JS divergence |
+| Pipeline | Battery | EV | Savings Range | Best Day |
+|----------|---------|----|--------------| ---------|
+| A - Comparison | On | Off | 200-450% | 452% reduction |
+| B - Learning | On | Off | 60-120% | 100% reduction |
+| C - Probability | N/A | N/A | Learning Score 0.05-0.14 | 0.1397 JS divergence |
 
 ## 🔧 Project Structure
 
@@ -266,6 +318,8 @@ ems/
 │   ├── 01_run.py                 # Pipeline A (comparison)
 │   ├── 02_integrated_pipeline.py # Pipeline B (learning)
 │   ├── 03_probability_learning_optimization.py # Pipeline C (optimization)
+│   ├── 04_endpoints_pipeline.py  # Pipeline D (endpoints testing)
+│   ├── compare_endpoints_vs_direct.py # Endpoint validation
 │   ├── common.py                 # Shared utilities
 │   ├── mlflow_analysis.py        # MLflow data analysis
 │   ├── launch_mlflow.py          # MLflow UI launcher
@@ -432,9 +486,9 @@ mlflow ui --backend-store-uri file:./mlflow_runs
 
 ### Basic Pipeline Testing
 ```bash
-# Test all pipelines with real data
-python scripts/01_run.py --building DE_KN_residential1 --mode centralised --n_days 3 --battery on
-python scripts/02_integrated_pipeline.py --building DE_KN_residential1 --n_days 5 --mode centralized_phases  
+# Test all pipelines with real data (production phases only)
+python scripts/01_run.py --building DE_KN_residential1 --n_days 3 --battery on
+python scripts/02_integrated_pipeline.py --building DE_KN_residential1 --n_days 5  
 python scripts/03_probability_learning_optimization.py --building DE_KN_residential1 --n_days 10 --target_device heat_pump
 ```
 
@@ -485,9 +539,19 @@ The system is configured for Azure ML deployment with:
 # Deploy learning pipeline to Azure ML
 python scripts/deploy_learning_pipeline.py
 
+# Test endpoint pipeline with deployed model
+python scripts/04_endpoints_pipeline.py --building DE_KN_residential1 --n_days 4 --model_name ems_optimizer --model_version 1
+
 # Azure-specific requirements are in requirements-azure.txt
 pip install -r requirements-azure.txt
 ```
+
+#### Deployed Model Information
+- **Model Name**: `ems_optimizer` (corrected from previous naming convention)
+- **Current Version**: 1 (latest deployment)
+- **Azure ML Workspace**: `ems-ml-workspace`
+- **Capabilities**: Full learning + optimization pipeline via endpoints
+- **Production Ready**: ✅ Validated with comprehensive testing
 
 ## 🚀 Future Development
 
@@ -541,11 +605,13 @@ The system is **fully operational** with:
 
 ## 🎯 Project Status
 
-**Current Status**: ✅ **PRODUCTION READY WITH COMPLETE PIPELINE SUITE**
+**Current Status**: ✅ **PRODUCTION READY WITH COMPLETE PIPELINE SUITE + AZURE ML DEPLOYMENT**
 
 Successfully demonstrates:
-- ✅ **Three Complete Pipelines**: Comparison, Learning, and Probability Optimization
+- ✅ **Four Complete Pipelines**: Comparison, Learning, Probability Optimization, and Endpoints Testing
 - ✅ **Real Agent Implementation**: All optimization through actual agent classes
+- ✅ **Azure ML Deployment**: Production-ready model deployment with endpoint validation
+- ✅ **Endpoint Equivalence**: Full learning + optimization workflow via deployed endpoints
 - ✅ **Advanced Probability Learning**: Hyperparameter optimization with real data
 - ✅ **Dual Prior System**: Uniform and realistic learned priors comparison  
 - ✅ **MLflow Integration**: Complete experiment tracking and artifact management
@@ -554,8 +620,8 @@ Successfully demonstrates:
 - ✅ **Academic Validation**: Mathematical convergence with Jensen-Shannon divergence
 - ✅ **Zero-Fallback Architecture**: Strict compliance with real agent requirements
 
-**Next Milestone**: Extended portfolio testing across all 7 buildings and real-time deployment capabilities.
+**Next Milestone**: Extended portfolio testing across all 7 buildings and multi-building fleet optimization.
 
 ---
 
-*Generated: 2025-06-06 | Version: v5.1 | 🤖 Complete Real Agent Implementation | 📊 Zero-Copy DuckDB Architecture | 📈 MLflow Experiment Tracking | 📓 Interactive Jupyter Notebooks | ☁️ Azure ML Ready*
+*Generated: 2025-06-06 | Version: v5.2 | 🤖 Complete Real Agent Implementation | 📊 Zero-Copy DuckDB Architecture | 📈 MLflow Experiment Tracking | 📓 Interactive Jupyter Notebooks | ☁️ Azure ML Deployed + Endpoint Validated*

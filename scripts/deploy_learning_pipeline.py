@@ -374,18 +374,12 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
                 device_column = f"{building_id}_{device_type}"
                 
                 if device_column in device_data.columns:
-                    # Use real device data and rename column to what FlexibleDevice expects
+                    # Use ONLY real device data - NO SYNTHETIC DATA ALLOWED
                     device_data[device_type] = device_data[device_column]
                 else:
-                    # Create synthetic device consumption based on probabilities
-                    synthetic_consumption = []
-                    for hour in range(len(device_data)):
-                        hour_of_day = hour % 24
-                        prob = device_probs.get(hour_of_day, 1.0/24)
-                        power = specs.get('power_rating', 1.0) * prob * 2
-                        synthetic_consumption.append(power)
-                    
-                    device_data[device_type] = synthetic_consumption
+                    # STRICT COMPLIANCE: Skip devices not in real data - no fallbacks allowed
+                    print(f"⚠ Device {device_id} not found in building data - skipping (no synthetic data)")
+                    continue
                 
                 # Create proper FlexibleDeviceAgent
                 device_agent = FlexibleDevice(
@@ -405,23 +399,28 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
                 device_agent.hour_probability = device_probs
                 devices.append(device_agent)
         
-        # Create GlobalConnectionLayer with correct parameters
-        global_layer = GlobalConnectionLayer(
-            max_building_load=65.0,  # Typical max load for residential building
-            total_hours=24,
-            export_price=agents['grid'].export_price if agents.get('grid') else 0.05
-        )
+        # Create GlobalConnectionLayer EXACTLY like direct pipeline
+        max_building_load = 65.0 if agents.get('ev') else 50.0
+        global_layer = GlobalConnectionLayer(max_building_load, 24)
         
         # Update device references to global layer
         for device in devices:
             device.global_layer = global_layer
         
-        # Create GlobalOptimizer instance with REAL configuration
+        # Create WeatherAgent EXACTLY like direct pipeline
+        weather_agent = None
+        try:
+            from agents.WeatherAgent import WeatherAgent
+            weather_agent = WeatherAgent(weather_data)
+        except Exception as e:
+            print(f"⚠ WeatherAgent initialization failed: {e}")
+        
+        # Create GlobalOptimizer instance EXACTLY like direct pipeline
         optimizer = GlobalOptimizer(
             devices=devices,
             global_layer=global_layer,
             pv_agent=agents.get('pv'),
-            weather_agent=None,  # WeatherAgent not needed for single day
+            weather_agent=weather_agent,
             battery_agent=agents.get('battery'),
             ev_agent=agents.get('ev'),
             grid_agent=agents['grid'],
@@ -437,7 +436,7 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
             battery_agent=agents.get('battery'),
             ev_agent=agents.get('ev'),
             grid_agent=agents['grid'],
-            weather_agent=None  # WeatherAgent not needed for single day
+            weather_agent=weather_agent
         )
         
         if not success:
@@ -448,12 +447,13 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
         total_cost = 0.0
         optimized_schedules = {}
         
-        # Get battery schedule if available
-        if agents.get('battery') and hasattr(agents['battery'], 'optimized_schedule'):
-            battery_schedule = agents['battery'].optimized_schedule[:24]
-            optimized_schedules['battery'] = battery_schedule
-            for hour, action in enumerate(battery_schedule):
-                total_cost += abs(action) * price_profile[hour]
+        # Get battery schedule if available - EXACTLY like direct pipeline
+        if agents.get('battery') and hasattr(agents['battery'], 'hourly_charge') and hasattr(agents['battery'], 'hourly_discharge'):
+            battery_cost = sum(agents['battery'].hourly_charge[h] * price_profile[h] for h in range(24))
+            battery_savings = sum(agents['battery'].hourly_discharge[h] * price_profile[h] for h in range(24))
+            total_cost += battery_cost - battery_savings
+            optimized_schedules['battery_charge'] = agents['battery'].hourly_charge[:24]
+            optimized_schedules['battery_discharge'] = agents['battery'].hourly_discharge[:24]
         
         # Get device schedules from FlexibleDeviceAgent optimization results
         for device in devices:
@@ -473,9 +473,16 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
                 for hour, power in enumerate(schedule):
                     total_cost += power * price_profile[hour]
         
-        # Calculate baseline cost for savings comparison
-        baseline_cost = sum(price_profile) * len(devices) * 0.5  # Rough baseline estimate
-        savings = max(0, baseline_cost - total_cost)
+        # Calculate baseline cost EXACTLY like direct pipeline
+        import numpy as np
+        total_energy = sum(sum(schedule) for schedule in optimized_schedules.values() 
+                          if isinstance(schedule, list))
+        if total_energy > 0:
+            expensive_hours_avg = np.mean(np.sort(price_profile)[-6:])  # Top 6 expensive hours
+            baseline_cost = total_energy * expensive_hours_avg
+            savings = max(0, baseline_cost - total_cost)
+        else:
+            savings = 0
         
         return {
             'schedules': optimized_schedules,
@@ -748,7 +755,7 @@ def run_learning_pipeline_with_mlflow(building_id="DE_KN_residential1", n_days=3
         model = EMSOptimizationModel()
         
         # Log model with artifacts
-        model_name = f"ems_complete_optimizer_{building_id}"
+        model_name = "ems_optimizer"
         
         mlflow.pyfunc.log_model(
             artifact_path="model",
