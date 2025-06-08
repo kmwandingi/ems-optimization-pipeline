@@ -118,13 +118,15 @@ class TestSmokeTests(unittest.TestCase):
     def test_helper_functions_run_without_error(self):
         """Test that helper functions can be imported and run."""
         from utils.helper import (
-            run_building_optimization_single_day_direct_phases,
-            compute_device_savings
+            compute_device_savings,
+            validate_dataframe_for_agents,
+            get_jads_color_palette
         )
         
         # These should import without error
-        self.assertTrue(callable(run_building_optimization_single_day_direct_phases))
         self.assertTrue(callable(compute_device_savings))
+        self.assertTrue(callable(validate_dataframe_for_agents))
+        self.assertTrue(callable(get_jads_color_palette))
 
     def test_agent_classes_can_be_imported(self):
         """Test that all required Agent classes can be imported."""

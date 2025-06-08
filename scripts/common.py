@@ -8,13 +8,34 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
+import os
 
-# DuckDB configuration
-DB_PATH = Path(__file__).parent.parent / "ems_data.duckdb"
+# DuckDB configuration - use absolute path to ensure system compatibility
+DB_PATH = Path(__file__).resolve().parent.parent / "ems_data.duckdb"
 
 def get_con():
     """Get a read-only connection to the DuckDB database."""
-    return duckdb.connect(DB_PATH, read_only=True)
+    # Convert to absolute path and normalize for system compatibility
+    # Handle both Path objects and string paths (for testing)
+    if isinstance(DB_PATH, str):
+        db_path = Path(DB_PATH).resolve()
+    else:
+        db_path = DB_PATH.resolve()
+    
+    # Ensure the database file exists
+    if not db_path.exists():
+        raise FileNotFoundError(f"Database file not found: {db_path}")
+    
+    try:
+        # Use string path with forward slashes for better cross-platform compatibility
+        db_path_str = str(db_path).replace(os.sep, '/')
+        return duckdb.connect(db_path_str, read_only=True)
+    except Exception as e:
+        # Fallback: try with original path string
+        try:
+            return duckdb.connect(str(db_path), read_only=True)
+        except Exception as fallback_e:
+            raise ConnectionError(f"Failed to connect to database. Original error: {e}, Fallback error: {fallback_e}")
 
 
 def preprocess(df):
