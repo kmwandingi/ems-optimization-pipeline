@@ -2,7 +2,7 @@
 """
 Azure ML Deployment Script for Complete EMS Optimization Pipeline
 Deploys FULL optimization pipeline: building + prices → optimized schedules + learning.
-STRICT COMPLIANCE: Uses only real agents, no fallbacks.
+Uses agent optimizers with strict compliance.
 """
 
 import os
@@ -22,7 +22,7 @@ sys.path.append(str(Path.cwd() / "notebooks"))
 sys.path.append(str(Path.cwd() / "notebooks" / "utils"))
 sys.path.append(str(Path.cwd() / "utils"))
 
-# Import ONLY agent classes - NO fallbacks allowed
+# Import agent classes
 try:
     from agents.ProbabilityModelAgent import ProbabilityModelAgent
     from agents.BatteryAgent import BatteryAgent
@@ -32,13 +32,23 @@ try:
     from agents.FlexibleDeviceAgent import FlexibleDevice
     from agents.GlobalOptimizer import GlobalOptimizer
     from agents.GlobalConnectionLayer import GlobalConnectionLayer
-    print("✓ Successfully imported ALL agent classes")
+    print("✓ Successfully imported agent classes")
 except ImportError as e:
     print(f"CRITICAL ERROR: Failed to import agent classes: {e}")
     sys.exit(1)
 
 from device_specs import device_specs
 from mlflow_tracker import EMS_OptimizationTracker
+
+# Import centralized configuration
+try:
+    from config_loader import get_config
+    config = get_config()
+    CONFIG_AVAILABLE = True
+    print("✓ Configuration system loaded")
+except ImportError as e:
+    print(f"⚠ Configuration loader not available: {e}")
+    CONFIG_AVAILABLE = False
 
 # Azure ML imports
 try:
@@ -180,11 +190,11 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
         
         print(f"✓ Retrieved {len(target_data)} hours of data for {target_date}")
         
-        # Initialize all agents with current probabilities
+        # Initialize all agents with current probabilities and configuration
         agents = self._initialize_optimization_agents(building_id, input_data)
         
         # Run real optimization using GlobalOptimizer
-        optimization_results = self._run_real_optimization(
+        optimization_results = self._run_optimization(
             building_id=building_id,
             target_date=target_date,
             weather_data=target_data,
@@ -229,7 +239,7 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
         actual_usage = input_data['actual_usage']
         date = input_data['date']
         
-        # Update probability distributions using real agent method
+        # Update probability distributions using agent method
         updated_devices = []
         
         for device_id, hourly_usage in actual_usage.items():
@@ -292,43 +302,61 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
         """Initialize all optimization agents with current state."""
         agents = {}
         
-        # Battery agent
+        # Battery agent with configuration
         if input_data.get('battery_enabled', True):
-            battery_params = input_data.get('battery_params', {
-                "max_charge_rate": 5.0,
-                "max_discharge_rate": 5.0,
-                "initial_soc": 8.0,
-                "soc_min": 2.0,
-                "soc_max": 15.0,
-                "capacity": 15.0,
-                "degradation_rate": 0.001,
-                "efficiency_charge": 0.95,
-                "efficiency_discharge": 0.95
-            })
+            if 'battery_params' in input_data:
+                battery_params = input_data['battery_params']
+            elif CONFIG_AVAILABLE:
+                battery_params = config.get_battery_config('large')
+            else:
+                # Fallback hardcoded parameters
+                battery_params = {
+                    "max_charge_rate": 5.0,
+                    "max_discharge_rate": 5.0,
+                    "initial_soc": 8.0,
+                    "soc_min": 2.0,
+                    "soc_max": 15.0,
+                    "capacity": 15.0,
+                    "degradation_rate": 0.001,
+                    "efficiency_charge": 0.95,
+                    "efficiency_discharge": 0.95
+                }
             agents['battery'] = BatteryAgent(**battery_params)
         
-        # EV agent
+        # EV agent with configuration
         if input_data.get('ev_enabled', False):
-            ev_params = input_data.get('ev_params', {
-                "capacity": 50.0,
-                "max_charge_rate": 11.0,
-                "max_discharge_rate": 11.0,
-                "initial_soc": 40.0,
-                "soc_min": 10.0,
-                "soc_max": 50.0,
-                "efficiency_charge": 0.9,
-                "efficiency_discharge": 0.9,
-                "must_be_full_by_hour": 7
-            })
+            if 'ev_params' in input_data:
+                ev_params = input_data['ev_params']
+            elif CONFIG_AVAILABLE:
+                ev_params = config.get_ev_config('default')
+            else:
+                # Fallback hardcoded parameters
+                ev_params = {
+                    "capacity": 50.0,
+                    "max_charge_rate": 11.0,
+                    "max_discharge_rate": 11.0,
+                    "initial_soc": 40.0,
+                    "soc_min": 10.0,
+                    "soc_max": 50.0,
+                    "efficiency_charge": 0.9,
+                    "efficiency_discharge": 0.9,
+                    "must_be_full_by_hour": 7
+                }
             agents['ev'] = EVAgent(**ev_params)
         
-        # Grid agent
-        grid_params = input_data.get('grid_params', {
-            "import_price": 0.25,
-            "export_price": 0.05,
-            "max_import": 15.0,
-            "max_export": 15.0
-        })
+        # Grid agent with configuration
+        if 'grid_params' in input_data:
+            grid_params = input_data['grid_params']
+        elif CONFIG_AVAILABLE:
+            grid_params = config.get_grid_config('default')
+        else:
+            # Fallback hardcoded parameters
+            grid_params = {
+                "import_price": 0.25,
+                "export_price": 0.05,
+                "max_import": 15.0,
+                "max_export": 15.0
+            }
         agents['grid'] = GridAgent(**grid_params)
         
         # PV agent (if building has solar)
@@ -348,10 +376,10 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
             # Return uniform distribution as fallback
             return {hour: 1.0/24 for hour in range(24)}
 
-    def _run_real_optimization(self, building_id, target_date, weather_data, price_profile, agents):
+    def _run_optimization(self, building_id, target_date, weather_data, price_profile, agents):
         """
-        Run REAL optimization using GlobalOptimizer.optimize_phases_centralized().
-        STRICT COMPLIANCE: Uses only real agent optimizers, no fallbacks.
+        Run optimization using GlobalOptimizer.optimize_phases_centralized().
+        Uses agent optimizers with strict compliance.
         """
         from agents.GlobalConnectionLayer import GlobalConnectionLayer
         
@@ -399,8 +427,14 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
                 device_agent.hour_probability = device_probs
                 devices.append(device_agent)
         
-        # Create GlobalConnectionLayer EXACTLY like direct pipeline
-        max_building_load = 65.0 if agents.get('ev') else 50.0
+        # Create GlobalConnectionLayer with configuration
+        if CONFIG_AVAILABLE:
+            building_config = config.get_building_config('residential')
+            base_load = building_config.get('max_building_load', 50.0)
+            load_buffer = building_config.get('load_buffer', 1.2)
+            max_building_load = base_load * load_buffer if agents.get('ev') else base_load
+        else:
+            max_building_load = 65.0 if agents.get('ev') else 50.0
         global_layer = GlobalConnectionLayer(max_building_load, 24)
         
         # Update device references to global layer
@@ -415,7 +449,15 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
         except Exception as e:
             print(f"⚠ WeatherAgent initialization failed: {e}")
         
-        # Create GlobalOptimizer instance EXACTLY like direct pipeline
+        # Create GlobalOptimizer instance with configuration
+        if CONFIG_AVAILABLE:
+            optimization_config = config.get_optimization_config()
+            max_iterations = optimization_config.get('global_optimizer', {}).get('max_iterations', 1)
+            online_iterations = optimization_config.get('global_optimizer', {}).get('online_iterations', 1)
+        else:
+            max_iterations = 1
+            online_iterations = 1
+            
         optimizer = GlobalOptimizer(
             devices=devices,
             global_layer=global_layer,
@@ -424,8 +466,8 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
             battery_agent=agents.get('battery'),
             ev_agent=agents.get('ev'),
             grid_agent=agents['grid'],
-            max_iterations=1,
-            online_iterations=1
+            max_iterations=max_iterations,
+            online_iterations=online_iterations
         )
         
         # MANDATORY: Use GlobalOptimizer.optimize_phases_centralized method
@@ -440,7 +482,7 @@ class EMSOptimizationModel(mlflow.pyfunc.PythonModel):
         )
         
         if not success:
-            # ERROR: Real agent method failed - no fallbacks allowed
+            # ERROR: Agent method failed - no fallbacks allowed
             raise RuntimeError("CRITICAL: GlobalOptimizer.optimize_phases_centralized() returned False - optimization failed")
         
         # Extract optimized schedules and calculate total cost from REAL optimization results
@@ -623,7 +665,7 @@ def setup_duckdb_connection(building_id):
 def run_learning_pipeline_with_mlflow(building_id="DE_KN_residential1", n_days=3):
     """
     Run the learning pipeline with MLflow tracking and model registration.
-    Uses only real agents - NO FALLBACKS.
+    Uses agent optimizers with strict compliance.
     """
     
     # Start MLflow run
@@ -658,7 +700,7 @@ def run_learning_pipeline_with_mlflow(building_id="DE_KN_residential1", n_days=3
         
         print(f"✓ Using {len(training_days)} training days: {training_days}")
         
-        # Initialize probability agent (USING REAL AGENT ONLY)
+        # Initialize probability agent (USING AGENT ONLY)
         # Get existing priors from DuckDB
         try:
             priors_df = con.execute("SELECT * FROM device_hourly_probabilities").df()
@@ -680,31 +722,38 @@ def run_learning_pipeline_with_mlflow(building_id="DE_KN_residential1", n_days=3
         
         print(f"✓ Loaded {len(training_data)} training records")
         
-        # Run probability training (USING REAL AGENT METHOD ONLY)
+        # Run probability training (USING AGENT METHOD ONLY)
         print("🎓 Training probability model using ProbabilityModelAgent.train()...")
         
         # Convert training days to string format for train method
         training_days_str = [day.strftime('%Y-%m-%d') for day in training_days]
         
-        # System parameters for training
-        BATTERY_PARAMS = {
-            "max_charge_rate": 5.0,
-            "max_discharge_rate": 5.0,
-            "initial_soc": 8.0,
-            "soc_min": 2.0,
-            "soc_max": 15.0,
-            "capacity": 15.0,
-            "degradation_rate": 0.001,
-            "efficiency_charge": 0.95,
-            "efficiency_discharge": 0.95
-        }
-        
-        GRID_PARAMS = {
-            "import_price": 0.25,
-            "export_price": 0.05,
-            "max_import": 15.0,
-            "max_export": 15.0
-        }
+        # System parameters for training from configuration
+        if CONFIG_AVAILABLE:
+            BATTERY_PARAMS = config.get_battery_config('large')
+            GRID_PARAMS = config.get_grid_config('default')
+            max_building_load = config.get('building.residential.max_building_load', 65.0)
+        else:
+            # Fallback hardcoded parameters
+            BATTERY_PARAMS = {
+                "max_charge_rate": 5.0,
+                "max_discharge_rate": 5.0,
+                "initial_soc": 8.0,
+                "soc_min": 2.0,
+                "soc_max": 15.0,
+                "capacity": 15.0,
+                "degradation_rate": 0.001,
+                "efficiency_charge": 0.95,
+                "efficiency_discharge": 0.95
+            }
+            
+            GRID_PARAMS = {
+                "import_price": 0.25,
+                "export_price": 0.05,
+                "max_import": 15.0,
+                "max_export": 15.0
+            }
+            max_building_load = 65.0
         
         updated_specs, device_probabilities = prob_agent.train(
             building_id=building_id,
@@ -713,7 +762,7 @@ def run_learning_pipeline_with_mlflow(building_id="DE_KN_residential1", n_days=3
             weather_df=training_data,
             forecast_df=training_data,
             parquet_dir="not-used-with-DuckDB",
-            max_building_load=65.0,
+            max_building_load=max_building_load,
             battery_params=BATTERY_PARAMS,
             flexible_params={},
             grid_params=GRID_PARAMS

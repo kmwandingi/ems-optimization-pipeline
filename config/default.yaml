@@ -1,0 +1,204 @@
+# EMS Optimization Pipeline - Default Configuration
+# This file contains all configurable parameters for the system
+
+# Application Configuration
+app:
+  name: "EMS Optimization Pipeline"
+  version: "6.0"
+  environment: "development"  # development, staging, production
+  debug: true
+  
+# Database Configuration
+database:
+  type: "duckdb"
+  path: "ems_data.duckdb"
+  connection_timeout: 30
+  max_retries: 3
+  retry_delay: 1.0
+  
+# File Paths
+paths:
+  data_dir: "notebooks/data"
+  probabilities_dir: "notebooks/probabilities"
+  results_dir: "results"
+  output_dir: "results/output"
+  figures_dir: "results/figures"
+  visualizations_dir: "results/visualizations"
+  mlflow_tracking_uri: "file:./mlflow_runs"
+
+# Battery Configuration
+battery:
+  default:
+    capacity: 10.0  # kWh
+    max_charge_rate: 3.0  # kW
+    max_discharge_rate: 3.0  # kW
+    initial_soc: 7.0  # kWh
+    soc_min: 1.0  # kWh
+    soc_max: 10.0  # kWh
+    degradation_rate: 0.001  # per cycle
+    efficiency_charge: 0.95
+    efficiency_discharge: 0.95
+    temperature_coefficient: 1.0
+    max_ramp_rate: 1.0  # kW/min
+  
+  large:  # Alternative configuration for larger systems
+    capacity: 15.0
+    max_charge_rate: 5.0
+    max_discharge_rate: 5.0
+    initial_soc: 8.0
+    soc_min: 2.0
+    soc_max: 15.0
+    degradation_rate: 0.0005
+    efficiency_charge: 0.95
+    efficiency_discharge: 0.95
+
+# Electric Vehicle Configuration
+ev:
+  default:
+    capacity: 60.0  # kWh
+    initial_soc: 18.0  # kWh (30% of capacity)
+    soc_min: 6.0  # kWh (10% of capacity)
+    soc_max: 54.0  # kWh (90% of capacity)
+    max_charge_rate: 7.4  # kW
+    max_discharge_rate: 0.0  # kW (V2G disabled by default)
+    efficiency_charge: 0.92
+    efficiency_discharge: 0.92
+    must_be_full_by_hour: 7  # Must be fully charged by 7 AM
+    degradation_cost: 0.07  # EUR per kWh throughput
+    
+  v2g_enabled:  # Configuration with Vehicle-to-Grid enabled
+    capacity: 60.0
+    initial_soc: 18.0
+    soc_min: 6.0
+    soc_max: 54.0
+    max_charge_rate: 11.0
+    max_discharge_rate: 11.0
+    efficiency_charge: 0.92
+    efficiency_discharge: 0.92
+    must_be_full_by_hour: 7
+
+# Grid Connection Configuration
+grid:
+  default:
+    import_price: 0.25  # EUR per kWh
+    export_price: 0.05  # EUR per kWh (feed-in tariff)
+    max_import: 15.0  # kW
+    max_export: 15.0  # kW
+    
+  industrial:  # Configuration for industrial buildings
+    import_price: 0.20
+    export_price: 0.08
+    max_import: 50.0
+    max_export: 20.0
+
+# Optimization Parameters
+optimization:
+  global_optimizer:
+    max_iterations: 5
+    online_iterations: 3
+    solver_timeout: 300  # seconds
+    solver_gap_tolerance: 0.01
+    enable_warm_start: true
+    
+  centralized:
+    max_shift_hours: 6
+    building_load_buffer: 1.1  # 10% buffer above rated capacity
+    
+  phases:
+    enable_discrete_phases: true
+    enable_partial_usage: true
+    
+  monte_carlo:
+    num_simulations: 10
+    z_alpha: 1.645  # 95% confidence interval
+    enable_uncertainty: false
+
+# Building Configuration
+building:
+  residential:
+    max_building_load: 50.0  # kW
+    voltage_level: "LV"  # Low Voltage
+    load_buffer: 1.2
+    
+  industrial:
+    max_building_load: 100.0  # kW
+    voltage_level: "MV"  # Medium Voltage
+    load_buffer: 1.5
+
+# Probability Model Configuration
+probability_model:
+  learning_rates:
+    lr_tau: 20.0
+    lr_min: 0.002
+    lr_max: 0.10
+    lr_burnin: 0.005
+    
+  thresholds:
+    cap_min: 0.005
+    cap_max: 0.03
+    probability_threshold: 0.05
+    
+  training:
+    burnin_days: 0
+    min_observations: 5
+    convergence_threshold: 0.001
+
+# MLflow Configuration
+mlflow:
+  tracking_uri: "file:./mlflow_runs"
+  experiment_name: "EMS_Optimization"
+  artifact_location: null
+  enable_autolog: true
+  log_models: true
+  log_artifacts: true
+  
+  ui:
+    host: "localhost"
+    port: 5000
+    backend_store_uri: null
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_logging: true
+  console_logging: true
+  log_file: "logs/ems_optimization.log"
+  max_file_size: "10MB"
+  backup_count: 5
+
+# Performance Configuration
+performance:
+  max_memory_usage: "2GB"
+  max_cpu_usage: 80  # percentage
+  optimization_timeout: 600  # seconds
+  database_query_timeout: 30  # seconds
+  
+# Monitoring Configuration
+monitoring:
+  health_check_interval: 30  # seconds
+  metrics_collection_interval: 60  # seconds
+  enable_performance_monitoring: true
+  enable_memory_monitoring: true
+
+# Security Configuration
+security:
+  enable_auth: false
+  api_key_required: false
+  input_validation: true
+  sql_injection_protection: true
+  
+# Pipeline Defaults
+pipeline:
+  default_n_days: 1
+  max_n_days: 30
+  default_mode: "decentralised"
+  enable_csv_output: false  # Disabled to save disk space
+  enable_visualization: true
+  
+# Agent Configuration
+agents:
+  strict_validation: true
+  enable_fallbacks: false  # Must be false for production
+  require_24_hour_schedules: true
+  schedule_validation: true

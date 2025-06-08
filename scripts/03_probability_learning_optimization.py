@@ -10,7 +10,7 @@ Features:
 2. Visual tracking of PMF evolution from priors to learned distributions
 3. Jensen-Shannon divergence and entropy metrics
 4. Beautiful Seaborn economist-style visualizations
-5. STRICT enforcement of "USE AGENT OPTIMIZERS" rule
+5. STRICT enforcement of agent optimizer usage
 
 Usage:
     python scripts/03_probability_learning_optimization.py --building DE_KN_residential1 --n_days 10
@@ -32,7 +32,7 @@ warnings.filterwarnings('ignore')
 # Add notebooks directory to path for agent imports
 sys.path.append(str(Path.cwd() / "notebooks"))
 
-# Import ONLY agent classes - NO fallbacks allowed
+# Import agent classes
 try:
     from agents.ProbabilityModelAgent import ProbabilityModelAgent
     from agents.BatteryAgent import BatteryAgent
@@ -43,10 +43,10 @@ try:
     from agents.GlobalOptimizer import GlobalOptimizer
     from agents.GlobalConnectionLayer import GlobalConnectionLayer
     from agents.WeatherAgent import WeatherAgent
-    print("✓ Successfully imported ALL agent classes")
+    print("✓ Successfully imported agent classes")
 except ImportError as e:
     print(f"CRITICAL ERROR: Failed to import agent classes: {e}")
-    print("This pipeline REQUIRES agent classes - no fallbacks allowed!")
+    print("This pipeline REQUIRES agent classes!")
     sys.exit(1)
 
 # Import common utilities and device_specs
@@ -301,7 +301,7 @@ def create_learned_priors_from_duckdb(con, view_name: str, building_id: str, tra
         
         print(f"✓ ProbabilityModelAgent learned patterns from real data")
         
-        # Extract learned distributions from real agent results
+        # Extract learned distributions from agent results
         learned_priors_data = {}
         device_types = []
         
@@ -359,11 +359,11 @@ def run_probability_training_experiment(con, view_name, building_id, training_da
         con, view_name, building_id, training_days
     )
     
-    # Create prior distributions - ENFORCE "USE REAL AGENT OPTIMIZERS"
+    # Create prior distributions - ENFORCE "USE AGENT OPTIMIZERS"
     priors_df = None
     if use_learned_priors:
         priors_df = create_learned_priors_from_duckdb(con, view_name, building_id, training_days=min(30, len(training_days)*2))
-        print(f"✓ Using REAL learned priors from DuckDB for {len(priors_df.index)} device types")
+        print(f"✓ Using learned priors from DuckDB for {len(priors_df.index)} device types")
     else:
         print("✓ Using uniform priors")
     
@@ -983,11 +983,11 @@ def main():
     if mlflow_tracker:
         mlflow_tracker.end_run()
     
-    # 3. Get devices to test - ENFORCE "USE REAL AGENT OPTIMIZERS" with ALL real devices
+    # 3. Get devices to test - ENFORCE "USE AGENT OPTIMIZERS" with ALL devices
     if test_multiple_devices:
         print(f"\n🔍 COMPREHENSIVE TESTING: Getting ALL devices from DuckDB")
         devices_to_test = get_all_available_devices_from_duckdb(con, view_name, building_id)
-        print(f"✓ Testing ALL {len(devices_to_test)} device types from REAL data: {devices_to_test}")
+        print(f"✓ Testing ALL {len(devices_to_test)} device types from data: {devices_to_test}")
     else:
         devices_to_test = [target_device]  # Single device test
         print(f"✓ Testing single device type: {target_device}")

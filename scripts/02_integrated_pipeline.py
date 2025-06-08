@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Learning Pipeline - Integrated EMS Pipeline with STRICT "USE AGENT OPTIMIZERS" compliance
+Learning Pipeline - Integrated EMS Pipeline with strict agent optimizer compliance
 
 This script implements the complete integrated EMS pipeline using ONLY agent methods.
 NO fallbacks, manual loops, or simplified logic allowed.
@@ -10,7 +10,7 @@ Features:
 2. ProbabilityModelAgent.train() for probability model training  
 3. Agent-based optimization using GlobalOptimizer methods
 4. Comprehensive visualization and results saving
-5. STRICT enforcement of "USE AGENT OPTIMIZERS" rule
+5. Strict enforcement of agent optimizer usage
 """
 import os
 import sys
@@ -27,7 +27,7 @@ from matplotlib.gridspec import GridSpec
 # Add notebooks directory to path for agent imports
 sys.path.append(str(Path.cwd() / "notebooks"))
 
-# Import ONLY agent classes - NO fallbacks allowed
+# Import agent classes
 try:
     from agents.ProbabilityModelAgent import ProbabilityModelAgent
     from agents.BatteryAgent import BatteryAgent
@@ -38,10 +38,10 @@ try:
     from agents.GlobalOptimizer import GlobalOptimizer
     from agents.GlobalConnectionLayer import GlobalConnectionLayer
     from agents.WeatherAgent import WeatherAgent
-    print("✓ Successfully imported ALL agent classes")
+    print("✓ Successfully imported agent classes")
 except ImportError as e:
     print(f"CRITICAL ERROR: Failed to import agent classes: {e}")
-    print("This pipeline REQUIRES agent classes - no fallbacks allowed!")
+    print("This pipeline REQUIRES agent classes!")
     sys.exit(1)
 
 # Import common utilities and device_specs
@@ -49,7 +49,7 @@ import common
 sys.path.append(str(Path.cwd() / "notebooks" / "utils"))
 from device_specs import device_specs
 
-# Import MLflow tracking (NON-INTRUSIVE - wraps around existing logic)
+# Import MLflow tracking and configuration loader
 sys.path.append(str(Path.cwd() / "utils"))
 try:
     from mlflow_tracker import EMS_OptimizationTracker
@@ -59,44 +59,64 @@ except ImportError as e:
     print(f"⚠ MLflow not available: {e}")
     MLFLOW_AVAILABLE = False
 
-# Parameters for system components
-BATTERY_PARAMS = {
-    "max_charge_rate": 5.0,
-    "max_discharge_rate": 5.0,
-    "initial_soc": 8.0,
-    "soc_min": 2.0,
-    "soc_max": 15.0,
-    "capacity": 15.0,
-    "degradation_rate": 0.001,
-    "efficiency_charge": 0.95,
-    "efficiency_discharge": 0.95
-}
+# Import centralized configuration
+try:
+    from config_loader import get_config
+    config = get_config()
+    CONFIG_AVAILABLE = True
+    print("✓ Configuration system loaded")
+except ImportError as e:
+    print(f"⚠ Configuration loader not available: {e}")
+    CONFIG_AVAILABLE = False
 
-EV_PARAMS = {
-    "capacity": 60.0,
-    "initial_soc": 18.0,  # 30% of 60kWh  
-    "soc_min": 6.0,       # 10% of 60kWh
-    "soc_max": 54.0,      # 90% of 60kWh
-    "max_charge_rate": 11.0,
-    "max_discharge_rate": 0.0,
-    "efficiency_charge": 0.92,
-    "efficiency_discharge": 0.92,
-    "must_be_full_by_hour": 7
-}
-
-GRID_PARAMS = {
-    "import_price": 0.25,  # Default price per kWh
-    "export_price": 0.05,  # Default feed-in tariff
-    "max_import": 15.0,    # Max grid import in kW
-    "max_export": 15.0     # Max grid export in kW
-}
+# Parameters for system components - Load from configuration if available
+if CONFIG_AVAILABLE:
+    BATTERY_PARAMS = config.get_battery_config('large')  # Use large battery config for integrated pipeline
+    EV_PARAMS = config.get_ev_config('default')
+    GRID_PARAMS = config.get_grid_config('default')
+    print("✓ Loaded parameters from centralized configuration")
+else:
+    # Fallback hardcoded parameters (to be removed after full migration)
+    BATTERY_PARAMS = {
+        "max_charge_rate": 5.0,
+        "max_discharge_rate": 5.0,
+        "initial_soc": 8.0,
+        "soc_min": 2.0,
+        "soc_max": 15.0,
+        "capacity": 15.0,
+        "degradation_rate": 0.001,
+        "efficiency_charge": 0.95,
+        "efficiency_discharge": 0.95
+    }
+    
+    EV_PARAMS = {
+        "capacity": 60.0,
+        "initial_soc": 18.0,  # 30% of 60kWh  
+        "soc_min": 6.0,       # 10% of 60kWh
+        "soc_max": 54.0,      # 90% of 60kWh
+        "max_charge_rate": 11.0,
+        "max_discharge_rate": 0.0,
+        "efficiency_charge": 0.92,
+        "efficiency_discharge": 0.92,
+        "must_be_full_by_hour": 7
+    }
+    
+    GRID_PARAMS = {
+        "import_price": 0.25,  # Default price per kWh
+        "export_price": 0.05,  # Default feed-in tariff
+        "max_import": 15.0,    # Max grid import in kW
+        "max_export": 15.0     # Max grid export in kW
+    }
+    print("⚠ Using fallback hardcoded parameters - configuration system unavailable")
 
 def parse_args():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Agent Integrated EMS Pipeline")
     parser.add_argument("--building", type=str, required=True,
                         help="Building ID (e.g., DE_KN_residential1)")
-    parser.add_argument("--n_days", type=int, default=10,
+    # Load default n_days from configuration if available
+    default_n_days = config.get('pipeline.default_n_days', 10) if CONFIG_AVAILABLE else 10
+    parser.add_argument("--n_days", type=int, default=default_n_days,
                         help="Number of days to process")
     parser.add_argument("--battery", type=str, default="on",
                         choices=["on", "off"],
@@ -112,7 +132,7 @@ def parse_args():
 def setup_duckdb_connection(building_id):
     """
     Setup DuckDB connection and validate data availability.
-    ENFORCES "USE AGENT OPTIMIZERS" - all data stays in DuckDB.
+    All data stays in DuckDB.
     """
     print(f"📊 Setting up DuckDB connection for {building_id}...")
     
@@ -134,7 +154,7 @@ def setup_duckdb_connection(building_id):
 def initialize_probability_agent():
     """
     Initialize ProbabilityModelAgent with actual probability data.
-    ENFORCES "USE AGENT OPTIMIZERS" - no simplified probability agent allowed.
+    No simplified probability agent allowed.
     """
     print("🧠 Initializing ProbabilityModelAgent...")
     
@@ -154,8 +174,8 @@ def initialize_probability_agent():
 
 def initialize_agents(building_id, con, view_name, battery_enabled=True, ev_enabled=True):
     """
-    Initialize ALL real agent instances using DuckDB queries.
-    ENFORCES "USE AGENT OPTIMIZERS" - all data stays in DuckDB.
+    Initialize agent instances using DuckDB queries.
+    All data stays in DuckDB.
     """
     print("🤖 Initializing ALL agents with DuckDB...")
     
@@ -212,13 +232,19 @@ def initialize_agents(building_id, con, view_name, battery_enabled=True, ev_enab
 def create_devices_for_day(con, view_name, building_id, day, prob_agent, battery_agent, ev_agent):
     """
     Create FlexibleDevice agents for a specific day using DuckDB queries.
-    ENFORCES "USE AGENT OPTIMIZERS" - all data from DuckDB.
+    All data from DuckDB.
     """
     devices = []
     
-    # Adjust building load limit based on EV presence
+    # Adjust building load limit based on EV presence and configuration
     has_ev = ev_agent is not None and hasattr(ev_agent, 'max_charge_rate')
-    max_building_load = 65.0 if has_ev else 50.0
+    if CONFIG_AVAILABLE:
+        building_config = config.get_building_config('residential')
+        base_load = building_config.get('max_building_load', 50.0)
+        load_buffer = building_config.get('load_buffer', 1.2)
+        max_building_load = base_load * load_buffer if has_ev else base_load
+    else:
+        max_building_load = 65.0 if has_ev else 50.0
     
     # Create global connection layer
     global_layer = GlobalConnectionLayer(max_building_load=max_building_load, total_hours=24)
@@ -288,7 +314,7 @@ def create_devices_for_day(con, view_name, building_id, day, prob_agent, battery
 def run_probability_training(prob_agent, building_id, training_days, df):
     """
     Run probability model training using ProbabilityModelAgent.train().
-    ENFORCES "USE AGENT OPTIMIZERS" - no simplified training allowed.
+    No simplified training allowed.
     """
     print(f"🎓 Running probability training on {len(training_days)} days...")
     
@@ -307,7 +333,7 @@ def run_probability_training(prob_agent, building_id, training_days, df):
         weather_df=df,
         forecast_df=df,
         parquet_dir="not-used-with-DuckDB",
-        max_building_load=65.0,
+        max_building_load=config.get('building.residential.max_building_load', 65.0) if CONFIG_AVAILABLE else 65.0,
         battery_params=BATTERY_PARAMS,
         flexible_params={},
         grid_params=GRID_PARAMS,
@@ -331,11 +357,22 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
     # Get prices from day_df
     day_ahead_prices = day_df.groupby('hour')['price_per_kwh'].mean().reindex(range(24), fill_value=0.25).values
     
-    # Create GlobalOptimizer instance
-    max_building_load = 65.0 if ev_agent else 50.0
+    # Create GlobalOptimizer instance with configuration
+    if CONFIG_AVAILABLE:
+        building_config = config.get_building_config('residential')
+        base_load = building_config.get('max_building_load', 50.0)
+        load_buffer = building_config.get('load_buffer', 1.2)
+        max_building_load = base_load * load_buffer if ev_agent else base_load
+    else:
+        max_building_load = 65.0 if ev_agent else 50.0
     global_layer = GlobalConnectionLayer(max_building_load, 24)
     
     # Weather agent is passed as parameter (already initialized with full dataset)
+    
+    # Get optimization parameters from configuration
+    optimization_config = config.get_optimization_config() if CONFIG_AVAILABLE else {}
+    max_iterations = optimization_config.get('global_optimizer', {}).get('max_iterations', 1)
+    online_iterations = optimization_config.get('global_optimizer', {}).get('online_iterations', 1)
     
     optimizer = GlobalOptimizer(
         devices=devices,
@@ -345,8 +382,8 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
         battery_agent=battery_agent,
         ev_agent=ev_agent,
         grid_agent=grid_agent,
-        max_iterations=1,
-        online_iterations=1
+        max_iterations=max_iterations,
+        online_iterations=online_iterations
     )
     
     # MANDATORY: Use GlobalOptimizer.optimize_phases_centralized method
@@ -362,7 +399,7 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
     )
     
     if not success:
-        # ERROR: Real agent method failed - no fallbacks allowed
+        # ERROR: Agent method failed - no fallbacks allowed
         raise RuntimeError(f"CRITICAL: GlobalOptimizer.optimize_phases_centralized() returned False - optimization failed. Fix the agent method.")
     
     # Extract optimized schedules and calculate total cost

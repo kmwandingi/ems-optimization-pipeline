@@ -51,7 +51,7 @@ except ImportError as e:
 sys.path.append(str(Path.cwd() / "notebooks" / "utils"))
 from device_specs import device_specs
 
-# Import MLflow tracking (NON-INTRUSIVE - wraps around existing logic)
+# Import MLflow tracking and configuration loader
 sys.path.append(str(Path.cwd() / "utils"))
 try:
     from mlflow_tracker import EMS_OptimizationTracker
@@ -61,41 +61,66 @@ except ImportError as e:
     print(f"⚠ MLflow not available: {e}")
     MLFLOW_AVAILABLE = False
 
-# Parameters for system components
-BATTERY_PARAMS = {
-    "max_charge_rate": 3.0,
-    "max_discharge_rate": 3.0,
-    "initial_soc": 7.0,
-    "soc_min": 1.0,
-    "soc_max": 10.0,
-    "capacity": 10.0,
-    "degradation_rate": 0.001,
-    "efficiency_charge": 0.95,
-    "efficiency_discharge": 0.95
-}
+# Import centralized configuration
+try:
+    from config_loader import get_config
+    config = get_config()
+    CONFIG_AVAILABLE = True
+    print("✓ Configuration system loaded")
+except ImportError as e:
+    print(f"⚠ Configuration loader not available: {e}")
+    CONFIG_AVAILABLE = False
 
-EV_PARAMS = {
-    "capacity": 60.0,
-    "initial_soc": 12.0,
-    "soc_min": 6.0,
-    "soc_max": 54.0,
-    "max_charge_rate": 7.4,
-    "max_discharge_rate": 0.0,
-    "efficiency_charge": 0.92,
-    "efficiency_discharge": 0.92,
-    "must_be_full_by_hour": 7
-}
+# Parameters for system components - Load from configuration if available
+if CONFIG_AVAILABLE:
+    BATTERY_PARAMS = config.get_battery_config('default')
+    EV_PARAMS = config.get_ev_config('default')
+    GRID_PARAMS = config.get_grid_config('default')
+    print("✓ Loaded parameters from centralized configuration")
+else:
+    # Fallback hardcoded parameters (to be removed after full migration)
+    BATTERY_PARAMS = {
+        "max_charge_rate": 3.0,
+        "max_discharge_rate": 3.0,
+        "initial_soc": 7.0,
+        "soc_min": 1.0,
+        "soc_max": 10.0,
+        "capacity": 10.0,
+        "degradation_rate": 0.001,
+        "efficiency_charge": 0.95,
+        "efficiency_discharge": 0.95
+    }
+    
+    EV_PARAMS = {
+        "capacity": 60.0,
+        "initial_soc": 12.0,
+        "soc_min": 6.0,
+        "soc_max": 54.0,
+        "max_charge_rate": 7.4,
+        "max_discharge_rate": 0.0,
+        "efficiency_charge": 0.92,
+        "efficiency_discharge": 0.92,
+        "must_be_full_by_hour": 7
+    }
+    
+    GRID_PARAMS = {
+        "import_price": 0.25,
+        "export_price": 0.05,
+        "max_import": 15.0,
+        "max_export": 15.0
+    }
+    print("⚠ Using fallback hardcoded parameters - configuration system unavailable")
 
-GRID_PARAMS = {
-    "import_price": 0.25,
-    "export_price": 0.05,
-    "max_import": 15.0,
-    "max_export": 15.0
-}
-
-# Create output directories if they don't exist
-os.makedirs("results/figures", exist_ok=True)
-os.makedirs("results/output", exist_ok=True)
+# Create output directories using configuration paths
+if CONFIG_AVAILABLE:
+    paths = config.get_paths_config()
+    os.makedirs(paths.get('figures_dir', 'results/figures'), exist_ok=True)
+    os.makedirs(paths.get('output_dir', 'results/output'), exist_ok=True)
+    os.makedirs(paths.get('results_dir', 'results'), exist_ok=True)
+else:
+    # Fallback directories
+    os.makedirs("results/figures", exist_ok=True)
+    os.makedirs("results/output", exist_ok=True)
 
 def parse_args():
     """Parse command-line arguments."""
@@ -113,7 +138,9 @@ def parse_args():
                         help="EV mode (on/off)")
     parser.add_argument("--validate", action="store_true",
                         help="Run validation checks on results")
-    parser.add_argument("--n_days", type=int, default=20,
+    # Load default n_days from configuration if available
+    default_n_days = config.get('pipeline.default_n_days', 20) if CONFIG_AVAILABLE else 20
+    parser.add_argument("--n_days", type=int, default=default_n_days,
                         help="Number of days to process")
     
     return parser.parse_args()
@@ -243,9 +270,15 @@ def create_devices_from_duckdb(con, view_name, building_id, day, battery_agent=N
     """
     devices = []
     
-    # Adjust building load limit based on EV presence
+    # Adjust building load limit based on EV presence and configuration
     has_ev = ev_agent is not None and hasattr(ev_agent, 'max_charge_rate')
-    max_building_load = 65.0 if has_ev else 50.0
+    if CONFIG_AVAILABLE:
+        building_config = config.get_building_config('residential')
+        base_load = building_config.get('max_building_load', 50.0)
+        load_buffer = building_config.get('load_buffer', 1.2)
+        max_building_load = base_load * load_buffer if has_ev else base_load
+    else:
+        max_building_load = 65.0 if has_ev else 50.0
     
     # Create global connection layer
     global_layer = GlobalConnectionLayer(max_building_load=max_building_load, total_hours=24)
@@ -408,12 +441,22 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
     day_ahead_prices = day_df.groupby('hour')['price_per_kwh'].mean().reindex(range(24), fill_value=0.25).values
     
     # MANDATORY: Use GlobalOptimizer.optimize_centralized() method
-    max_building_load = 65.0 if ev_agent else 50.0
+    if CONFIG_AVAILABLE:
+        building_config = config.get_building_config('residential')
+        base_load = building_config.get('max_building_load', 50.0)
+        load_buffer = building_config.get('load_buffer', 1.2)
+        max_building_load = base_load * load_buffer if ev_agent else base_load
+    else:
+        max_building_load = 65.0 if ev_agent else 50.0
     global_layer = GlobalConnectionLayer(max_building_load, 24)
     
     # Weather agent is passed as parameter (already initialized with full dataset)
     
-    # Create GlobalOptimizer instance
+    # Create GlobalOptimizer instance with configuration parameters
+    optimization_config = config.get_optimization_config() if CONFIG_AVAILABLE else {}
+    max_iterations = optimization_config.get('global_optimizer', {}).get('max_iterations', 1)
+    online_iterations = optimization_config.get('global_optimizer', {}).get('online_iterations', 1)
+    
     optimizer = GlobalOptimizer(
         devices=devices,
         global_layer=global_layer,
@@ -422,8 +465,8 @@ def run_centralized_optimization(devices, day_df, battery_agent, ev_agent, pv_ag
         battery_agent=battery_agent,
         ev_agent=ev_agent,
         grid_agent=grid_agent,
-        max_iterations=1,
-        online_iterations=1
+        max_iterations=max_iterations,
+        online_iterations=online_iterations
     )
     
     try:
@@ -474,12 +517,22 @@ def run_centralized_phases_optimization(devices, day_df, battery_agent, ev_agent
     print("  Running centralized phases optimization...")
     
     # MANDATORY: Use GlobalOptimizer.optimize_phases_centralized() method
-    max_building_load = 65.0 if ev_agent else 50.0
+    if CONFIG_AVAILABLE:
+        building_config = config.get_building_config('residential')
+        base_load = building_config.get('max_building_load', 50.0)
+        load_buffer = building_config.get('load_buffer', 1.2)
+        max_building_load = base_load * load_buffer if ev_agent else base_load
+    else:
+        max_building_load = 65.0 if ev_agent else 50.0
     global_layer = GlobalConnectionLayer(max_building_load, 24)
     
     # Weather agent is passed as parameter (already initialized with full dataset)
     
-    # Create GlobalOptimizer instance  
+    # Create GlobalOptimizer instance with configuration parameters
+    optimization_config = config.get_optimization_config() if CONFIG_AVAILABLE else {}
+    max_iterations = optimization_config.get('global_optimizer', {}).get('max_iterations', 1)
+    online_iterations = optimization_config.get('global_optimizer', {}).get('online_iterations', 1)
+    
     optimizer = GlobalOptimizer(
         devices=devices,
         global_layer=global_layer,
@@ -488,8 +541,8 @@ def run_centralized_phases_optimization(devices, day_df, battery_agent, ev_agent
         battery_agent=battery_agent,
         ev_agent=ev_agent,
         grid_agent=grid_agent,
-        max_iterations=1,
-        online_iterations=1
+        max_iterations=max_iterations,
+        online_iterations=online_iterations
     )
     
     try:

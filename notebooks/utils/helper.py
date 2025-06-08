@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 """
-Helper functions for EMS optimization using REAL AGENT OPTIMIZERS ONLY.
+Helper functions for EMS optimization using agent optimizers.
 
-This module provides utility functions that strictly enforce the 
-"USE REAL AGENT OPTIMIZERS" rule. All functions delegate to real agent 
+This module provides utility functions that delegate to agent 
 methods with proper DataFrame formatting.
 """
 
@@ -18,7 +17,7 @@ from datetime import datetime, timedelta
 # Add notebooks directory to path for agent imports
 sys.path.append(str(Path(__file__).parent.parent))
 
-# Import ONLY real agent classes - NO fallbacks allowed
+# Import agent classes
 from agents.ProbabilityModelAgent import ProbabilityModelAgent
 from agents.BatteryAgent import BatteryAgent
 from agents.EVAgent import EVAgent
@@ -32,7 +31,7 @@ from agents.WeatherAgent import WeatherAgent
 # Import device_specs
 from .device_specs import device_specs
 
-# Default parameters for real system components
+# Default parameters for system components
 BATTERY_PARAMS = {
     "max_charge_rate": 3.0,
     "max_discharge_rate": 3.0,
@@ -67,7 +66,7 @@ GRID_PARAMS = {
 def validate_dataframe_for_agents(df, expected_hours=24):
     """
     Validate that DataFrame has correct structure for agent consumption.
-    ENFORCES "USE REAL AGENT OPTIMIZERS" - ensures proper data format.
+    Ensures proper data format.
     """
     if df is None or df.empty:
         raise ValueError("DataFrame is empty or None")
@@ -96,16 +95,12 @@ def validate_dataframe_for_agents(df, expected_hours=24):
 def compute_device_savings(device):
     """
     Compute device savings using original vs optimized consumption.
-    ENFORCES "USE REAL AGENT OPTIMIZERS" - uses agent-generated schedules only.
+    Uses agent-generated schedules only.
     """
     if not hasattr(device, 'original_consumption') or not hasattr(device, 'optimized_consumption'):
-        # If device doesn't have these attributes, calculate from available data
-        if hasattr(device, 'data') and 'price_per_kwh' in device.data.columns:
-            # Use simple difference between scheduled and original
-            original_cost = np.sum(np.array([1.0] * 24) * device.data['price_per_kwh'].values[:24])
-            optimized_cost = np.sum(np.array([0.8] * 24) * device.data['price_per_kwh'].values[:24])  # Assume 20% improvement
-        else:
-            return 0.0, 0.0, 0.0
+        # No fallback allowed - device must have consumption data from agent optimization
+        raise ValueError(f"Device {device.device_name if hasattr(device, 'device_name') else 'Unknown'} "
+                        f"missing required consumption attributes. Agent optimization must be run correctly.")
     else:
         # Calculate costs using device data
         if hasattr(device, 'data') and 'price_per_kwh' in device.data.columns:
@@ -138,8 +133,8 @@ def compute_device_savings(device):
 
 def plot_battery_schedule(battery_schedule, building_id, day_str):
     """
-    Plot battery schedule using real agent results.
-    ENFORCES "USE REAL AGENT OPTIMIZERS" - plots agent-generated schedules only.
+    Plot battery schedule using agent results.
+    Plots agent-generated schedules only.
     """
     # Create output directory
     os.makedirs("results/plots", exist_ok=True)
@@ -166,7 +161,7 @@ def plot_battery_schedule(battery_schedule, building_id, day_str):
 def plot_device_comparison(device, building_id, day_str):
     """
     Plot device original vs optimized consumption.
-    ENFORCES "USE REAL AGENT OPTIMIZERS" - plots agent-generated schedules only.
+    Plots agent-generated schedules only.
     """
     # Create output directory
     os.makedirs("results/plots", exist_ok=True)
@@ -203,7 +198,7 @@ def plot_device_comparison(device, building_id, day_str):
 def load_building_day_devices(building_id, single_day, parquet_dir, device_specs):
     """
     Load building devices for a specific day using DuckDB queries.
-    ENFORCES "USE REAL AGENT OPTIMIZERS" - loads data from DuckDB only.
+    Loads data from DuckDB only.
     """
     # Import common here to avoid circular imports
     import common
@@ -226,7 +221,7 @@ def load_building_day_devices(building_id, single_day, parquet_dir, device_specs
     # Create devices
     devices = []
     
-    # Create REAL global connection layer
+    # Create global connection layer
     max_building_load = 65.0  # Default building load limit
     global_layer = GlobalConnectionLayer(max_building_load=max_building_load, total_hours=24)
     
@@ -256,7 +251,7 @@ def load_building_day_devices(building_id, single_day, parquet_dir, device_specs
             # Reset index for proper agent data handling
             day_data_reset = day_data.reset_index(drop=True).copy()
             
-            # Create REAL FlexibleDevice agent
+            # Create FlexibleDevice agent
             device = FlexibleDevice(
                 device_name=device_id,
                 data=day_data_reset,
@@ -291,7 +286,7 @@ def load_building_day_devices(building_id, single_day, parquet_dir, device_specs
 def validate_agent_results(devices, optimizer, battery_agent=None, ev_agent=None):
     """
     Validate that agent optimization results are consistent.
-    ENFORCES "USE REAL AGENT OPTIMIZERS" - validates agent-generated results only.
+    Validates agent-generated results only.
     """
     validation_errors = []
     

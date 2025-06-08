@@ -204,15 +204,9 @@ def plot_schedule_heatmap(devices, building_id, mode, day=None):
         elif mode == "centralised" and hasattr(dev, "centralized_optimized_schedule"):
             schedule = np.array(dev.centralized_optimized_schedule[:24])
         else:
-            # Fallback to any available schedule
-            if hasattr(dev, "optimized_consumption"):
-                schedule = np.array(dev.optimized_consumption[:24])
-            elif hasattr(dev, "nextday_optimized_schedule"):
-                schedule = np.array(dev.nextday_optimized_schedule[:24])
-            elif hasattr(dev, "centralized_optimized_schedule"):
-                schedule = np.array(dev.centralized_optimized_schedule[:24])
-            else:
-                schedule = np.zeros(24)
+            # No fallback allowed - raise error if schedule not found for mode
+            raise ValueError(f"Device {dev.device_name} does not have required schedule for mode '{mode}'. "
+                           f"Expected attribute not found. Agent optimization must be run correctly.")
 
         mat.append(schedule)
         names.append(dev.device_name)

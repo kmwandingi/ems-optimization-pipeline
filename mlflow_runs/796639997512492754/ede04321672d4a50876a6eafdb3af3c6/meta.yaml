@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kennethmwandingi/ems/mlflow_runs/796639997512492754/ede04321672d4a50876a6eafdb3af3c6/artifacts
+end_time: 1749371041541
+entry_point_name: ''
+experiment_id: '796639997512492754'
+lifecycle_stage: active
+run_id: ede04321672d4a50876a6eafdb3af3c6
+run_name: lr_tau_50.0_lr_max_0.050_heat_pump_20250608_102401
+run_uuid: ede04321672d4a50876a6eafdb3af3c6
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1749371041534
+status: 3
+tags: []
+user_id: kennethmwandingi

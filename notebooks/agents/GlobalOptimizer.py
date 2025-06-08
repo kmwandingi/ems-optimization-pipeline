@@ -60,10 +60,9 @@ def _evaluate_costs_for_day(
         else:
             opt_schedule = getattr(dev, 'optimized_consumption', None)
         
-        # Fallback to original if no optimized schedule
+        # No fallback allowed - raise error if no optimized schedule
         if opt_schedule is None:
-            opt_schedule = dev.original_consumption
-            print(f"WARNING: No {tag} schedule for {dev.device_name}, using original")
+            raise ValueError(f"Device {dev.device_name} has no {tag} schedule. Agent optimization must be run correctly.")
         
         # Ensure arrays are the right length
         orig_len = min(len(dev.original_consumption), len(price_vec))
@@ -1017,11 +1016,17 @@ class GlobalOptimizer:
                                 self.battery_agent.soc_history.append(final_soc)
                                 self.battery_agent._last_updated_day = day_val
                             
-                            # Populate hourly arrays for battery
-                            for t in range(n_hours):
-                                self.battery_agent.hourly_charge[t] = charge[t].varValue if hasattr(charge[t], 'varValue') and charge[t].varValue is not None else 0.0
-                                self.battery_agent.hourly_discharge[t] = discharge[t].varValue if hasattr(discharge[t], 'varValue') and discharge[t].varValue is not None else 0.0
-                                self.battery_agent.hourly_soc[t] = soc[t].varValue if hasattr(soc[t], 'varValue') and soc[t].varValue is not None else self.battery_agent.current_soc
+                            # Populate hourly arrays for battery (ensure 24-hour arrays)
+                            for t in range(24):
+                                if t < n_hours:
+                                    self.battery_agent.hourly_charge[t] = charge[t].varValue if hasattr(charge[t], 'varValue') and charge[t].varValue is not None else 0.0
+                                    self.battery_agent.hourly_discharge[t] = discharge[t].varValue if hasattr(discharge[t], 'varValue') and discharge[t].varValue is not None else 0.0
+                                    self.battery_agent.hourly_soc[t] = soc[t].varValue if hasattr(soc[t], 'varValue') and soc[t].varValue is not None else self.battery_agent.current_soc
+                                else:
+                                    # Pad remaining hours with zeros for charge/discharge, maintain last SOC
+                                    self.battery_agent.hourly_charge[t] = 0.0
+                                    self.battery_agent.hourly_discharge[t] = 0.0
+                                    self.battery_agent.hourly_soc[t] = self.battery_agent.hourly_soc[t-1] if t > 0 else self.battery_agent.current_soc
                             
                             print(f"  Updated battery agent: SOC={final_soc:.2f}, day charge={day_charge:.2f}, day discharge={day_discharge:.2f}")
                     
@@ -1059,11 +1064,17 @@ class GlobalOptimizer:
                         day_discharge = sum(ev_discharge[t].varValue or 0 for t in range(n_hours))
                         day_throughput = day_charge + day_discharge
                         
-                        # Populate hourly arrays for EV
-                        for t in range(n_hours):
-                            self.ev_agent.hourly_charge[t] = ev_charge[t].varValue if hasattr(ev_charge[t], 'varValue') and ev_charge[t].varValue is not None else 0.0
-                            self.ev_agent.hourly_discharge[t] = ev_discharge[t].varValue if hasattr(ev_discharge[t], 'varValue') and ev_discharge[t].varValue is not None else 0.0
-                            self.ev_agent.hourly_soc[t] = ev_soc[t].varValue if hasattr(ev_soc[t], 'varValue') and ev_soc[t].varValue is not None else self.ev_agent.current_soc
+                        # Populate hourly arrays for EV (ensure 24-hour arrays)
+                        for t in range(24):
+                            if t < n_hours:
+                                self.ev_agent.hourly_charge[t] = ev_charge[t].varValue if hasattr(ev_charge[t], 'varValue') and ev_charge[t].varValue is not None else 0.0
+                                self.ev_agent.hourly_discharge[t] = ev_discharge[t].varValue if hasattr(ev_discharge[t], 'varValue') and ev_discharge[t].varValue is not None else 0.0
+                                self.ev_agent.hourly_soc[t] = ev_soc[t].varValue if hasattr(ev_soc[t], 'varValue') and ev_soc[t].varValue is not None else self.ev_agent.current_soc
+                            else:
+                                # Pad remaining hours with zeros for charge/discharge, maintain last SOC
+                                self.ev_agent.hourly_charge[t] = 0.0
+                                self.ev_agent.hourly_discharge[t] = 0.0
+                                self.ev_agent.hourly_soc[t] = self.ev_agent.hourly_soc[t-1] if t > 0 else self.ev_agent.current_soc
                         
                         # Update EV cycle count if attribute exists
                         if hasattr(self.ev_agent, 'cycle_count'):
@@ -1642,12 +1653,17 @@ class GlobalOptimizer:
             ch_vals = [charge[t].varValue for t in hours]
             dis_vals= [discharge[t].varValue for t in hours]
             
-            # Populate hourly arrays for battery (for visualization)
-            for t in range(len(hours)):
-                if t < len(battery_agent.hourly_charge):
+            # Populate hourly arrays for battery (ensure 24-hour arrays)
+            for t in range(24):
+                if t < len(hours) and t < len(ch_vals):
                     battery_agent.hourly_charge[t] = ch_vals[t] if ch_vals[t] is not None else 0.0
                     battery_agent.hourly_discharge[t] = dis_vals[t] if dis_vals[t] is not None else 0.0
                     battery_agent.hourly_soc[t] = soc_vals[t] if soc_vals[t] is not None else battery_agent.current_soc
+                else:
+                    # Pad remaining hours with zeros for charge/discharge, maintain last SOC
+                    battery_agent.hourly_charge[t] = 0.0
+                    battery_agent.hourly_discharge[t] = 0.0
+                    battery_agent.hourly_soc[t] = battery_agent.hourly_soc[t-1] if t > 0 else battery_agent.current_soc
             
             # Update battery history
             final_soc = soc_vals[-1]
@@ -1668,12 +1684,17 @@ class GlobalOptimizer:
             ev_ch_vals = [ev_charge[t].varValue for t in hours] 
             ev_dis_vals = [ev_discharge[t].varValue for t in hours]
             
-            # Populate hourly arrays for EV (for visualization and cost calculation)
-            for t in range(len(hours)):
-                if t < len(ev_agent.hourly_charge):
+            # Populate hourly arrays for EV (ensure 24-hour arrays)
+            for t in range(24):
+                if t < len(hours) and t < len(ev_ch_vals):
                     ev_agent.hourly_charge[t] = ev_ch_vals[t] if ev_ch_vals[t] is not None else 0.0
                     ev_agent.hourly_discharge[t] = ev_dis_vals[t] if ev_dis_vals[t] is not None else 0.0
                     ev_agent.hourly_soc[t] = ev_soc_vals[t] if ev_soc_vals[t] is not None else ev_agent.current_soc
+                else:
+                    # Pad remaining hours with zeros for charge/discharge, maintain last SOC
+                    ev_agent.hourly_charge[t] = 0.0
+                    ev_agent.hourly_discharge[t] = 0.0
+                    ev_agent.hourly_soc[t] = ev_agent.hourly_soc[t-1] if t > 0 else ev_agent.current_soc
             
             # Update EV history
             final_soc = ev_soc_vals[-1]
