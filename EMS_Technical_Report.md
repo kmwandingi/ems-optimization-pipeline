@@ -1038,19 +1038,30 @@ models/
 - Resource utilization
 - Data drift detection
 
-**Example API Endpoint:**
-```http
-POST /predict
-Content-Type: application/json
+**Azure ML Endpoint Examples:**
 
+1. Learning Mode:
+```json
 {
-  "device_type": "washing_machine",
-  "features": {
-    "hour": 18,
-    "day_of_week": 2,
-    "temperature": 22.5,
-    "is_holiday": false
-  }
+  "mode": "learn",
+  "building_id": "DE_KN_residential3",
+  "actual_usage": {
+    "DE_KN_residential3_washing_machine": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "DE_KN_residential3_dishwasher": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0]
+  },
+  "date": "2025-06-08"
+}
+```
+
+2. Optimization Mode:
+```json
+{
+  "mode": "optimize",
+  "building_id": "DE_KN_residential3",
+  "target_date": "2025-06-08",
+  "price_profile": [0.22, 0.21, 0.20, 0.22, 0.24, 0.26, 0.28, 0.32, 0.36, 0.34, 0.32, 0.30, 0.28, 0.26, 0.27, 0.29, 0.32, 0.36, 0.38, 0.36, 0.34, 0.30, 0.26, 0.24],
+  "battery_enabled": true,
+  "ev_enabled": false
 }
 ```
 
@@ -1262,12 +1273,10 @@ Each scenario was evaluated over multiple time periods to account for seasonal v
 
 #### Test Buildings and Data
 
-For our evaluation, we used data from four different buildings:
+For our evaluation, we used data from several buildings, with all datasets exclusively located in the project's `notebooks/data` folder:
 
-1. **Building 1**: UK-DALE House 1 (highly flexible devices, no PV/battery)
-2. **Building 2**: UK-DALE House 2 (mix of flexible/continuous devices, with PV)
-3. **Building 3**: CoSSMic Building (all device types, with PV and battery)
-4. **Building 4**: DE Dataset (commercial building, with PV and battery)
+1. **Industrial Building**: DE_KN_industrial3 (commercial building with various device types)
+2. **Residential Buildings**: Six different residential datasets (DE_KN_residential1 through DE_KN_residential6) with various configurations of flexible devices, PV systems, and batteries
 
 Each building dataset included hourly electricity consumption data at the device level, along with price data reflecting dynamic pricing schemes.
 
