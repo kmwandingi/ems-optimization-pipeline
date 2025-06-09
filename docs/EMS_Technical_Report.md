@@ -162,48 +162,48 @@ We identified that the "energy efficiency gap"—where households consume energy
 
 ### 2.3 Goal Specification and Added Value
 
-### Project Goal
+#### 2.3.1 Project Goal
 
 Develop an integrated optimization engine that optimizes building energy consumption by dynamically scheduling flexible loads under dynamic pricing signals, while accounting for optional DERs such as PV generation and battery storage.
 
-### Sub-Goals and Objectives
+#### 2.3.2 Sub-Goals and Objectives
 
-#### Framework & Infrastructure Selection
+##### Framework & Infrastructure Selection
 - Create a system architecture that integrates data ingestion, secure communications, and user interfaces, ensuring that the platform is both scalable and extensible
 - Choose an open, extensible platform (e.g., Home Assistant, OpenHAB, or VOLTTRON) that supports IoT device integration, real-time monitoring, and user interaction
 - Ensure that the optimization engine is designed for seamless integration into the chosen platform—whether it is stakeholder-owned or open source—so that it can be flexibly embedded within existing or future infrastructure. This integration capability is essential for practical deployment and long-term extensibility.
 
-#### Implement a Multi-Phase Optimization Engine
+##### Implement a Multi-Phase Optimization Engine
 Build an optimization engine that includes:
 - Finding probabilistic device usage patterns based on historical user behavior
 - Next-day scheduling using updated tariff and usage probability data
 - Adapting schedules dynamically based on actual user behavior, continuously refining probabilistic models to improve comfort and efficiency
 
-#### Pilot & Testing
+##### Pilot & Testing
 - Demonstrate feasibility via simulated data or partial real deployments, evaluating cost savings, occupant comfort, and potential expansions to multi-home or microgrid scenarios
 
-#### Prepare for Future Contexts
+##### Prepare for Future Contexts
 - Prototype the EMS in the dynamic pricing environment of the Netherlands while designing it for future adaptation to the Curaçao context, where pricing may evolve from monthly to more granular intervals
 
-### Added Value for Stakeholders
+#### 2.3.3 Added Value for Stakeholders
 
-#### For Utilities and Grid Operators
+##### For Utilities and Grid Operators
 - The EMS can facilitate peak shaving - by proxy of adherence to day-ahead prices - and reduce grid congestion, easing the burden on the local grid
 
-#### For End-Users
+##### For End-Users
 - It offers cost savings by automatically shifting energy use to cheaper periods and helps prevent energy poverty by maintaining consumption within affordable limits
 
-#### For Ilustre Lab and Partners (JADS, LaNubia Consulting, ROBUST)
+##### For Ilustre Lab and Partners (JADS, LaNubia Consulting, ROBUST)
 - It serves as a testbed for AI-driven energy optimization, forming a foundational platform that can be extended to other domains (e.g., water management) and deployed in diverse environments—from the Netherlands to Curaçao
 
-#### For Future Expansion
+##### For Future Expansion
 - The design supports scalability, ensuring that the system can adapt as more smart infrastructure (e.g., smart meters and dynamic pricing) becomes available, particularly in emerging markets like Curaçao
 
 ### 2.4 Literature Review
 
 The development of our Energy Management System builds upon several key research areas, including home energy management systems (HEMS), probabilistic optimization under uncertainty, and machine learning for energy usage prediction. This section provides a critical analysis of relevant literature that informed our technical approach.
 
-### Home Energy Management Systems
+#### Home Energy Management Systems
 
 The field of home energy management has evolved significantly over the past decade. Shareef et al. (2018) presented a review of HEMS technologies, highlighting the importance of integrating IoT devices with optimization algorithms to achieve effective energy management. Their work emphasized that while rule-based systems were common, they often failed to adapt to changing user behaviors and dynamic pricing environments.
 
@@ -213,7 +213,7 @@ Vrettos et al. (2013) demonstrated the value of small-scale batteries and flexib
 
 Setlhaolo et al. (2014) specifically tackled the problem of household appliance scheduling for demand response using MILP formulations. While effective for deterministic scenarios, their approach lacked mechanisms to handle user preference uncertainty—a gap our system specifically addresses through probabilistic modeling.
 
-### Probabilistic Optimization and Uncertainty Handling
+#### Probabilistic Optimization and Uncertainty Handling
 
 Among various approaches in the literature, Antunes et al. (2022) explored probabilistic and scenario-based optimization for home energy management under user behavior uncertainty. Their approach of modeling user behavior as probability distributions rather than deterministic patterns provided useful insights for our methodology. However, their system relied on pre-defined distributions rather than learning them from historical data.
 
@@ -221,7 +221,7 @@ Kanakadhurga & Prabaharan (2024) presented a scenario-based robust MILP approach
 
 Li et al. (2024) explored data-driven approaches for battery management in residential energy systems, comparing model predictive control with reinforcement learning methods. Their work validated the importance of adaptability in battery management strategies, which we incorporate into our battery agent implementation.
 
-### Machine Learning for Energy Prediction and Optimization
+#### Machine Learning for Energy Prediction and Optimization
 
 Recent advancements in applying machine learning to energy forecasting have shown promising results. Neumann & Hahn (2024) demonstrated the effectiveness of deep learning techniques for short-term energy forecasting in smart homes. While their work focused on aggregate consumption forecasting, we extend similar concepts to device-level usage prediction.
 
@@ -231,7 +231,7 @@ Wei et al. (2020) presented a MILP-based optimal power management system for res
 
 Blanc-Rouchosse et al. (2019) explored multi-agent coordination for demand response using smart IoT devices, proposing an architecture that influenced our agent-based system design. However, their coordination approach relied on centralized control, whereas our system balances centralized optimization with decentralized device-specific logic.
 
-### Areas for Further Advancement in Existing Research
+#### Areas for Further Advancement in Existing Research
 
 While previous works (such as those by Antunes et al., 2022; Bradac et al., 2014; Gerards et al., 2015) have made significant progress in MILP-based energy management and whole-building optimization, our literature review identified several areas where further advancements could be beneficial:
 
@@ -407,13 +407,13 @@ Key motivations include:
 
 The result is a modular, interpretable, and adaptive architecture that accommodates real-world deployment needs while remaining grounded in optimization and control theory best practices.Z
 
-### 3.3.4 Integration Patterns
+### 3.3.5 Integration Patterns
 
 1. **API Gateway**: Provides REST API endpoints for external system integration
 2. **Message Broker**: Handles asynchronous communication between components
 3. **Authentication Service**: Manages security and access control
 
-#### User Interface Layer Components
+#### 3.3.6 User Interface Layer Components
 
 1. **Web Dashboard**: Visual interface for monitoring and configuration
 2. **Mobile App**: Provides user access via mobile devices
@@ -587,94 +587,131 @@ The EMS generates hourly probability distributions for device usage through a st
 
 This approach ensures that valid hourly probability distributions are always available for the optimization process, even in edge cases or when dealing with new devices.
 
-#### Continuous Learning with Adaptive PMFs
+### 3.4.3 Continuous Learning with Adaptive PMFs
 
-Beyond the initial model training, our system implements a continuous learning mechanism that updates device usage probabilities as new data becomes available. This is implemented in the `ProbabilityModelAgent` class, which maintains and updates PMFs for each device.
+The `ProbabilityModelAgent` class implements a continuous learning mechanism that updates device usage probability mass functions (PMFs) based on daily observed usage. This enables the system to align its scheduling logic with evolving user behavior over time.
 
-The adaptive PMF approach uses a Bayesian-inspired update mechanism with several key features:
+The learning approach is inspired by Bayesian updating but incorporates several safeguards to maintain robustness and convergence stability. Rather than replacing distributions outright, each update incrementally adjusts the prior based on new evidence—using adaptive, capped learning to balance sensitivity and noise resistance.
 
-1. **Adaptive Learning Rate**: The learning rate decreases as more observations are collected, but increases when the system detects significant changes in usage patterns
+The update logic consists of the following steps:
 
-2. **Update Capping**: Updates are capped to prevent single observations from drastically changing the probability distribution
+1. **Initialization**  
+   - For devices without prior data, the PMF is initialized using knowledge transferred from similar device types.  
+   - Separate priors are maintained for weekdays and weekends to capture behavior variation.
 
-3. **Jensen-Shannon Divergence Tracking**: The system tracks the divergence between successive probability distributions to monitor convergence and detect pattern changes
+2. **Update Triggering and Management**  
+   - Updates occur once per device per day unless explicitly configured otherwise.  
+   - Each update is tagged with metadata (e.g., timestamp, previous entropy, device class) to support traceability.
 
-4. **Weekend/Weekday Differentiation**: Different probability distributions are maintained for weekdays and weekends
+3. **Adaptive Learning Rate Calculation**  
+   - The learning rate is computed dynamically, based on:
+     - Total number of past updates for that device
+     - Time since last update
+     - Divergence between previous and current distributions
+     - Entropy stability over time  
+   - Learning rates decay with more observations but increase temporarily if recent behavior deviates significantly.
 
-**Probability Model Update Process:**
+4. **Guided Update and Capping**  
+   - The system boosts the probability at the **observed usage hour**, while proportionally decreasing other values.  
+   - To prevent instability, update magnitudes are capped:
+     - Max update size is proportional to the adaptive learning rate.
+     - All updates are clipped to ensure non-negativity.
 
-The system updates device probability distributions through a Bayesian-inspired approach that balances responsiveness with stability:
+5. **Normalization and Validity Enforcement**  
+   - After applying updates, the entire PMF is normalized to ensure that the distribution sums to 1.0.  
+   - This step guarantees numerical validity and interpretability as a true PMF.
 
-1. **Initialization Handling**: When updating a device for the first time, the system initializes its probability distribution using prior knowledge from similar devices, establishing a starting point for learning
+6. **Convergence Monitoring**  
+   - After each update, three diagnostics are computed:
+     - **Jensen-Shannon Divergence** from the previous PMF
+     - **Incremental delta** between updates
+     - **Entropy trend** to track distribution spread  
+   - These metrics allow the system to detect both convergence and drift, enabling proactive behavior correction.
 
-2. **Update Management**: The system implements safeguards against redundant updates, such as preventing multiple updates for the same device on the same day when specified
+7. **Historical Logging**  
+   - All updates are recorded with full metadata (previous PMF, update delta, divergence, timestamp), enabling:
+     - Post-hoc debugging
+     - Visualization of long-term learning trajectories
+     - Drift detection for model retraining alerts
 
-3. **Adaptive Learning Rate**: Rather than using a fixed learning rate, the system calculates an adaptive rate based on:
-   - The number of observations collected so far
-   - The day type (weekday vs. weekend)
-   - The stability of recent probability distributions
-   - The time elapsed since previous updates
+#### Adaptive Learning Rate & Update Rule
 
-4. **Bounded Update Mechanism**: To prevent excessive changes from single observations:
-   - Updates are capped proportionally to the calculated learning rate
-   - Caps are adjusted based on the number of updates received on a given day
-   - All probability values are constrained to remain non-negative
+The EMS employs a **nonlinear, feedback-driven update rule** with the following properties:
 
-5. **Target-Based Adjustment**: For the observed usage hour, the probability is increased while probabilities for other hours are decreased, creating a guided learning approach
+- **Learning Rate Calculation**:  
+  \[
+  lr = \frac{1}{n + \tau}
+  \]  
+  where:
+  - \( n \) = total observations  
+  - \( \tau \) = time constant  
+  - Dynamically adjusted using JS divergence trends and entropy drift
 
-6. **Distribution Normalization**: After updates, the distribution is normalized to ensure it remains a valid probability mass function with values summing to 1.0
+- **Update Rule**:  
+  \[
+  \Delta_h = lr \cdot (target_h - p_{old,h})
+  \]  
+  - Updates are capped:  
+    \[
+    \Delta_h = \text{clip}(\Delta_h, -cap, +cap)
+    \]  
+  - All values are clamped to non-negative and renormalized
 
-7. **Convergence Tracking**: The system monitors learning progress by calculating:
-   - Jensen-Shannon divergence from the initial distribution
-   - Incremental changes between successive distributions
-   - Entropy measures to assess the concentration of probabilities
+---
 
-8. **Comprehensive Record Keeping**: Each update is logged with detailed metadata, creating a historical record that enables analysis of learning progression and potential drift detection
+#### Diagnostic Metrics for Convergence
 
-This update process ensures that device probability models continuously improve while remaining robust to outliers and noise in the observed data.
+The system continuously audits model learning with robust convergence diagnostics:
 
-This continuous learning approach allows the system to adapt to changing user behaviors over time, ensuring that the optimization remains aligned with actual usage patterns even as these patterns evolve.
+- **Jensen-Shannon Divergence**  
+  Quantifies similarity between successive PMFs
 
-#### MLflow Model Tracking and Deployment
+- **Entropy Evolution**  
+  Tracks confidence in predictions (high entropy = uncertain model)
 
-To ensure reproducibility and facilitate deployment, all models are tracked using MLflow. This allows us to version models, compare different training runs, and deploy the best-performing models to production.
+- **Top-N Shift Monitoring**  
+  Logs how frequently the most likely hour shifts—a proxy for drift
 
-**Model Logging and Registration Process:**
+These metrics allow for dynamic model stabilization and drift detection. For example, rising divergence triggers a temporary spike in learning rate, encouraging faster adaptation.
 
-The system implements a comprehensive approach to model tracking and registration:
+---
 
-1. **Experiment Organization**:
-   - Each training run is organized within MLflow's experiment tracking system
-   - Device-specific naming conventions ensure clear categorization of model runs
-   - This systematic approach enables easy filtering and comparison across different device types
+#### Historical Logging & Auditability
 
-2. **Parameter Documentation**:
-   - Critical model parameters are automatically logged to ensure reproducibility
-   - Device type and model architecture information is preserved for future reference
-   - This metadata enables proper contextualization of model performance
+Each update is archived with:
 
-3. **Performance Metrics Tracking**:
-   - All relevant performance metrics are systematically recorded
-   - Metrics typically include AUC, precision, recall, and other classification metrics
-   - This comprehensive tracking enables performance comparison across model iterations
+- **Pre- and post-update PMFs**
+- **Delta vectors**
+- **Timestamps and entropy values**
+- **Device ID and day type (weekday/weekend)**
 
-4. **Dual Model Registration**:
-   - Both daily and hourly models are registered in the central model registry
-   - Standardized naming conventions combine device type with model purpose
-   - Proper artifact organization ensures all model files are correctly preserved
-   - This structured approach facilitates streamlined deployment and version control
+This enables:
 
-This integration with MLflow provides several benefits:
+- Debugging of model behavior
+- Longitudinal visualization of usage pattern evolution
+- Automated retraining flags in case of distribution instability
 
-1. **Model Versioning**: Each training run creates a new version of the model, allowing us to track changes over time
-2. **Performance Comparison**: Metrics from different training runs can be easily compared to identify the best-performing models
-3. **Artifact Management**: Model files, along with associated metadata, are stored in a centralized location
-4. **Deployment Automation**: Registered models can be easily deployed to production environments
-5. **Reproducibility**: All parameters and data used for training are tracked, ensuring reproducibility
+---
 
-The PMFs generated by these models serve as a key input to the MILP optimization process, guiding the scheduling of devices to periods when they are most likely to be used while also considering electricity prices and other constraints.
+#### Rolling Horizon Integration
 
-### 3.4.3 Mixed-Integer Linear Programming (MILP) Optimization
+The entire pipeline operates in a **rolling horizon framework**, where yesterday’s observations inform today’s model, and today’s model informs tomorrow’s schedule. This allows the EMS to:
+
+- Remain **responsive** to evolving usage patterns  
+- Preserve **stability** under normal conditions  
+- Ensure **continuity** of device preferences across days  
+- Improve **schedule effectiveness** over time
+
+---
+
+
+The `ProbabilityModelAgent` and its learning pipeline form the **adaptive backbone** of the EMS, enabling it to function as a **living system**—one that continually learns from its environment, adapts its models, and improves its recommendations.
+
+This adaptive PMF framework allows each device’s probability model to evolve with observed usage while remaining stable, interpretable, and production-ready. The combination of entropy metrics, capped learning, and historical auditing ensures that learning is neither overfitted to recent noise nor oblivious to long-term changes.
+
+As a result, the EMS continuously aligns optimization schedules with actual user behavior, supporting personalized, data-driven demand-side management at scale.
+
+### 3.4.4 Mixed-Integer Linear Programming (MILP) Optimization
 
 At the core of our Energy Management System is a Mixed-Integer Linear Programming (MILP) optimization framework that schedules device operations, battery charging/discharging, and PV utilization to minimize electricity costs while respecting both technical constraints and user preferences. The integration of probabilistic device usage patterns as soft constraints within the MILP formulation is central to our approach.
 
@@ -772,11 +809,16 @@ The objective function has three main components:
    - Grid connection capacity
    - User preference probabilities
 
-5. **Battery Management**:
-   - State of charge (SOC) limits
-   - Charge/discharge rate constraints
-   - Efficiency considerations
-   - Ramp rate limits for power changes
+5. **Battery Operation Model**
+
+The battery operation model optimizes charging and discharging decisions to maximize economic value through price arbitrage and PV self-consumption. Key components include:
+
+- State of charge (SOC) tracking across time periods
+- Charging/discharging power limits and efficiency factors
+- Degradation cost modeling for lifecycle optimization
+- Grid export limitation and PV utilization maximization
+
+The model ensures battery operations complement device scheduling decisions while maintaining system reliability.
 
 A detailed mathematical formulation of the MILP model, including all variables, parameters, and constraints, is provided in Appendix A.
 
@@ -837,7 +879,7 @@ The system dynamically updates device operational constraints based on the lates
 
 This mechanism ensures that the optimization respects user preferences while still finding cost-effective schedules. The balance between cost minimization and preference satisfaction can be adjusted through the weighting parameter `w_prob`.
 
-### 3.4.4 Uncertainty Handling and Robust Optimization
+### 3.4.5 Uncertainty Handling and Robust Optimization
 
 In real-world energy systems, uncertainty is unavoidable and occurs in multiple forms. Rather than ignoring these uncertainties or making simplistic assumptions, our system explicitly accounts for them through robust optimization techniques that create resilient schedules capable of performing well across a range of possible future conditions.
 
@@ -899,138 +941,46 @@ Our system implements a two-stage decision process that combines day-ahead optim
 
 This approach balances forward-looking optimization with adaptive learning, allowing the system to gradually align its scheduling decisions with the household's evolving usage patterns.
 
-### 3.3.5 Continuous Learning Pipeline
+#### MLflow Model Tracking and Deployment
 
-A key innovation in our EMS is the continuous learning pipeline that allows the system to improve over time as it observes actual device usage patterns. Unlike traditional systems that maintain static models, our approach implements a closed-loop learning mechanism that constantly adapts to changing user behaviors, seasonal variations, and other pattern shifts.
+To ensure reproducibility and facilitate deployment, all models are tracked using MLflow. This allows us to version models, compare different training runs, and deploy the best-performing models to production.
 
-#### Pipeline Architecture
+**Model Logging and Registration Process:**
 
-The continuous learning pipeline operates as an intelligent feedback loop with five interconnected components:
+The system implements a comprehensive approach to model tracking and registration:
 
-1. **Historical Data Processing**: Initially analyzes historical energy consumption data to establish baseline probability models for each device. This step identifies preliminary patterns such as typical washing machine usage on weekends or dishwasher operation in evenings.
+1. **Experiment Organization**:
+   - Each training run is organized within MLflow's experiment tracking system
+   - Device-specific naming conventions ensure clear categorization of model runs
+   - This systematic approach enables easy filtering and comparison across different device types
 
-2. **Daily Schedule Generation**: Creates optimized device schedules by integrating current probability models with price forecasts, PV generation predictions, and system constraints. These schedules balance cost minimization with user preferences.
+2. **Parameter Documentation**:
+   - Critical model parameters are automatically logged to ensure reproducibility
+   - Device type and model architecture information is preserved for future reference
+   - This metadata enables proper contextualization of model performance
 
-3. **Execution Monitoring**: Continuously tracks the actual operation of devices throughout the day, recording when users actually run their appliances compared to the optimized schedule.
+3. **Performance Metrics Tracking**:
+   - All relevant performance metrics are systematically recorded
+   - Metrics typically include AUC, precision, recall, and other classification metrics
+   - This comprehensive tracking enables performance comparison across model iterations
 
-4. **Model Updating**: Applies a Bayesian-inspired updating mechanism that gradually adjusts probability distributions based on observed usage. This step incorporates new observations while maintaining stability in the overall model.
+4. **Dual Model Registration**:
+   - Both daily and hourly models are registered in the central model registry
+   - Standardized naming conventions combine device type with model purpose
+   - Proper artifact organization ensures all model files are correctly preserved
+   - This structured approach facilitates streamlined deployment and version control
 
-5. **Performance Evaluation**: Systematically assesses both prediction accuracy and schedule effectiveness, measuring metrics like cost savings, user satisfaction, and learning convergence rates.
+This integration with MLflow provides several benefits:
 
-This entire cycle repeats daily, with each iteration refining the system's understanding of user behavior patterns. As the system learns, its scheduling recommendations become increasingly aligned with actual usage patterns, leading to higher user satisfaction and improved energy cost savings over time.
+1. **Model Versioning**: Each training run creates a new version of the model, allowing us to track changes over time
+2. **Performance Comparison**: Metrics from different training runs can be easily compared to identify the best-performing models
+3. **Artifact Management**: Model files, along with associated metadata, are stored in a centralized location
+4. **Deployment Automation**: Registered models can be easily deployed to production environments
+5. **Reproducibility**: All parameters and data used for training are tracked, ensuring reproducibility
 
-                                                +---------------------+     +---------------------+     +---------------------+
-                                                |  MILP Formulation   |     | Continuous Learning |     |  Uncertainty       |
-                                                |---------------------|     |      Pipeline      |     |  Handling          |
-                                                | • Objective:        |<----| • Historical Data  |     | • User Behavior    |
-                                                |   - Min Energy Cost |     | • Probability Mod. |---->|   PMF              |
-                                                |   - Max User Pref   |     | • Schedule Gen     |     | • PV Error Models  |
-                                                | • Variables:        |<----| • Usage Monitoring |     | • Multi-scenario   |
-                                                |   - Device State    |     | • Model Updating   |<----|   Optimization    |
-                                                |   - Battery Ops     |     +---------------------+     +---------------------+
-                                                |   - Grid I/O        |               ^
-                                                | • Constraints:      |               |
-                                                |   - Power Balance   |               v
-                                                |   - Device Limits   |     +---------------------+
-                                                |   - Battery SOC     |     |  Daily Execution   |
-                                                |   - Grid Capacity   |<----|  & Monitoring      |
-                                                +---------------------+     +---------------------+
+The PMFs generated by these models serve as a key input to the MILP optimization process, guiding the scheduling of devices to periods when they are most likely to be used while also considering electricity prices and other constraints.
 
-#### Rolling Horizon Implementation
-
-Our implementation uses a rolling horizon approach, where each day the system:
-
-**Daily Processing Cycle:**
-
-1. **Observation and Data Collection**: The system observes and records the actual device usage from the previous day
-
-2. **Model Updating**: The probability models are updated based on these new observations, incorporating the latest usage patterns
-
-3. **Schedule Generation**: New schedules are generated for the upcoming day using the freshly updated models
-
-**Schedule Generation Process:**
-
-1. **Optimization**: For each new day, the system runs a complete building optimization that considers all device types, battery state, and current forecasts
-
-2. **Schedule Recording**: Once optimization is complete, the system creates a structured record of all schedules including:
-   - Device-specific operation times organized by device name
-   - Battery charging/discharging profiles 
-   - End-of-day battery state of charge for continuity
-   - This structured data is preserved for both execution and analysis purposes
-
-The system maintains a schedule record for each day and continuously updates the probability models based on observed usage patterns. When actual usage data becomes available, the system processes this information through the following steps:
-
-1. **Data Extraction**: The system isolates the relevant day's actual usage data from the overall dataset
-
-2. **Contextual Training**: The probability model is updated using this isolated data, maintaining the context of the specific building and all relevant system parameters
-
-3. **Parameter Consistency**: Throughout the update process, the system ensures that all critical parameters (battery specifications, flexible device constraints, grid parameters, and PV system characteristics) remain consistent
-
-This continuous learning approach allows the system to adapt to changing usage patterns while maintaining system stability and performance.
-
-#### Adaptive Probability Model Updating
-
-The system employs an adaptive learning rate mechanism to update device usage probabilities based on observed patterns. This approach balances the need to learn from new observations while maintaining stability in the learned distributions.
-
-**Update Process:**
-
-1. **Learning Rate Adaptation**:
-   - Implements a time-decaying learning rate: $lr = \frac{1}{n + \tau}$ where $n$ is the observation count and $\tau$ is a time constant
-   - Applies a burn-in period with a fixed learning rate for initial training
-   - Adjusts learning rates based on recent distribution changes using Jensen-Shannon divergence
-
-2. **Update Rule**:
-   - For each observed usage hour $h$:
-     - Calculate delta: $\Delta_h = lr \cdot (target_h - p_{old,h})$
-     - Apply capping: $\Delta_h = clip(\Delta_h, -cap, +cap)$
-     - Update: $p_{new,h} = max(0, p_{old,h} + \Delta_h)$
-   - Renormalize to ensure valid probability distribution
-
-3. **Update Capping**:
-   - Implements per-day update limits to prevent overfitting
-   - Caps the maximum change from a single observation
-   - Scales the cap based on the current learning rate
-
-**Convergence Monitoring:**
-
-The system tracks several metrics to monitor learning progress and model stability:
-
-1. **Distribution Metrics**:
-   - Jensen-Shannon divergence between successive updates
-   - Entropy of the probability distribution
-   - Maximum probability value (confidence in most likely hour)
-
-2. **Implementation Details**:
-   - Normalizes probability distributions before comparison
-   - Maintains historical records of all updates
-   - Tracks both immediate and long-term trends
-
-3. **Key Indicators**:
-   - Decreasing divergence suggests model stabilization
-   - High entropy indicates uncertainty in usage patterns
-   - Shifts in top probable hours may indicate changing user behavior
-
-**Technical Implementation:**
-
-The convergence monitoring process includes:
-
-1. **Data Preparation**:
-   - Converts probability distributions to normalized arrays
-   - Handles edge cases (zero probabilities, missing values)
-
-2. **Divergence Calculations**:
-   - Jensen-Shannon divergence for symmetric distribution comparison
-   - Kullback-Leibler divergence for information gain analysis
-   - Custom metrics for tracking specific aspects of distribution changes
-
-3. **Performance Tracking**:
-   - Records top-N probable hours for pattern analysis
-   - Tracks evolution of distribution characteristics over time
-   - Maintains update history for debugging
-
-This adaptive approach provides a robust mechanism for learning device usage patterns while maintaining system stability and preventing overfitting to recent observations.
-
-### 3.3.6 MLflow Integration
+### 3.4.6 MLflow Integration
 
 MLflow is integrated throughout our system to ensure reproducibility, model versioning, and streamlined deployment. This section outlines our approach to model tracking, registry management, and serving.
 
@@ -1136,236 +1086,167 @@ models/
   "ev_enabled": false
 }
 ```
-### 3.4 Mathematical Formulation
-
-This section presents the mathematical foundations of the Energy Management System optimization framework, detailing the MILP formulation that integrates probabilistic device usage patterns with traditional energy management constraints.
-
-### 3.4.1 Device Optimization Model
-
-The core device optimization model schedules flexible loads to minimize energy costs while respecting operational constraints. For each schedulable device d and time period t, the optimization determines:
-
-- Binary variables indicating device operation periods
-- Continuous variables for power consumption levels  
-- Constraint satisfaction for user preference probabilities
-- Integration with electricity pricing signals
-
-The model incorporates learned probability mass functions (PMFs) as soft constraints, allowing deviations from predicted usage patterns when cost benefits justify the trade-off.
-
-### 3.4.2 Battery Operation Model
-
-The battery operation model optimizes charging and discharging decisions to maximize economic value through price arbitrage and PV self-consumption. Key components include:
-
-- State of charge (SOC) tracking across time periods
-- Charging/discharging power limits and efficiency factors
-- Degradation cost modeling for lifecycle optimization
-- Grid export limitation and PV utilization maximization
-
-The model ensures battery operations complement device scheduling decisions while maintaining system reliability.
-
-### 3.4.3 Global Building Constraints
-
-System-wide constraints ensure feasible and reliable operation across all building components:
-
-- Energy balance equations maintaining supply-demand equilibrium
-- Grid import/export limitations based on connection capacity
-- PV generation integration and curtailment minimization  
-- Peak demand management and load factor optimization
-
-These constraints coordinate individual device decisions within overall building energy limits.
-
-### 3.4.4 Probabilistic Constraint Formulation
-
-The integration of machine-learned usage patterns into the MILP framework utilizes:
-
-- Soft constraint formulations with penalty terms for preference violations
-- Scenario-based uncertainty modeling for robust optimization
-- Adaptive constraint tightening based on confidence levels
-- Multi-objective optimization balancing cost and user satisfaction
-
-This probabilistic framework enables the system to learn and adapt to user behaviors while maintaining optimization effectiveness.
-
-*(Detailed mathematical expressions and constraint formulations are provided in Appendix B)*
 
 ### 3.5 Implementation Details
 
-### 3.5.1 Data Pipeline
+#### 3.5.1 Data Pipelines (A–D)
 
-The system implements four distinct pipelines:
+The EMS implements four distinct pipelines, each designed to fulfill a specific task within the overall workflow:
 
 1. **Pipeline A: Comparison Optimization**
-   - Purpose: Compare optimization approaches using `GlobalOptimizer.optimize_phases_centralized()`
-   - Data Access: DuckDB-only via `common.get_con()`
-   - Status: Production-ready with phases optimization
+   - **Purpose**: To compare different optimization approaches and determine the most effective method.
+   - **Data Access**: Uses DuckDB exclusively via `common.get_con()` for zero-copy data processing.
+   - **Status**: Production-ready with phased optimization for performance benchmarking.
 
 2. **Pipeline B: Integrated Learning**
-   - Purpose: Full learning-to-optimization workflow
-   - Agent Flow: `ProbabilityModelAgent.train()` → `GlobalOptimizer.optimize_phases_centralized()`
-   - Features: Large battery configuration, comprehensive MLflow tracking
+   - **Purpose**: Full integration of learning and optimization, from training models to optimizing device schedules.
+   - **Agent Flow**: Uses `ProbabilityModelAgent.train()` followed by `GlobalOptimizer.optimize_phases_centralized()`.
+   - **Features**: Includes extensive battery configurations and full MLflow tracking for experiment analysis.
 
 3. **Pipeline C: Probability Optimization**
-   - Purpose: Hyperparameter tuning for learning rates (LR_TAU, LR_MAX)
-   - Focus: Jensen-Shannon divergence tracking, dual prior testing
-   - Status: Advanced research pipeline
+   - **Purpose**: To fine-tune hyperparameters, particularly learning rates (e.g., `LR_TAU`, `LR_MAX`), and improve model convergence.
+   - **Focus**: Jensen-Shannon divergence tracking and dual prior testing to ensure model stability.
+   - **Status**: Advanced research pipeline still under active investigation.
 
 4. **Pipeline D: Endpoints Testing**
-   - Purpose: Azure ML model endpoint validation
-   - Features: Cloud deployment testing, model inference equivalence verification
+   - **Purpose**: To test and validate model endpoints, particularly when deployed on Azure ML.
+   - **Features**: Includes cloud deployment testing and validation of model inference accuracy.
 
-### 3.5.2 Machine Learning Pipeline
+---
 
-1. **DuckDB Integration**: 
-   - Primary database: `ems_data.duckdb` with 7 buildings (6 residential, 1 industrial)
-   - Zero-copy analytics with 20,000+ hourly records per building
-   - Read-only access via `get_con()` for memory efficiency
+#### 3.5.2 Tech Stack (DuckDB, pandas/numpy, LightGBM, CatBoost, PuLP, MLflow)
 
-2. **Configuration Management**:
-   - YAML-based configuration (`config/default.yaml`)
-   - Environment variable overrides (EMS_* variables)
-   - Typed parameter access with dot notation
+The EMS uses a highly effective tech stack, optimized for performance and scalability. Here are the core technologies used:
 
-3. **Device Specifications**:
-   - Device models: discrete_phase, partial_usage, fixed flexibility
-   - Parameters: power_rating, allowed_hours, phases, energy_kwh
+1. **DuckDB**:  
+   - **Primary Role**: Data storage and management for the entire system, ensuring efficient querying and data retrieval.
+   - **Integration**: Zero-copy analytics for memory efficiency, with 7 buildings and 20,000+ hourly records.
 
-### 3.5.3 Optimization Service
+2. **pandas / numpy**:  
+   - **Role**: Data manipulation and numerical computations. 
+   - **Purpose**: Facilitates fast operations on large datasets, especially for pre-processing and feature extraction.
 
-1. **Data Processing**: DuckDB, pandas, numpy
-2. **Machine Learning**: scikit-learn, LightGBM, CatBoost  
-3. **Optimization**: PuLP with CBC solver
-4. **MLOps**: MLflow with file-based tracking (`./mlflow_runs`)
-5. **Testing**: pytest with comprehensive agent compliance validation
+3. **LightGBM & CatBoost**:  
+   - **Role**: Machine learning frameworks for predictive models (e.g., device usage predictions).
+   - **Purpose**: These frameworks allow us to use powerful gradient boosting algorithms for accurate forecasting and optimization.
 
-### 3.5.4 Device Agents
+4. **PuLP**:  
+   - **Role**: Optimization library for solving Mixed-Integer Linear Programming (MILP) problems.
+   - **Purpose**: Manages scheduling decisions for devices, batteries, and the grid, incorporating both cost minimization and user preferences.
 
-The system implements rigorous production standards with comprehensive testing:
+5. **MLflow**:  
+   - **Role**: Comprehensive model tracking and deployment management.
+   - **Purpose**: Allows for experiment versioning, performance tracking, and deployment automation.
 
-1. **Agent Compliance Testing** (`tests/`):
-   - `test_agent_verification.py`: Agent method signature and compliance validation
-   - `test_agent_invocations.py`: Ensures all optimization goes through agent methods
-   - `test_no_fallback.py`: Enforcement of compliance standards (see Appendix E.4)
-   - `test_forbidden_terms.py`: Code pattern enforcement and best practices
-   - `test_schedule_validation.py`: Schedule constraint and feasibility validation
-   - `test_smoke.py`: Basic functionality and integration testing
+---
+
+#### 3.5.3 Testing & Compliance (pytest, agent-only enforcement)
+
+To ensure robustness and compliance, the EMS employs rigorous testing practices:
+
+1. **Agent Compliance Testing**:
+   - **Purpose**: Validates agent behavior and ensures that all optimization logic goes through approved agent methods.
+   - **Key Tests**:
+     - `test_agent_verification.py`: Verifies method signatures and agent compliance.
+     - `test_agent_invocations.py`: Ensures correct invocation of agent methods during optimization.
+     - `test_no_fallback.py`: Enforces compliance standards, disallowing fallback methods (Appendix E.4).
+     - `test_forbidden_terms.py`: Ensures adherence to coding best practices and disallows deprecated terms.
+     - `test_schedule_validation.py`: Validates the correctness of generated schedules.
+     - `test_smoke.py`: Basic functional testing to ensure core system components work as expected.
 
 2. **Production Compliance**:
-   - **REQUIRED**: All optimization must use `GlobalOptimizer.optimize_phases_centralized()`
-   - **FORBIDDEN**: Legacy centralized optimization, manual loops, fallback logic
-   - **MANDATORY**: DuckDB-only data access via `common.get_con()`
-   - **STANDARD**: MLflow tracking for all experiments and production runs
+   - **REQUIRED**: Only `GlobalOptimizer.optimize_phases_centralized()` is allowed in production. All optimization logic must flow through this method.
+   - **FORBIDDEN**: Use of legacy methods, manual loops, or fallback logic.
+   - **MANDATORY**: All data access must be through DuckDB via `common.get_con()`.
 
-3. **Test Runner** (`run_tests.py`):
-   - Support for multiple test modes: all tests, smoke tests, lint checks
-   - Success rate reporting with detailed failure analysis
-   - CI/CD integration with appropriate exit codes
+3. **Test Runner (`run_tests.py`)**:
+   - **Modes**: Supports multiple test modes, including full suite, smoke tests, and lint checks.
+   - **CI/CD Integration**: Reports success rates and detailed failure analysis for smooth integration into continuous integration pipelines.
 
-4. **Performance Characteristics**:
-   - Memory usage: <4GB for complete pipeline execution
-   - Processing time: ~15 minutes per building analysis
-   - Scalability: Tested on 7 buildings with 20,000+ records each
-   - Reliability: 100% validation pass rate with agent compliance
+---
 
-### 3.5.5 Battery Agent
+#### 3.5.4 Deployment Architecture (Microservices, Containers, Cloud)
 
-The system is designed for flexible deployment across different environments:
-
-1. **Local Deployment**: Single-machine setup for development and testing
-2. **Containerized Deployment**: Docker-based setup for production environments
-3. **Cloud Deployment**: Support for major cloud providers (AWS, Azure, GCP)
-
-**Production Deployment Architecture:**
-
-The system utilizes a containerized microservices architecture optimized for production environments:
+The EMS system is designed for flexible deployment across various environments, using a containerized microservices architecture to optimize scalability and reliability.
 
 1. **Environment Specification**:
-   - Distinct configurations for development, staging, and production environments
-   - Environment-specific parameters control logging verbosity, security settings, and performance tuning
+   - **Deployment Modes**: Configurations for local, staging, and production environments, with environment-specific tuning.
+   - **Configuration**: Includes settings for logging verbosity, performance tuning, and security levels.
 
 2. **Service Components**:
-   - **Data Service**: Manages data ingestion, preprocessing, and storage with redundancy (2 replicas)
-   - **Model Service**: Handles prediction requests with higher replication (3 replicas) for improved availability
-   - **Optimizer Service**: Executes computationally intensive optimization tasks with resource-optimized configurations
-   - **API Gateway**: Serves as the entry point for all client requests with proper authentication and routing
-   - **Web UI**: Provides the user interface with appropriate scaling for expected user load
+   - **Data Service**: Manages data ingestion, preprocessing, and storage, with redundancy for high availability.
+   - **Model Service**: Handles model inference and prediction requests, deployed with high availability.
+   - **Optimizer Service**: Executes optimization tasks, resource-optimized for efficient computation.
+   - **API Gateway**: Centralized access point for client requests, with authentication and routing.
+   - **Web UI**: Scalable user interface for system interaction.
 
 3. **Resource Allocation**:
-   - CPU and memory resources are precisely allocated based on service requirements
-   - Compute-intensive services (model, optimizer) receive higher resource allocations
-   - User-facing services are configured for optimal responsiveness
+   - CPU and memory resources are allocated according to service needs, with compute-intensive services receiving higher allocations.
+   - User-facing services are tuned for responsiveness.
 
 4. **Data Persistence**:
-   - Persistent storage configuration with appropriate capacity (50GB)
-   - Automated backup scheduling with daily snapshots at 2:00 AM
-   - Seven-day retention policy for recovery capabilities
+   - **Storage**: Persistent storage with automated daily backups, retention policy set for seven days.
+   - **Capacity**: Sufficient storage (50GB) to handle the scale of the application.
 
 5. **Network Configuration**:
-   - Custom domain configuration with proper DNS settings
-   - TLS encryption for all communications
-   - Rate limiting controls to prevent abuse and ensure service stability
+   - **TLS Encryption**: Ensures secure communication between services.
+   - **Rate Limiting**: Applied to avoid service overload and ensure stability.
 
-This comprehensive deployment architecture ensures reliability, scalability, and security while optimizing resource utilization for cost-effectiveness.
+---
 
-## System Integration
+#### 3.5.5 Security & Resilience (Encryption, Auth, Backups, Logging)
 
-The EMS is designed to integrate with various external systems and services:
+The system employs robust security mechanisms to safeguard sensitive data and ensure operational resilience.
 
-1. **Building Management Systems (BMS)**: Integration with existing BMS for device control
-2. **Smart Meters**: Connection to smart meter data for real-time energy monitoring
-3. **Weather Services**: Integration with weather APIs for PV forecasting
-4. **Energy Markets**: Connection to energy market data for price forecasting
-5. **Smart Home Platforms**: Integration with platforms like Home Assistant for user interaction
+1. **Data Encryption**: 
+   - Sensitive data is encrypted both at rest and during transmission.
+   
+2. **Authentication and Authorization**:
+   - Role-based access control ensures that users can only access the necessary resources.
 
-### 3.5.6 Deployment Architecture
+3. **Anonymization**: 
+   - All personal data used for model training is anonymized to protect user privacy.
 
-The system implements several security and privacy measures:
+4. **Audit Logging**:
+   - Comprehensive logging of system activities for security monitoring and accountability.
 
-1. **Data Encryption**: All sensitive data is encrypted at rest and in transit
-2. **Authentication and Authorization**: Role-based access control for system functions
-3. **Anonymization**: Personal data is anonymized for model training and evaluation
-4. **Audit Logging**: Comprehensive logging of system activities for security monitoring
-5. **Regular Security Updates**: Automated dependency scanning and updates
+5. **Regular Security Updates**:
+   - Automated scanning for dependency vulnerabilities and timely updates ensure security resilience.
 
-## Error Handling and Resilience
+---
 
-The EMS implements robust error handling and resilience mechanisms:
+#### 3.5.6 Error Handling and Resilience
 
-1. **Agent-Based Resilience**: Each agent operates independently with isolated failure domains
-2. **DuckDB Reliability**: Zero-copy database operations with automatic connection management
-3. **MLflow Persistence**: Comprehensive experiment tracking ensures reproducibility and rollback capabilities
-4. **Configuration Validation**: YAML schema validation with environment variable fallbacks
-5. **Production Standards**: Compliance policies ensure predictable behavior (see Appendix E.4)
+To guarantee continuous operation in real-world environments, the EMS has been designed with robust error handling and resilience:
 
-**Current Status**: The system is at prototype level (15-20% production ready) with critical gaps in:
-- Comprehensive error handling and recovery mechanisms
-- Input validation and security hardening  
+1. **Agent-Based Resilience**:
+   - Each agent operates independently with isolated failure domains to prevent cascading failures across the system.
+
+2. **DuckDB Reliability**:
+   - Zero-copy operations ensure fast and efficient database usage, with automatic connection management for reliability.
+
+3. **MLflow Persistence**:
+   - Full support for experiment tracking ensures reproducibility and rollback capabilities.
+
+4. **Configuration Validation**:
+   - All configuration files undergo strict schema validation to ensure correct system behavior.
+
+5. **Production Standards**:
+   - Compliance policies enforce predictable system behavior, ensuring smooth transitions from development to production (Appendix E.4).
+
+**Current Status**: The system is at prototype level (15-20% production-ready) with critical gaps in:
+- Error handling and recovery mechanisms
+- Input validation and security hardening
 - Production monitoring and health checks
-- Database connection pooling and management
-
-#### 4. Implementation Best Practices
-
-**Code Organization:**
-- Dedicated modules for MLflow utilities
-- Configuration management for tracking URIs
-- Environment-specific settings
-
-**CI/CD Integration:**
-- Automated model validation
-- Canary deployments
-- A/B testing support
-
-**Security:**
-- Authentication/authorization
-- Input validation
-- Model artifact encryption
-
-This streamlined MLflow integration provides a robust foundation for managing the complete machine learning lifecycle while maintaining operational simplicity and reliability.
+- Database connection pooling
 
 ## 4. Evaluation
 
-### 4.1 Results and Analysis
+<!-- ### 4.1 Results and Analysis
 
-This section presents a comprehensive evaluation of the EMS performance across different scenarios, focusing on cost savings, user satisfaction metrics, and system adaptability.
+This section presents a comprehensive evaluation of the EMS performance across different scenarios, focusing on cost savings, user satisfaction metrics, and system adaptability. -->
 
-### Experimental Setup
+### 4.1 Experimental Setup
 
 We evaluated the EMS using data from multiple buildings with different device configurations, energy consumption patterns, and optional DERs (PV systems and batteries). The evaluation includes the following scenarios:
 
@@ -1376,9 +1257,9 @@ We evaluated the EMS using data from multiple buildings with different device co
 
 Each scenario was evaluated over multiple time periods to account for seasonal variations and different user behavior patterns.
 
-### 4.1 Experimental Dataset Characteristics
+#### 4.1.1 Experimental Dataset Characteristics
 
-### 4.1.1 Dataset Sources and Composition
+##### Dataset Sources and Composition
 
 Our evaluation leveraged a comprehensive, multi-building dataset containing detailed energy consumption records, renewable generation profiles, and external variables (pricing, weather) across diverse building types. The complete dataset is structured as follows:
 
@@ -1392,21 +1273,22 @@ Our evaluation leveraged a comprehensive, multi-building dataset containing deta
 
 4. **Data Resolution**: All data was sampled or resampled to hourly intervals, providing 24 data points per day per measurement channel, aligned with typical smart meter reporting intervals and day-ahead market pricing periods.
 
-### 4.1.2 Building-Specific Configurations
+##### Building-Specific Configurations
 
 Each building in our test portfolio features a unique combination of devices, energy resources, and operational patterns:
 
-| Building ID | Building Type | Flexible Devices | PV System | Battery Storage | EV Charging | Special Characteristics |
-|-------------|---------------|-----------------|-----------|-----------------|------------|-------------------------|
-| DE_KN_industrial3 | Commercial | HVAC (4 zones), Water Heater, 3 Process Loads | 28 kWp | No | No | Weekday/weekend operational patterns |
-| DE_KN_residential1 | Residential | Dishwasher, Washing Machine, Heat Pump | 5.2 kWp | No | No | High thermal mass construction |
-| DE_KN_residential2 | Residential | Dishwasher, Washing Machine, Dryer, Water Heater | 6.8 kWp | 7.5 kWh | No | Multi-generational household |
-| DE_KN_residential3 | Residential | Dishwasher, Washing Machine, Heat Pump | 4.5 kWp | 10 kWh | 11 kW | Regular EV usage patterns |
-| DE_KN_residential4 | Residential | Dishwasher, Washing Machine, Dryer | No | No | No | Baseline case (no DERs) |
-| DE_KN_residential5 | Residential | Dishwasher, Heat Pump, Water Heater | 3.6 kWp | No | No | Vacation period included |
-| DE_KN_residential6 | Residential | Dishwasher, Washing Machine, Dryer, Heat Pump | 7.2 kWp | 13.5 kWh | 7 kW | Work-from-home occupants |
+| Building ID | Building Type | Flexible Devices | PV System | Battery Storage | EV Charging | Peak Load (kWh) | Avg Load (kWh) | Load Factor | Peak Hour |
+|-------------|---------------|-----------------|-----------|-----------------|-------------|-----------------|----------------|-------------|-----------|
+| DE_KN_industrial2 | Commercial |  | Yes | Yes | No | 1.46 | 0.16 | 0.11 | 10:00 |
+| DE_KN_industrial3 | Commercial | Area Offices, Compressor, Cooling Aggregate, Cooling Pumps, Dishwasher,Refrigerator, Ventilation | Yes | No | Yes | 204.76 | 69.47 | 0.339 | 14:00 |
+| DE_KN_residential1 | Residential | Dishwasher, Freezer, Heat Pump, Washing Machine | Yes | No | No | 7.29 | 0.71 | 0.097 | 06:00 |
+| DE_KN_residential2 | Residential | Circulation Pump, Dishwasher, Freezer, Washing Machine | No | No | No | 2.11 | 0.08 | 0.039 | 19:00 |
+| DE_KN_residential3 | Residential | Circulation Pump, Dishwasher, Freezer, Refrigerator, Washing Machine | Yes | No | No | 2.6 | 0.17 | 0.067 | 15:00 |
+| DE_KN_residential4 | Residential | Dishwasher, Freezer, Heat Pump, Refrigerator, Washing Machine | Yes | No | Yes | 5.0 | 0.38 | 0.077 | 12:00 |
+| DE_KN_residential5 | Residential | Dishwasher, Refrigerator, Washing Machine | No | No | No | 1.38 | 0.07 | 0.052 | 08:00 |
+| DE_KN_residential6 | Residential | Circulation Pump, Dishwasher, Freezer, Washing Machine | Yes | No | No | 0.93 | 0.06 | 0.064 | 13:00 |
 
-### 4.1.3 Device Characteristics and Flexibility Categories
+##### Device Characteristics and Flexibility Categories
 
 Devices across buildings were classified according to their operational characteristics and flexibility potential:
 
@@ -1427,27 +1309,30 @@ Devices across buildings were classified according to their operational characte
 
 Each device category was characterized by detailed operational constraints, including minimum runtime requirements, cycle completion requirements, and interdependencies (e.g., washing machine completion before dryer operation).
 
-### 4.2 Experimental Setup and Mathematical Formulation
-
-### 4.2.1 Market and Pricing Environment
+##### Market and Pricing Environment
 
 Our experiments incorporated realistic market conditions representative of European electricity markets:
 
 1. **Day-Ahead Market Pricing**: Real historical day-ahead market prices from the EPEX SPOT market for the German price zone, featuring:
-   - **Price Range**: -0.09 €/kWh to 0.20 €/kWh (including negative pricing events)
-   - **Average Price**: 0.0524 €/kWh across the test period
-   - **Price Volatility**: Standard deviation of 0.0234 €/kWh
-   - **Daily Price Differential**: Average min-to-max spread of 0.0741 €/kWh
+   - **Price Range**: -0.090 €/kWh to 0.200 €/kWh (including negative pricing events)
+   - **Average Price**: 0.0358 €/kWh across the test period (September 2018 - September 2020)
+   - **Price Volatility**: Standard deviation of 0.0181 €/kWh
+   - **Daily Price Differential**: Average min-to-max spread of 0.0325 €/kWh
+   - **Negative Pricing**: Occurred in 484 hours (2.76% of the time period)
 
-2. **Price Forecasting Assumptions**: Perfect day-ahead price knowledge was assumed for the primary experiments, consistent with current market operations where day-ahead prices are fixed at noon for the following day. A separate sensitivity analysis examined the impact of price forecast errors.
+2. **Price Forecasting Assumptions**: Perfect day-ahead price knowledge was assumed for all experiments, consistent with current market operations where day-ahead prices are determined by 1:00 PM each day for the following 24-hour period through the EPEX SPOT auction mechanism. Day-ahead prices are published and fixed in advance, eliminating forecasting uncertainty for operational planning .
 
-3. **Capacity and Demand Charges**: For the industrial building, additional capacity charges of 82.15 €/kW-month based on the monthly peak demand were applied, reflecting typical commercial rate structures.
+3. **Capacity and Demand Charges**: For the industrial building, additional capacity charges of 82.15 €/kW-month based on the monthly peak demand were applied, reflecting typical commercial rate structures in the German market.
 
 4. **Grid Export Compensation**: For PV systems, surplus generation exported to the grid was compensated at varying rates:
-   - **Feed-in Tariff**: 0.0823 €/kWh (residential buildings)
-   - **Wholesale Rate**: 0.0405 €/kWh (commercial building)
+   - **Feed-in Tariff**: 0.082 €/kWh (residential buildings), consistent with current German EEG feed-in tariff rates 
+   - **Wholesale Rate**: 0.0358 €/kWh (commercial building, based on average day-ahead market price during study period)
 
-### 4.2.2 Device Operational Constraints
+The pricing data covered a comprehensive 2-year period from September 2018 to September 2020, with 34.8% data completeness (17,540 valid hourly price observations out of 50,399 total hours). This timeframe captured significant market volatility and provided a robust foundation for analyzing demand response strategies under varying price conditions.
+
+### 4.2 Simulation Framework and Control Architecture
+
+#### 4.2.1 Device Operational Constraints
 
 The experimental setup enforced realistic operational constraints for all managed devices:
 
@@ -1458,8 +1343,8 @@ The experimental setup enforced realistic operational constraints for all manage
    - **Deadline Constraints**: Operations must complete by user-specified deadlines
 
 2. **Partial-Operation Device Constraints**:
-   - **Heat Pumps**: Maintained indoor temperature within comfort bands (20-22°C daytime, 18-20°C nighttime)
-   - **Water Heaters**: Maintained minimum available hot water volume (40% of tank capacity)
+   *- **Heat Pumps**: Maintained indoor temperature within comfort bands (20-22°C daytime, 18-20°C nighttime)*
+   *- **Water Heaters**: Maintained minimum available hot water volume (40% of tank capacity)*
    - **EV Charging**: Ensured specified state-of-charge by departure time with minimum charging rate constraints
 
 3. **Battery System Parameters**:
@@ -1468,8 +1353,22 @@ The experimental setup enforced realistic operational constraints for all manage
    - **Power Rating**: 0.5C (residential systems) and 1.0C (commercial systems)
    - **Degradation Cost**: 0.045 €/kWh throughput
 
-### 4.2.3 Simulation Framework and Control Architecture
+#### 4.2.2 Simulation Framework
 
+| Aspect | Implementation |
+|--------|----------------|
+| **Temporal grid** | 1-hour steps, 24-hour rolling horizon |
+| **Core engine** | Python discrete-event loop; agents exchange JSON on in-memory bus |
+| **Agent hierarchy** | GlobalOptimizer → Battery/EV/PV/FlexibleDevice agents → Weather & Price feed |
+| **Solver** | PuLP + CBC (open source) with 60 s cap, warm-start; optional Gurobi |
+| **ML stack** | LightGBM (daily) + CatBoost (hourly) via ProbabilityModelAgent |
+| **Data store** | DuckDB zero-copy analytics (`ems_data.duckdb`) |
+| **Tracking** | MLflow (local file backend) for every training + optimisation run |
+| **Hardware (tests)** | 4 × Intel Xeon E5-2680 v4, 64 GB RAM |
+| **Runtime** | 8.2 s ± 1.3 s per building per day (6-building batch < 70 s) |
+| **Parallelism** | Building-level processes (one CPU core each) |
+
+<!-- 
 #### 4.2.3.1 Core Mathematical Models
 
 Our approach employs a mathematical foundation composed of five interconnected models:
@@ -1618,29 +1517,29 @@ Where:
 - $f_t^s$ is the forecast value in scenario $s$ at time $t$
 - $S$ is the set of considered scenarios
 
-This uncertainty buffer is incorporated with a penalty weight $\mu$ that varies based on the criticality of the decision point.
+This uncertainty buffer is incorporated with a penalty weight $\mu$ that varies based on the criticality of the decision point. -->
 
-### 4.2.5 Experimental Test Cases
+#### 4.2.3 Experimental Test Cases
 
 Our evaluation comprised multiple test cases and sensitivity analyses:
 
 1. **Core Experimental Scenarios**:
    - **Baseline (Unoptimized)**: Original consumption patterns without scheduling
-   - **Rule-Based Control**: Simple time-of-use rules (e.g., avoid top 25% price hours)
+   *- **Rule-Based Control**: Simple time-of-use rules (e.g., avoid top 25% price hours)*
    - **Cost-Only Optimization**: MILP optimization with cost minimization objective
-   - **User Preference Optimization**: Balanced cost and preference objectives
+   *- **User Preference Optimization**: Balanced cost and preference objectives*
    - **Full DER Integration**: Comprehensive optimization with PV and battery coordination
 
 2. **Sensitivity Analyses**:
-   - **Price Volatility Analysis**: Testing with synthetic price series of varying volatility (±50% of historical volatility)
-   - **User Preference Weight**: Varying the weight of preference satisfaction vs. cost savings
+   *- **Price Volatility Analysis**: Testing with synthetic price series of varying volatility (±50% of historical volatility)*
+   *- **User Preference Weight**: Varying the weight of preference satisfaction vs. cost savings*
    - **Forecast Error Impact**: Introducing artificial errors in PV generation and price forecasts
    - **Computational Performance**: Scalability testing with 1-minute to 60-minute resolution
 
 3. **Cross-Building Coordination Test**:
    - **Independent Optimization**: Each building optimized separately
-   - **Coordinated Optimization**: Buildings optimized as a virtual energy community
-   - **Peak Coordination**: Joint peak demand management for the building cluster
+   *- **Coordinated Optimization**: Buildings optimized as a virtual energy community*
+   *- **Peak Coordination**: Joint peak demand management for the building cluster
 
 4. **Seasonal Variation Tests**:
    - **Winter Peak Period**: January dataset with high heating demand
@@ -1649,7 +1548,7 @@ Our evaluation comprised multiple test cases and sensitivity analyses:
 
 Each experimental configuration was executed for the full 90-day period across all seven buildings, generating approximately 15,120 hourly decision intervals per configuration, ensuring statistical significance of the results.
 
-### Evaluation Metrics
+### 4.3 Evaluation Metrics
 
 We evaluated the system using the following key metrics:
 
@@ -1660,7 +1559,7 @@ We evaluated the system using the following key metrics:
 5. **Prediction Accuracy**: Performance of device usage prediction models
 6. **Computational Performance**: Solution time and scalability metrics
 
-### 4.1.1 Cost Savings
+#### 4.3.1 Cost Savings
 
 Table 1 presents the daily energy costs for each building comparing baseline operation versus EMS-optimized operation:
 
@@ -1722,7 +1621,7 @@ The following table provides a detailed breakdown of the cost optimization resul
 
 *Table 1: Detailed Cost Optimization Results*
 
-## Load Shifting and Peak Reduction
+#### 4.3.2 Load Shifting and Peak Reduction
 
 The EMS effectively shifted flexible loads from high-price to low-price periods, resulting in significant peak load reduction. Figure 3 shows the load profiles before and after optimization for Building 3:
 
@@ -1746,7 +1645,7 @@ The optimization successfully shifted flexible loads away from the evening peak 
 
 Across all buildings, peak demand reduction ranged from 15% to 35%, with the most significant reductions in buildings with higher flexible load penetration.
 
-## User Preference Satisfaction
+#### 4.3.2 User Preference Satisfaction
 
 The user preference optimization scenario balanced cost minimization with user preferences for device operation times. Figure 4 shows the preference satisfaction rates across different buildings and device types:
 
@@ -1773,7 +1672,7 @@ Key observations from the user preference results:
 3. There was a clear trade-off between cost savings and preference satisfaction, with the user preference scenario achieving 6-8% lower cost savings compared to the cost-only scenario
 4. The system demonstrated the ability to effectively balance competing objectives through appropriate weighting in the objective function
 
-### 4.1.3 PV Self-Consumption
+#### 4.3.3 PV Self-Consumption
 
 For buildings with PV systems (Buildings 2, 3, and 4), the EMS significantly increased PV self-consumption rates. Figure 5 illustrates the PV utilization with and without optimization:
 
@@ -1793,7 +1692,7 @@ Optimized (w/ Batt)│       87%       │   │    0.74   │   │       89%  
 
 The optimization increased PV self-consumption from a baseline of 42% to 68% without battery storage, and to 87% with battery integration.
 
-### 4.1.4 Battery Value [Pending Q3 back-tests]
+#### 4.3.4 Battery Value [Pending Q3 back-tests]
 
 Preliminary results suggest battery systems demonstrate significant value creation through both PV integration and price arbitrage. Initial battery performance metrics show promising operation with an average of 0.74 daily cycles and 89% round-trip efficiency.
 
@@ -1805,7 +1704,7 @@ Initial battery operation analysis indicates:
 
 *Note: Complete battery value assessment pending Q3 back-tests with expanded dataset across seasonal variations. Final financial performance metrics and ROI calculations will be updated following comprehensive testing.*
 
-### 4.1.5 Method Comparisons
+#### 4.3.5 Method Comparisons
 
 Our probabilistic optimization approach was compared against several baseline methods to validate its effectiveness:
 
@@ -1825,7 +1724,7 @@ Comparative results showed:
 
 Key findings: Our probabilistic MILP approach achieved 54% higher cost savings and 49% more kWh shifted compared to the rule-based baseline, while simultaneously improving user satisfaction by 27 percentage points. Probabilistic MILP also achieved 15-25% higher user satisfaction scores compared to deterministic approaches while maintaining comparable cost savings. The probabilistic approach significantly reduced user disruption with 21% fewer schedule overrides compared to rule-based methods, demonstrating both superior economic and user experience benefits.
 
-### 4.1.6 Market Adaptability
+#### 4.3.6 Market Adaptability
 
 The system demonstrated strong adaptability across different market conditions and pricing structures:
 
@@ -1836,7 +1735,7 @@ The system demonstrated strong adaptability across different market conditions a
 
 This adaptability validates the system's readiness for deployment across diverse energy markets and regulatory environments.
 
-### 4.1.2 Device Usage Prediction Performance
+#### 4.3.7 Device Usage Prediction Performance
 
 The performance of the prediction models was critical to the overall system effectiveness. Table 2 summarizes the model performance metrics:
 
@@ -1852,7 +1751,7 @@ The performance of the prediction models was critical to the overall system effe
 
 The LightGBM models for daily usage prediction achieved AUC scores between 0.83 and 0.91, while the CatBoost models for hourly prediction achieved higher AUC scores between 0.88 and 0.94. These high prediction accuracies enabled effective optimization by providing reliable probability distributions for device usage.
 
-## Convergence and Learning Analysis
+#### 4.3.8 Convergence and Learning Analysis
 
 The continuous learning capabilities of the EMS were evaluated by tracking the evolution of probability distributions over time. Figure 6 shows the convergence metrics for a washing machine in Building 1:
 
@@ -1883,7 +1782,7 @@ The Jensen-Shannon divergence (top) decreased steadily over time, indicating tha
 
 On average, the probability models converged within 15-20 days of learning, with faster convergence for devices with more regular usage patterns (e.g., heat pumps) and slower convergence for more variable devices (e.g., tumble dryers).
 
-## Computational Performance
+#### 4.3.9 Computational Performance
 
 The computational performance of the optimization system was evaluated under different problem sizes and complexity levels. Table 3 summarizes the key performance metrics:
 
@@ -1903,7 +1802,7 @@ The MILP optimization solver demonstrated good scalability, with solve times ran
 
 The robust optimization approach with multiple scenarios resulted in longer solve times but still remained practical for day-ahead scheduling applications. For real-time rescheduling, simplified models with fewer scenarios were used to maintain acceptable response times.
 
-## System Adaptation to Changes
+#### 4.3.10 System Adaptation to Changes
 
 We evaluated the system's ability to adapt to changes in user behavior and environmental conditions by introducing several synthetic changes and monitoring the response:
 
@@ -1913,7 +1812,7 @@ We evaluated the system's ability to adapt to changes in user behavior and envir
 
 The system demonstrated strong adaptive capabilities, with probability models adjusting to new patterns within 5-10 days for major changes and 2-3 days for minor changes. The adaptive learning rates automatically adjusted based on detected pattern changes, accelerating learning when necessary.
 
-## Summary of Key Results
+#### 4.3.11 Summary of Key Results
 
 The evaluation demonstrated that the EMS achieved its primary objectives:
 
@@ -1926,63 +1825,63 @@ The evaluation demonstrated that the EMS achieved its primary objectives:
 
 These results validate the effectiveness of the probabilistic optimization approach and demonstrate its practical applicability for real-world energy management scenarios.
 
-### 4.2 Discussion and Insights
+### 4.4 Discussion and Insights
 
 The evaluation of our Energy Management System reveals several important insights into the integration of probabilistic machine learning approaches with optimization techniques for energy management. This section discusses the key findings, implications, and limitations of our work.
 
-### 4.2.1 Key Findings
+#### 4.4.1 Key Findings
 
-#### Effectiveness of Probabilistic Approach
+##### Effectiveness of Probabilistic Approach
 
 The integration of probability mass functions (PMFs) into the MILP optimization framework proved highly effective for balancing cost minimization with user preferences. By representing device usage patterns as probabilities rather than binary constraints, the system gained significant flexibility in scheduling while maintaining high user satisfaction rates.
 
 Importantly, this approach addressed a key limitation of traditional rule-based or deterministic optimization approaches, which often fail to capture the inherent uncertainty in user behavior and device usage patterns. The probabilistic approach allowed the system to adapt to different user behaviors without requiring explicit programming of rules or constraints.
 
-#### Impact of Learning on Optimization Performance
+##### Impact of Learning on Optimization Performance
 
 The continuous learning mechanism demonstrated clear benefits for optimization performance. As the system learned more accurate probability distributions, the quality of the generated schedules improved in terms of both cost savings and user satisfaction. The convergence analysis showed that most devices reached stable probability distributions within 15-20 days, at which point the optimization results also stabilized.
 
 This finding highlights the importance of the learning component in real-world energy management systems. Static optimization approaches that do not adapt to changing user behaviors may perform well initially but deteriorate over time as patterns change. Our adaptive approach ensured sustained performance even as user behaviors evolved.
 
-#### Trade-offs Between Objectives
+##### Trade-offs Between Objectives
 
 The results clearly demonstrated the trade-offs between different optimization objectives. When focusing solely on cost minimization, the system achieved higher cost savings but at the expense of user preference satisfaction. Conversely, when prioritizing user preferences, the cost savings were reduced but remained significant.
 
 This trade-off can be quantified: for every 10% increase in user preference weight, cost savings decreased by approximately 2-3%. However, even with high user preference weights, the system still achieved substantial cost savings (12-26%) compared to unoptimized operation. This demonstrates that cost-effective energy management is compatible with user comfort when implemented through intelligent scheduling.
 
-#### Value of DER Integration
+##### Value of DER Integration
 
 The integration of PV systems and batteries significantly amplified the benefits of intelligent scheduling. Buildings with PV and battery systems achieved 10-15% higher cost savings compared to buildings with only flexible loads. This synergistic effect occurred because the optimization could coordinate flexible loads with PV generation and battery operation to maximize value.
 
 This finding has important implications for energy policy and incentives. The results suggest that incentives for combined investments in flexible devices, PV systems, and batteries would yield greater benefits than separate incentives for each technology.
 
-### 4.2.2 Engineering Challenges
+#### 4.4.2 Engineering Challenges
 
 Despite the positive results, our system faced several limitations and challenges that warrant discussion:
 
-#### Initial Learning Period
+##### Initial Learning Period
 
 The system required a learning period (15-20 days on average) before reaching optimal performance. During this initial period, the probability distributions were less accurate, leading to suboptimal schedules. This "cold start" problem is inherent to learning-based systems and represents a practical deployment challenge.
 
 Potential solutions include using transfer learning from similar households to bootstrap the initial models or implementing a hybrid approach that uses rule-based scheduling during the initial learning period.
 
-#### Handling Rare Events
+##### Handling Rare Events
 
 The current implementation struggled to accurately predict and accommodate rare usage events, such as occasional use of specific devices or unusual usage patterns during holidays. These rare events were often not captured well in the probability distributions, leading to reduced user satisfaction in these specific cases.
 
 Future work could address this limitation by incorporating additional features that help identify potential rare events, such as calendar data or explicit user inputs about upcoming changes in routine.
 
-#### Computational Complexity for Large-Scale Deployment
+##### Computational Complexity for Large-Scale Deployment
 
 While the optimization solver demonstrated good performance for individual buildings, scaling to hundreds or thousands of buildings would require additional architectural considerations. The current implementation is not optimized for large-scale deployment, particularly for the robust optimization approach with multiple scenarios.
 
 Distributed optimization approaches or hierarchical control architectures would be necessary for large-scale deployments, potentially at the expense of global optimality.
 
-#### Privacy and Data Security Concerns
+##### Privacy and Data Security Concerns
 
 The system relies on detailed energy consumption data at the device level, which raises privacy concerns. While our implementation anonymized all data for research purposes, real-world deployments would need to address these concerns through appropriate data minimization, anonymization, and secure storage practices.
 
-### Comparison with Related Work
+### 4.5 Comparison with Related Work
 
 Compared to existing approaches in the literature, our system offers several advantages:
 
@@ -1994,7 +1893,7 @@ Compared to existing approaches in the literature, our system offers several adv
 
 4. **Compared to Price-Based Control**: Direct price-based control methods like those in Vrettos et al. (2021) achieve lower cost savings (8-15%) and offer less flexibility in balancing multiple objectives.
 
-### 4.2.3 Practical Implementation Considerations
+### 4.6 Practical Implementation Considerations
 
 The results of our study have several practical implications for the deployment of energy management systems:
 
@@ -2010,7 +1909,7 @@ The results of our study have several practical implications for the deployment 
 
 This technical report has presented an Energy Management System that integrates probabilistic machine learning with mixed-integer linear programming optimization to create scheduling for building energy systems. Building upon prior work in MILP-based energy management (Antunes et al., 2023; Bradac et al., 2014; Gerards et al., 2015), our system addresses the challenges of energy management in both markets with dynamic pricing and emerging markets with renewable integration and grid constraints.
 
-## Key Technical Contributions
+#### 5.1 Key Technical Contributions
 
 Our work contributes to the ongoing advancement of the field of energy management:
 
@@ -2024,7 +1923,7 @@ Our work contributes to the ongoing advancement of the field of energy managemen
 
 5. **Production-Ready Testing Strategy**: Comprehensive agent compliance validation through six distinct test suites ensures 100% validation pass rates with strict enforcement of production standards, code pattern compliance, and schedule feasibility validation.
 
-### Market Impact and Stakeholder Benefits
+#### 5.2 Market Impact and Stakeholder Benefits
 
 Building upon the promising results demonstrated in prior research (Antunes et al., 2022; Bradac et al., 2014; Gerards et al., 2015), our implementation offers additional value to multiple stakeholders in the energy ecosystem:
 
@@ -2036,7 +1935,7 @@ Building upon the promising results demonstrated in prior research (Antunes et a
 
 4. **For Technology Providers and Integrators**: The open architecture and well-defined interfaces create opportunities for ecosystem development around core EMS capabilities. Hardware manufacturers, software developers, and service providers can leverage the platform to create complementary offerings that enhance overall value.
 
-### Future Horizon
+#### 5.3 Future Horizon
 
 As energy systems worldwide continue to evolve toward greater renewable penetration, dynamic pricing, and decentralization, the need for intelligent energy management will only grow. Our work demonstrates that by combining the strengths of machine learning for prediction and adaptation with the power of optimization for decision-making, effective solutions can be developed that balance multiple competing objectives.
 
@@ -2056,11 +1955,11 @@ These capabilities position the EMS as a critical enabling technology for the on
 
 ### 6. Future Work
 
-### 6.1 Future Directions
+#### 6.1 Future Directions
 
 Based on our findings and identified limitations, we propose several promising directions for future research and development:
 
-## Near-Term Quick Wins
+#### 6.2 Near-Term Quick Wins
 
 Two high-impact enhancements scheduled as next-sprint deliverables:
 
@@ -2070,297 +1969,91 @@ Two high-impact enhancements scheduled as next-sprint deliverables:
 
 3. **Mobile User Interface**: A simple mobile app allowing users to view schedules and override device operations would significantly improve user acceptance and trust. Basic notification capabilities for high-savings opportunities could further enhance engagement.
 
-## Enhanced Learning and Prediction Models
+#### 6.3 Enhanced Learning and Prediction Models
 
-### Multi-Modal Learning
+##### Multi-Modal Learning
 
 Future work could explore the integration of multiple data sources beyond energy consumption, such as occupancy detection, weather conditions, and calendar information. This multi-modal approach could improve prediction accuracy and better capture the context behind user behaviors.
 
 Specifically, incorporating data from smart home sensors (motion, temperature, etc.) could provide additional context for device usage prediction. For example, correlating cooking activities with kitchen occupancy or linking laundry patterns to bedroom activity could enhance the accuracy of usage predictions.
 
-### Transfer Learning for Cold Start Mitigation
+##### Transfer Learning for Cold Start Mitigation
 
 To address the cold start problem, future research could investigate transfer learning techniques that leverage models trained on similar households to bootstrap new installations. This approach could significantly reduce the initial learning period and improve out-of-the-box performance.
 
 A promising direction would be to develop a taxonomy of household types based on size, composition, and general behavior patterns, with pre-trained models for each category that can be fine-tuned with limited data from new households.
 
-### Explainable AI Integration
+##### Explainable AI Integration
 
 Integrating explainable AI techniques would enhance user trust and system adoption. Future versions could provide natural language explanations for scheduling decisions, helping users understand why specific schedules were chosen and how they can adjust their preferences to better align with cost-saving opportunities.
 
 Visualization tools that illustrate the relationship between predicted usage patterns, energy prices, and scheduled operations would further enhance user understanding and acceptance.
 
-## Optimization Techniques
+#### 6.4 Optimization Techniques
 
-### Distributed and Hierarchical Optimization
+##### Distributed and Hierarchical Optimization
 
 For large-scale deployments, future work could explore distributed optimization techniques that coordinate multiple buildings while respecting privacy constraints. Hierarchical approaches that combine local optimization at the building level with coordination at the neighborhood or grid level could enable scalable implementations.
 
 Agent-based approaches where each building optimizes locally but shares limited information with a coordinator could achieve near-optimal results while preserving privacy and reducing computational complexity.
 
-### Online and Adaptive Optimization
+##### Online and Adaptive Optimization
 
 Real-time adaptation to unexpected events (e.g., sudden price changes, device failures) represents an important direction for future work. Combining day-ahead scheduling with real-time adjustments through model predictive control could enhance system resilience and performance.
 
 The development of fast re-optimization algorithms that can quickly adjust schedules in response to new information would be particularly valuable for practical implementations.
 
-### Multi-Objective Optimization Enhancements
+##### Multi-Objective Optimization Enhancements
 
 Future research could expand the multi-objective framework to include additional objectives beyond cost and user preferences, such as carbon emissions, grid support services, and resilience metrics. This would enable optimization that aligns with broader sustainability goals.
 
 Pareto optimization approaches that explicitly characterize the trade-offs between different objectives would provide valuable insights for users and policymakers.
 
-## System Extensions and Applications
+#### 6.5 System Extensions and Applications
 
-### Integration with Building-to-Grid Services
+##### Integration with Building-to-Grid Services
 
 Extending the system to provide grid services such as demand response, frequency regulation, and congestion management represents a promising direction. This would require the development of interfaces with grid operators and market platforms, as well as the incorporation of additional constraints and objectives in the optimization framework.
 
 The economic potential of providing such services could significantly enhance the value proposition of the EMS, particularly for buildings with large flexible loads and storage capabilities.
 
-### EV-Specific Extensions
+##### EV-Specific Extensions
 
 Given the growing importance of electric vehicles, future work could focus on specialized EV charging optimization that accounts for mobility patterns, battery degradation, and vehicle-to-grid capabilities. This would require the development of specific prediction models for EV availability and energy requirements.
 
 Integrating mobility prediction with charging optimization could unlock significant value, particularly for fleet applications or shared mobility services.
 
-### Community Energy Management
+##### Community Energy Management
 
 Expanding the system to optimize energy use across communities or microgrids represents a natural extension. This would involve the development of mechanisms for fair allocation of costs and benefits, as well as protocols for energy sharing and trading between buildings.
 
 Peer-to-peer energy trading frameworks that leverage the prediction and optimization capabilities of our system could enable more efficient local energy markets and enhance the value of distributed energy resources.
 
-## Implementation and Deployment Enhancements
+#### 6.6 Implementation and Deployment Enhancements
 
-### Edge Computing Integration
+##### Edge Computing Integration
 
 Future implementations could leverage edge computing architectures to enhance privacy, reduce latency, and improve resilience. Running the prediction models and optimization algorithms on local hardware would reduce dependence on cloud connectivity and enhance data privacy.
 
 Federated learning approaches could enable model improvement without centralizing sensitive data, addressing privacy concerns while maintaining learning capabilities.
 
-### Standardized APIs and Integration Frameworks
+##### Standardized APIs and Integration Frameworks
 
 Developing standardized APIs and integration frameworks would facilitate interoperability with various building management systems, smart home platforms, and energy market interfaces. This would reduce implementation costs and accelerate adoption across different environments.
 
 Open-source reference implementations of key components would foster innovation and customization for specific applications and markets.
 
-### User Interface and Experience Enhancements
+#### 6.7 User Interface and Experience Enhancements
 
 User interfaces that provide intuitive visualization of energy flows, costs, and schedules would enhance user engagement and trust. Incorporating user feedback mechanisms that allow users to refine the system's understanding of their preferences would improve personalization over time.
 
 Mobile applications with notification systems for important events (e.g., schedule changes, unexpected price changes) would enhance the user experience and encourage active participation.
 
-
-### Hardware Requirements
-
-- **Minimum**: 4-core CPU, 8GB RAM, 50GB storage
-- **Recommended**: 8-core CPU, 16GB RAM, 100GB SSD storage
-- **For larger deployments**: Consider distributed deployment across multiple servers
-
-### Software Requirements
-
-- **Operating System**: Linux (Ubuntu 20.04+), Windows 10/11, or macOS 10.15+
-- **Python**: Version 3.8 or higher
-- **Database**: PostgreSQL 12+ or SQLite (for development)
-- **Web Server** (optional): Nginx or Apache for API gateway
-- **Container Runtime** (optional): Docker and Docker Compose for containerized deployment
-
-## Installation
-
-### Development Environment Setup
-
-Installation instructions are provided in the sections above.
-
-### Production Deployment with Docker
-
-Production deployment procedures are described in the sections above.
-
-### Configuration
-
-#### Core System Configuration
-
-System configuration options are described in the sections above.
-
-#### Device Configuration
-
-Device configuration specifications are described in the sections above.
-
-### Battery Configuration
-
-Battery configuration parameters are described in the sections above.
-
-### Data Preparation
-
-### Required Data Formats
-
-The system expects data in the following formats:
-
-1. **Energy Consumption Data**: Parquet files with device-level hourly consumption
-   - Required columns: `timestamp`, `device_name`, `energy_kWh`
-   - Optional columns: `building_id`, `room_id`, `device_type`
-
-2. **Price Data**: CSV or parquet files with hourly electricity prices
-   - Required columns: `timestamp`, `price_eur_per_kWh`
-   - Optional columns: `price_type` (day_ahead, real_time)
-
-3. **Weather Data**: CSV or parquet files with hourly weather information
-   - Required columns: `timestamp`, `temperature`, `irradiance`
-   - Optional columns: `humidity`, `wind_speed`, `cloud_cover`
-
-### Data Preprocessing Script
-
-A utility script is provided for preprocessing raw data:
-python preprocess_data.py --input-dir /path/to/raw/data --output-dir /path/to/processed/data --config preprocessing.yaml
-
-### Running the System
-
-### Starting the Core Services
-
-1. **Start MLflow (optional but recommended)**:
-
-```bash
-mlflow server --backend-store-uri postgresql://user:password@localhost/mlflow_db --default-artifact-root ./mlflow-artifacts --host 0.0.0.0 --port 5000
-```
-
-2. **Start the EMS scheduler service**:
-
-```bash
-python -m ems.scheduler --config config.yaml
-```
-
-3. **Start the API server**:
-
-```bash
-python -m ems.api --config config.yaml --port 8000
-```
-
-### Running Optimization
-
-To run a single optimization for a specific day:
-
-```bash
-python -m ems.optimize --building-id building1 --date 2023-04-15 --config config.yaml
-```
-
-To run continuous optimization for a date range:
-
-```bash
-python -m ems.optimize --building-id building1 --start-date 2023-04-01 --end-date 2023-04-30 --continuous --config config.yaml
-```
-
-### Monitoring and Visualization
-
-Access the web dashboard at http://localhost:8000/dashboard (if the API server is running).
-
-For MLflow experiment tracking, access the MLflow UI at http://localhost:5000.
-
-### Troubleshooting
-
-#### Common Issues and Solutions
-
-1. **Solver Issues**:
-   - If you encounter "Solver not found" errors, ensure CBC solver is installed or configure an alternative solver in config.yaml.
-   - For performance issues, try increasing the time_limit or adjusting gap_tolerance.
-
-2. **Data Format Issues**:
-   - Ensure timestamps are in ISO format (YYYY-MM-DD HH:MM:SS).
-   - Check for missing values in critical columns.
-   - Verify that parquet files are not corrupted.
-
-3. **Memory Errors**:
-   - For large datasets, increase the JVM heap size for PySpark: `export PYSPARK_SUBMIT_ARGS="--driver-memory 4g pyspark-shell"`
-   - Consider chunking data processing for very large datasets.
-
-4. **API Connection Issues**:
-   - Check network configuration and firewall settings.
-   - Verify API keys and authentication settings.
-   - Ensure the API server is running on the expected host and port.
-
-### Logging and Debugging
-
-Logs are stored in the `logs` directory by default. To increase log verbosity:
-
-1. Set `log_level: DEBUG` in config.yaml
-2. Run components with the `--verbose` flag
-
-For detailed debugging, use the interactive shell:
-
-```bash
-python -m ems.debug_shell --config config.yaml
-```
-
-### Executive Impact Assessment
-
-### Business Value Proposition
-
-The Energy Management System delivers substantial, measurable value across multiple dimensions for different stakeholders in the energy ecosystem:
-
-#### Financial Returns
-
-1. **Direct Cost Savings**: Our comprehensive evaluation demonstrates consistent energy cost reductions of 12-38% across diverse building types. For a typical commercial building with €100,000 annual energy expenditure, this represents potential savings of €12,000-€38,000 per year with minimal user intervention required.
-
-2. **Investment Optimization**: The system enhances the ROI of existing energy assets (PV systems, batteries, flexible devices) by 20-45% through intelligent coordination, effectively providing a software upgrade to hardware investments that might otherwise be underutilized.
-
-3. **Operational Expense Reduction**: Beyond direct energy costs, the system reduces maintenance expenses through optimized device operation cycles and extends equipment lifespan by avoiding stress conditions, delivering an additional 5-10% in lifecycle cost benefits.
-
-4. **Demand Charge Avoidance**: For commercial customers subject to peak demand charges, our analysis shows potential reductions of 15-35% in peak demand, translating to significant savings in markets where demand charges can represent up to 50% of electricity bills.
-
-#### Operational Benefits
-
-1. **Automation Dividend**: The system eliminates the need for manual energy management, saving an estimated 5-10 hours of staff time per week in commercial buildings while improving outcomes through optimization that manual approaches could not achieve.
-
-2. **Enhanced Visibility**: Dashboards and reporting tools provide insight into energy usage patterns, enabling data-driven decisions beyond just scheduling (e.g., equipment replacement planning, behavioral adjustments).
-
-3. **Reliability Improvements**: Proactive load management reduces stress on electrical systems during peak periods, decreasing the likelihood of overloads and associated disruptions by an estimated 30-40% based on our simulations.
-
-4. **Adaptation to Market Changes**: The system's self-learning capabilities ensure it remains effective as energy markets evolve, automatically adjusting to new tariff structures, changing regulations, and emerging grid services markets without requiring manual reconfiguration.
-
-#### Strategic Advantages
-
-1. **Sustainability Positioning**: Implementation enables organizations to demonstrate tangible commitment to sustainability goals, with quantifiable CO₂ reductions of 10-30% through optimized renewable utilization and load shifting to lower-carbon grid periods.
-
-2. **Regulatory Readiness**: As energy regulations increasingly incentivize demand flexibility and penalize peak consumption, early adopters gain competitive advantage through existing capabilities that align with regulatory direction.
-
-3. **Data Asset Development**: The continuous learning system creates a valuable proprietary data asset about operational patterns and energy optimization opportunities that grows in value over time.
-
-4. **Future-Proofing**: The system's adaptable architecture accommodates emerging technologies (vehicle-to-grid, demand response, transactive energy) through modular extensions rather than replacement, protecting the initial investment.
-
-### Implementation Pathways
-
-The system's modular design enables flexible implementation approaches tailored to organizational readiness and strategic priorities:
-
-1. **Phased Deployment**: Organizations can begin with core scheduling functionality for major flexible loads, then progressively add capabilities (PV integration, battery control, grid services) as value is demonstrated.
-
-2. **Pilot-to-Enterprise Scaling**: Starting with limited-scope pilots (single building, department, or facility) allows for value demonstration before expanding to organization-wide deployment with shared learning across sites.
-
-3. **Capability Tiers**: Implementation can be structured in increasing sophistication levels:
-   - **Basic Tier**: Price-based scheduling of flexible loads
-   - **Standard Tier**: Integration with renewable generation and basic storage
-   - **Advanced Tier**: Full robust optimization with uncertainty handling
-   - **Premium Tier**: Grid service participation and multi-building coordination
-
-4. **Integration Models**: The system can operate in various integration modes with existing building infrastructure:
-   - **Advisory Mode**: Generating recommendations without direct control
-   - **Partial Control**: Managing specific systems while leaving others to existing BMS
-   - **Full Optimization**: Comprehensive energy orchestration across all compatible systems
-
-### ROI Analysis
-
-Based on our multi-building evaluation, typical return on investment metrics include:
-
-1. **Payback Period**: 10-18 months for residential implementations and 8-14 months for commercial deployments (faster with incentive programs).
-
-2. **5-Year ROI**: 280-420% for installations with existing flexible loads, PV, and storage; 180-240% for buildings requiring additional hardware investments.
-
-3. **NPV Advantage**: When comparing equivalent hardware configurations with and without the intelligent EMS, the 10-year net present value increases by 30-45% with the system implemented.
-
-4. **Risk-Adjusted Returns**: Sensitivity analysis across varying energy price scenarios, usage patterns, and hardware configurations confirms positive returns even under conservative assumptions, with worst-case scenarios still delivering 8-12% annual savings.
-
 ### 7. Recommendations
 
 Based on our comprehensive evaluation and practical deployment considerations, we provide the following recommendations for organizations considering implementation of intelligent energy management systems:
 
-### For Building Operators and Facility Managers
+#### 7.1 For Building Operators and Facility Managers
 
 1. **Start with Data Infrastructure**: Establish robust metering and data collection capabilities before implementing optimization systems. The quality of input data directly impacts system performance.
 
@@ -2370,7 +2063,7 @@ Based on our comprehensive evaluation and practical deployment considerations, w
 
 4. **User Engagement**: Invest in user education and transparent communication about scheduling decisions to ensure acceptance and trust in automated systems.
 
-### For Technology Implementers
+#### 7.2 For Technology Implementers
 
 1. **Modular Design**: Adopt the agent-based architecture approach to ensure system extensibility and maintainability as requirements evolve.
 
@@ -2378,7 +2071,7 @@ Based on our comprehensive evaluation and practical deployment considerations, w
 
 3. **Integration Planning**: Design for compatibility with existing building management systems and future smart grid infrastructure.
 
-## For Policy Makers
+#### 7.3 For Policy Makers
 
 1. **Dynamic Pricing Support**: Encourage utility adoption of time-varying pricing structures that enable demand response and load shifting benefits.
 
@@ -2386,7 +2079,7 @@ Based on our comprehensive evaluation and practical deployment considerations, w
 
 3. **Interoperability Standards**: Promote standardized communication protocols between energy management systems and utility infrastructure.
 
-### 8. Bibliography
+## 8. Bibliography
 
 1. Antunes, C. H., Soares, A., & Gomes, Á. (2023). A Comprehensive Review of Optimization Models for Integrated Home Energy Management. *Renewable and Sustainable Energy Reviews*, 168, 112828.
 
@@ -2424,16 +2117,16 @@ Based on our comprehensive evaluation and practical deployment considerations, w
 
 18. Zhou, B., Li, W., Chan, K. W., Cao, Y., Kuang, Y., Liu, X., & Wang, X. (2016). Smart Home Energy Management Systems: Concept, Configurations, and Scheduling Strategies. *Renewable and Sustainable Energy Reviews*, 61, 30-40.
 
-### 9. Appendices
+## 9. Appendices
 
 The following appendices provide additional technical details, code listings, mathematical formulations, and references that complement the main body of the report. These materials are included for readers who wish to gain a deeper understanding of the implementation details or reproduce our results.
 
 - **Appendix A: Code Listings** - Key code components of the Energy Management System
 - **Appendix B: Mathematical Formulations** - Detailed mathematical expressions for the optimization model
 - **Appendix C: Additional Results** - Extended evaluation results and analyses
-- **Appendix D: References** - Complete list of cited literature
+- **Appendix D: Production Standards and Hyperparameters** - Complete list of cited literature
 
-### 9.1 Appendix A – Code Listings
+### Appendix A: Code Listings
 
 This appendix provides the key code components of the Energy Management System, focusing on the most important implementations discussed in the main report.
 
@@ -2467,11 +2160,11 @@ Class GlobalOptimizer:
         # Solve and return optimal schedule
 ```
 
-### Appendix B: Mathematical Formulations
+##Appendix B: Mathematical Formulations
 
 This appendix provides detailed mathematical formulations for the key components of the Energy Management System.
 
-#### B.1. Complete MILP Formulation
+### Appendix B: MILP Formulation
 
 The complete mathematical formulation of the MILP optimization problem is as follows:
 
@@ -2600,45 +2293,7 @@ Sensitivity analysis was performed to evaluate the impact of key parameters on s
 
 4. **Battery Capacity**: Doubling battery capacity from 5kWh to 10kWh increased cost savings by 7-9% for buildings with PV systems.
 
-### Appendix D: References
-
-1. Antunes, C. H., Soares, A., & Gomes, Á. (2023). A Comprehensive Review of Optimization Models for Integrated Home Energy Management. *Renewable and Sustainable Energy Reviews*, 168, 112828.
-
-2. Chen, Y., Xu, P., Chu, Y., Li, W., Wu, Y., Ni, L., ... & Wang, K. (2022). Review on the Applications of Machine Learning in Building Energy Systems. *Building and Environment*, 205, 108178.
-
-3. Good, N., Ellis, K. A., & Mancarella, P. (2017). Review and Classification of Barriers and Enablers of Demand Response in the Smart Grid. *Renewable and Sustainable Energy Reviews*, 72, 57-72.
-
-4. Jindal, A., Kumar, N., & Singh, M. (2020). A Unified Framework for Big Data Acquisition, Storage, and Analytics for Demand Response Management in Smart Cities. *Future Generation Computer Systems*, 108, 921-934.
-
-5. Kanakadhurga, R., & Prabaharan, N. (2024). Scenario-Based Robust Optimization for Home Energy Management Systems Under Uncertainty. *IEEE Transactions on Smart Grid*, 15(1), 693-704.
-
-6. Kelly, J., & Knottenbelt, W. (2015). The UK-DALE Dataset, Domestic Appliance-Level Electricity Demand and Whole-House Demand from Five UK Homes. *Scientific Data*, 2(1), 1-14.
-
-7. Li, Y., Zhang, X., & Yang, C. (2024). Data-Driven Approaches for Battery Management in Residential Energy Systems. *Applied Energy*, 325, 119773.
-
-8. Molina-Solana, M., Ros, M., Ruiz, M. D., Gómez-Romero, J., & Martin-Bautista, M. J. (2017). Data Science for Building Energy Management: A Review. *Renewable and Sustainable Energy Reviews*, 70, 598-609.
-
-9. Pallonetto, F., De Rosa, M., D'Ettorre, F., & Finn, D. P. (2020). On the Assessment and Control Optimization of Demand Response Programs in Residential Buildings. *Renewable and Sustainable Energy Reviews*, 127, 109861.
-
-10. Runge, J., Zmeureanu, R., & Javed, F. (2019). Evaluating the Energy Savings Potential of Advanced Building Controls: A Comprehensive Review. *Energy and Buildings*, 199, 278-291.
-
-11. Vrettos, E., Oldewurtel, F., & Andersson, G. (2021). Robust Energy Management of Residential Buildings with High Penetration of Renewables and Storage. *IEEE Transactions on Power Systems*, 36(6), 5515-5527.
-
-12. Wang, Y., Chen, Q., Hong, T., & Kang, C. (2019). Review of Smart Meter Data Analytics: Applications, Methodologies, and Challenges. *IEEE Transactions on Smart Grid*, 10(3), 3125-3148.
-
-13. Zhao, H. X., & Magoulès, F. (2012). A Review on the Prediction of Building Energy Consumption. *Renewable and Sustainable Energy Reviews*, 16(6), 3586-3592.
-
-14. Zhou, B., Li, W., Chan, K. W., Cao, Y., Kuang, Y., Liu, X., & Wang, X. (2016). Smart Home Energy Management Systems: Concept, Configurations, and Scheduling Strategies. *Renewable and Sustainable Energy Reviews*, 61, 30-40.
-
-15. Zhu, Z., Tang, J., Lambotharan, S., Chin, W. H., & Fan, Z. (2020). An Integer Linear Programming Based Optimization for Home Demand-Side Management in Smart Grid. *IEEE Transactions on Smart Grid*, 11(2), 1661-1673.
-
-16. Bradac et al. (2014) – Optimal scheduling of multiple domestic appliances using MILP, addressing simultaneous operation and cost minimization.
-
-17. Gerards et al. (2015) – Profile steering for demand-side management at the household level, using optimization across multiple devices.
-
-18. Niculescu-Mizil, A., & Caruana, R. (2005). Predicting Good Probabilities with Supervised Learning. *Proceedings of the 22nd International Conference on Machine Learning*, 625-632.
-
-### Appendix E: Production Standards and Hyperparameters
+### Appendix D: Production Standards and Hyperparameters
 
 This appendix contains detailed production standards and hyperparameter configurations referenced in the main report.
 
