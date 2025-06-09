@@ -10,32 +10,104 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import os
 
-# DuckDB configuration - use absolute path to ensure system compatibility
-DB_PATH = Path(__file__).resolve().parent.parent / "ems_data.duckdb"
-
-def get_con():
-    """Get a read-only connection to the DuckDB database."""
-    # Convert to absolute path and normalize for system compatibility
-    # Handle both Path objects and string paths (for testing)
-    if isinstance(DB_PATH, str):
-        db_path = Path(DB_PATH).resolve()
-    else:
-        db_path = DB_PATH.resolve()
+def get_con(building_id: str = None):
+    """Get a connection to the DuckDB database with enhanced fallback."""
+    this_file = Path(__file__).resolve()
+    project_root = this_file.parent.parent
+    db_path = project_root / "ems_data.duckdb"
     
-    # Ensure the database file exists
     if not db_path.exists():
         raise FileNotFoundError(f"Database file not found: {db_path}")
     
     try:
-        # Use string path with forward slashes for better cross-platform compatibility
-        db_path_str = str(db_path).replace(os.sep, '/')
-        return duckdb.connect(db_path_str, read_only=True)
-    except Exception as e:
-        # Fallback: try with original path string
+        # First try: read-only mode (safer)
+        con = duckdb.connect(str(db_path), read_only=True)
+        
+    except duckdb.IOException as lock_err:
+        print("⚠️  DB locked – loading data into in-memory DuckDB:", lock_err)
+        
+        # Create in-memory database and load data
+        con = duckdb.connect(database=":memory:")
+        
+        # Try to copy data from the locked file using read-only mode
         try:
-            return duckdb.connect(str(db_path), read_only=True)
-        except Exception as fallback_e:
-            raise ConnectionError(f"Failed to connect to database. Original error: {e}, Fallback error: {fallback_e}")
+            # Load the parquet files directly if available
+            if building_id:
+                parquet_candidates = [
+                    project_root / "data" / f"{building_id}_processed_data.parquet",
+                    project_root / "notebooks" / "data" / f"{building_id}_processed_data.parquet",
+                ]
+                
+                for parquet_path in parquet_candidates:
+                    if parquet_path.exists():
+                        con.execute(f"""
+                        CREATE TABLE {building_id}_processed_data AS 
+                        SELECT * FROM read_parquet('{str(parquet_path).replace(os.sep, '/')}')
+                        """)
+                        print(f"✓ Loaded data from {parquet_path}")
+                        break
+                else:
+                    raise FileNotFoundError("No parquet backup found")
+                    
+        except Exception as data_err:
+            print(f"⚠️  Could not load data into memory: {data_err}")
+            raise ConnectionError("Database locked and no data backup available")
+    
+    if building_id and not hasattr(con, '_view_registered'):
+        try:
+            # Check if view exists, create if needed
+            result = con.execute(f"SELECT COUNT(*) FROM {building_id}_processed_data").fetchone()
+            con._view_registered = True
+        except:
+            register_processed_view(con, building_id)
+            con._view_registered = True
+    
+    return (con, f"{building_id}_processed_data") if building_id else con
+def register_processed_view(con, building_id):
+    """
+    Register a DuckDB view pointing at the building's processed_data parquet.
+    """
+    view_name = f"{building_id}_processed_data"
+    # locate project root relative to this script
+    this_file = Path(__file__).resolve()
+    project_root = this_file.parent.parent
+
+    # look for our parquet under either <root>/data or <root>/notebooks/data
+    candidates = [
+        project_root / "data" / f"{view_name}.parquet",
+        project_root / "notebooks" / "data" / f"{view_name}.parquet",
+    ]
+    for data_path in candidates:
+        if data_path.exists():
+            break
+    else:
+        # none found
+        raise FileNotFoundError(
+            "Tried:\n  " +
+            "\n  ".join(str(p) for p in candidates) +
+            "\nbut no parquet file was found."
+        )
+    
+    # register parquet as a view in whichever DB we have (on-disk or in-memory)
+    con.execute(
+        f"CREATE OR REPLACE VIEW {view_name} AS "
+        f"SELECT * FROM read_parquet('{str(data_path).replace(os.sep, '/')}')"
+    )
+    return view_name
+
+def get_view_con(building_id: str):
+    """
+    Convenience: open DuckDB (on-disk or in-memory if locked) and
+    register the processed_data parquet for `building_id` as a view.
+    Returns: (con, view_name)
+    """
+    # 1) connect (will auto-fall-back to memory if locked)
+    con = get_con()
+
+    # 2) register the parquet as a view
+    view_name = register_processed_view(con, building_id)
+
+    return con, view_name
 
 
 def preprocess(df):

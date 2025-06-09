@@ -1354,68 +1354,8 @@ def plot_additional_plots(devices, building_id):
     (5.a) Heatmap of 'Initial Start' coverage
     (5.b) Heatmap of 'Next Day' coverage
     """
-    # # (3) Original vs Initial Start
-    # for dev in devices:
-    #     if dev.weekday_optimized_schedule is not None:
-    #         plt.figure(figsize=(12, 6))
-    #         price_hour = dev.data.groupby('hour')['price_per_kwh'].mean()
-    #         shade_price_hours(plt.gca(), price_hour)
 
-    #         c_orig = "black"
-    #         c_init = "purple"
-
-    #         orig = pd.Series(dev.original_consumption, index=dev.data['hour']).groupby(level=0).mean()
-    #         plt.plot(orig.index, orig.values, '-', color=c_orig, linewidth=2, label='Original')
-    #         plt.step(range(24), dev.weekday_optimized_schedule,
-    #                  where='post', color=c_init, linewidth=2, label='Initial Start')
-    #         plt.xlabel("Hour of Day")
-    #         plt.ylabel("Consumption (kWh)")
-    #         plt.title(f"(3) Original vs Initial Start — {dev.device_name} — {building_id}")
-    #         plt.legend()
-    #         plt.grid(alpha=0.3)
-    #         plt.show()
-
-    # # (4) Original vs Initial Start vs Next Day
-    # for dev in devices:
-    #     if (dev.weekday_optimized_schedule is not None) or (dev.nextday_optimized_schedule is not None):
-    #         plt.figure(figsize=(12, 6))
-    #         price_hour = dev.data.groupby('hour')['price_per_kwh'].mean()
-    #         shade_price_hours(plt.gca(), price_hour)
-
-    #         c_orig = "black"
-    #         c_init = "purple"
-    #         c_nd   = "orange"
-
-    #         orig = pd.Series(dev.original_consumption, index=dev.data['hour']).groupby(level=0).mean()
-    #         plt.plot(orig.index, orig.values, '-', color=c_orig, linewidth=2, label='Original')
-    #         if dev.weekday_optimized_schedule is not None:
-    #             plt.step(range(24), dev.weekday_optimized_schedule,
-    #                      where='post', color=c_init, linewidth=2, label='Initial Start')
-    #         if dev.nextday_optimized_schedule is not None:
-    #             plt.step(range(24), dev.nextday_optimized_schedule,
-    #                      where='post', color=c_nd, linewidth=2, label='Next Day')
-    #         plt.xlabel("Hour of Day")
-    #         plt.ylabel("Consumption (kWh)")
-    #         plt.title(f"(4) Original vs Initial Start vs Next Day — {dev.device_name} — {building_id}")
-    #         plt.legend()
-    #         plt.grid(alpha=0.3)
-    #         plt.show()
-
-    # (5.a) Heatmap of 'Initial Start' coverage
-    init_matrix = []
-    dev_names = []
-    for dev in devices:
-        schedule = dev.weekday_optimized_schedule if dev.weekday_optimized_schedule is not None else [0]*24
-        init_matrix.append(schedule)
-        dev_names.append(dev.device_name)
-    plt.figure(figsize=(12, max(4, len(devices)/2)))
-    sns.heatmap(init_matrix, cmap="YlOrRd", xticklabels=range(24), yticklabels=dev_names)
-    plt.title(f"(5.a) Heatmap 'Initial Start' Coverage — {building_id}")
-    plt.xlabel("Hour of Day")
-    plt.ylabel("Devices")
-    plt.show()
-
-    # (5.b) Heatmap of 'Next Day' coverage
+    #  Heatmap of 'Next Day' coverage
     nd_matrix = []
     nd_dev_names = []
     for dev in devices:
@@ -1424,7 +1364,7 @@ def plot_additional_plots(devices, building_id):
         nd_dev_names.append(dev.device_name)
     plt.figure(figsize=(12, max(4, len(devices)/2)))
     sns.heatmap(nd_matrix, cmap="YlOrRd", xticklabels=range(24), yticklabels=nd_dev_names)
-    plt.title(f"(5.b) Heatmap 'Next Day' Coverage — {building_id}")
+    plt.title(f"Heatmap 'Next Day' Coverage — {building_id}")
     plt.xlabel("Hour of Day")
     plt.ylabel("Devices")
     plt.show()
