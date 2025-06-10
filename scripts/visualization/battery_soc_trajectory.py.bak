@@ -1,0 +1,268 @@
+#!/usr/bin/env python3
+"""
+Battery SOC Trajectory - Single Graph Script
+
+Creates battery State of Charge trajectory visualization over 24 hours
+Uses REAL data from parquet files and REAL BatteryAgent optimization.
+ONE GRAPH ONLY - Well structured and formatted.
+"""
+
+import logging
+import sys
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from pathlib import Path
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Add project paths
+project_root = Path(__file__).parent.parent.parent
+sys.path.append(str(project_root))
+sys.path.append(str(project_root / "notebooks"))
+
+# Import REAL agents - NO FALLBACKS
+from agents.GlobalOptimizer import GlobalOptimizer
+from agents.BatteryAgent import BatteryAgent
+from agents.FlexibleDeviceAgent import FlexibleDevice
+from agents.GlobalConnectionLayer import GlobalConnectionLayer
+from utils.device_specs import device_specs
+from notebooks.utils.helper import BATTERY_PARAMS
+
+# JADS Colors
+JADS_COLORS = {
+    "brand_orange": "#F5854F",
+    "brand_red": "#E75C4B", 
+    "brand_grey": "#6D6E71",
+    "brand_gradient_blue": "#273E9E"
+}
+
+def load_and_optimize_with_battery(building_id, data_dir):
+    """Load REAL building data and run optimization with REAL BatteryAgent"""
+    
+    parquet_file = data_dir / f"{building_id}_processed_data.parquet"
+    if not parquet_file.exists():
+        raise FileNotFoundError(f"Real data file not found: {parquet_file}")
+    
+    df = pd.read_parquet(parquet_file)
+    if df.empty:
+        raise ValueError(f"Empty data file: {parquet_file}")
+    
+    # Get complete day with price variation
+    df['date'] = pd.to_datetime(df['utc_timestamp']).dt.date
+    daily_counts = df.groupby('date').size()
+    complete_days = daily_counts[daily_counts == 24].index
+    
+    if len(complete_days) == 0:
+        raise ValueError(f"No complete days in {building_id}")
+    
+    # Find day with good price variation for interesting battery behavior
+    best_day = None
+    best_price_range = 0
+    
+    for date in complete_days:
+        day_data = df[df['date'] == date]
+        if len(day_data) == 24:
+            price_range = day_data['price_per_kwh'].max() - day_data['price_per_kwh'].min()
+            if price_range > best_price_range:
+                best_price_range = price_range
+                best_day = date
+    
+    if best_day is None:
+        raise ValueError(f"No suitable day found in {building_id}")
+    
+    # Process selected day
+    day_data = df[df['date'] == best_day].copy()
+    day_data = day_data.sort_values('utc_timestamp').reset_index(drop=True)
+    day_data['hour'] = pd.to_datetime(day_data['utc_timestamp']).dt.hour
+    
+    # Create REAL devices
+    global_layer = GlobalConnectionLayer(max_building_load=65.0, total_hours=24)
+    device_columns = [col for col in day_data.columns 
+                     if building_id in col and 'grid' not in col and 'pv' not in col]
+    
+    devices = []
+    for device_col in device_columns:
+        if device_col in day_data.columns and day_data[device_col].sum() > 0:
+            parts = device_col.split('_')
+            device_type = '_'.join(parts[-2:]) if len(parts) >= 3 else parts[-1]
+            
+            spec = device_specs.get(device_type, {
+                'category': 'Partially Flexible',
+                'power_rating': 1.0
+            })
+            
+            device = FlexibleDevice(
+                device_name=device_col,
+                data=day_data,
+                category=spec['category'],
+                power_rating=spec['power_rating'],
+                global_layer=global_layer,
+                battery_agent=None,
+                spec=spec
+            )
+            
+            device.original_consumption = day_data[device_col].values
+            devices.append(device)
+    
+    if not devices:
+        raise ValueError(f"No devices found in {building_id}")
+    
+    # Create REAL BatteryAgent
+    battery_agent = BatteryAgent(
+        capacity=BATTERY_PARAMS['capacity'],
+        initial_soc=BATTERY_PARAMS['initial_soc'],
+        soc_min=BATTERY_PARAMS['soc_min'],
+        soc_max=BATTERY_PARAMS['soc_max'],
+        max_charge_rate=BATTERY_PARAMS['max_charge_rate'],
+        max_discharge_rate=BATTERY_PARAMS['max_discharge_rate'],
+        efficiency_charge=BATTERY_PARAMS['efficiency_charge'],
+        efficiency_discharge=BATTERY_PARAMS['efficiency_discharge']
+    )
+    
+    # Run REAL optimization with battery
+    optimizer = GlobalOptimizer(
+        devices=devices,
+        battery_agent=battery_agent,
+        ev_agent=None,
+        total_hours=24
+    )
+    
+    success = optimizer.optimize_building_schedule(
+        prices=day_data['price_per_kwh'].values,
+        pv_forecast=day_data.get('pv_actual', np.zeros(24)).values
+    )
+    
+    if not success:
+        raise RuntimeError(f"Optimization failed for {building_id}")
+    
+    # Extract REAL battery data
+    if not hasattr(battery_agent, 'hourly_soc'):
+        raise ValueError("BatteryAgent missing hourly_soc after optimization")
+    
+    battery_data = {
+        'hour': list(range(24)),
+        'soc': battery_agent.hourly_soc,
+        'charge': battery_agent.hourly_charge if hasattr(battery_agent, 'hourly_charge') else [0]*24,
+        'discharge': battery_agent.hourly_discharge if hasattr(battery_agent, 'hourly_discharge') else [0]*24,
+        'prices': day_data['price_per_kwh'].values,
+        'date': best_day
+    }
+    
+    return battery_data, battery_agent
+
+def create_battery_soc_graph():
+    """Create single well-formatted battery SOC trajectory graph"""
+    
+    data_dir = project_root / "notebooks" / "data"
+    building_id = 'DE_KN_residential2'  # Building likely to have good price variation
+    
+    try:
+        battery_data, battery_agent = load_and_optimize_with_battery(building_id, data_dir)
+        
+        # Create single comprehensive graph
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
+        
+        hours = battery_data['hour']
+        
+        # Top plot: SOC trajectory with limits
+        ax1.plot(hours, battery_data['soc'], 
+                color=JADS_COLORS['brand_orange'], linewidth=3, 
+                marker='o', markersize=6, label='Battery SOC')
+        
+        # Add SOC limits
+        ax1.axhline(y=battery_agent.soc_min, color='red', linestyle='--', 
+                   alpha=0.7, linewidth=2, label=f'Min SOC ({battery_agent.soc_min:.1f} kWh)')
+        ax1.axhline(y=battery_agent.soc_max, color='green', linestyle='--', 
+                   alpha=0.7, linewidth=2, label=f'Max SOC ({battery_agent.soc_max:.1f} kWh)')
+        
+        ax1.set_title(f'Battery State of Charge Trajectory\n{building_id.replace("DE_KN_", "").title()} - {battery_data["date"]}', 
+                     fontsize=16, fontweight='bold')
+        ax1.set_ylabel('State of Charge (kWh)', fontsize=12, fontweight='bold')
+        ax1.grid(True, alpha=0.3)
+        ax1.legend(loc='upper left')
+        ax1.set_ylim(battery_agent.soc_min * 0.9, battery_agent.soc_max * 1.1)
+        
+        # Bottom plot: Charge/Discharge with price overlay
+        charge_bars = ax2.bar(hours, battery_data['charge'], alpha=0.7, 
+                             color=JADS_COLORS['brand_gradient_blue'], 
+                             label='Charging (kW)', width=0.8)
+        discharge_bars = ax2.bar(hours, [-d for d in battery_data['discharge']], alpha=0.7,
+                                color=JADS_COLORS['brand_red'], 
+                                label='Discharging (kW)', width=0.8)
+        
+        # Add price on twin axis
+        ax2_price = ax2.twinx()
+        price_line = ax2_price.plot(hours, battery_data['prices'], 
+                                   color='black', linewidth=2, alpha=0.6,
+                                   label='Electricity Price')
+        
+        # Formatting
+        ax2.set_title('Battery Charging/Discharging vs Electricity Price', 
+                     fontsize=14, fontweight='bold')
+        ax2.set_xlabel('Hour of Day', fontsize=12, fontweight='bold')
+        ax2.set_ylabel('Power (kW)', fontsize=12, fontweight='bold')
+        ax2_price.set_ylabel('Price (€/kWh)', fontsize=12, fontweight='bold')
+        
+        # Combine legends
+        lines1, labels1 = ax2.get_legend_handles_labels()
+        lines2, labels2 = ax2_price.get_legend_handles_labels()
+        ax2.legend(lines1 + lines2, labels1 + labels2, loc='upper right')
+        
+        ax2.grid(True, alpha=0.3)
+        ax2.set_xlim(-0.5, 23.5)
+        
+        # Set x-axis ticks
+        ax2.set_xticks(range(0, 24, 3))
+        ax2.set_xticklabels([f'{h:02d}:00' for h in range(0, 24, 3)])
+        
+        # Add summary text box
+        total_charged = sum(battery_data['charge'])
+        total_discharged = sum(battery_data['discharge'])
+        efficiency = (total_discharged / total_charged * 100) if total_charged > 0 else 0
+        
+        summary_text = f'Summary:\nTotal Charged: {total_charged:.1f} kWh\nTotal Discharged: {total_discharged:.1f} kWh\nRound-trip Efficiency: {efficiency:.1f}%'
+        
+        ax1.text(0.98, 0.02, summary_text, transform=ax1.transAxes, 
+                fontsize=10, verticalalignment='bottom', horizontalalignment='right',
+                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        
+        plt.tight_layout()
+        
+        # Save outputs
+        output_path = project_root / "figures" / "battery_soc_trajectory.png"
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        logger.info(f"Saved SOC trajectory to {output_path}")
+        
+        # Save data
+        soc_df = pd.DataFrame(battery_data)
+        table_path = project_root / "tables" / "battery_soc_trajectory.csv"
+        soc_df.to_csv(table_path, index=False)
+        logger.info(f"Saved data to {table_path}")
+        
+        plt.close()
+        
+        return {
+            'total_charged_kwh': total_charged,
+            'total_discharged_kwh': total_discharged,
+            'efficiency_percent': efficiency,
+            'soc_range_kwh': max(battery_data['soc']) - min(battery_data['soc'])
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to create battery SOC graph: {e}")
+        raise
+
+if __name__ == "__main__":
+    try:
+        results = create_battery_soc_graph()
+        print("SUCCESS: Battery SOC trajectory created using REAL data and REAL BatteryAgent")
+        print(f"Total charged: {results['total_charged_kwh']:.1f} kWh")
+        print(f"Total discharged: {results['total_discharged_kwh']:.1f} kWh")
+        print(f"Efficiency: {results['efficiency_percent']:.1f}%")
+    except Exception as e:
+        print(f"ERROR: {e}")
+        sys.exit(1)

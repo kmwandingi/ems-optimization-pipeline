@@ -1,0 +1,5 @@
+Scenario,Avg_Time_Sec,Std_Time_Sec,Min_Time_Sec,Max_Time_Sec,Avg_Variables,Avg_Memory_MB,Avg_Iterations,Convergence_Rate_Pct,Time_Per_Variable_Ms
+Complex,0.667,0.066,0.58,0.736,180,36.446,76,50.0,4.0
+Medium,0.372,0.055,0.327,0.452,72,15.678,78,100.0,5.0
+Simple,0.145,0.019,0.117,0.159,24,3.12,49,100.0,6.0
+OVERALL,0.395,0.228,0.117,0.736,92,18.414,67,83.333,4.995

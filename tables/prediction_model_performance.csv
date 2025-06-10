@@ -1,0 +1,6 @@
+Building,Avg_AUC,Std_AUC,Avg_Accuracy,Std_Accuracy,Total_Samples
+DE_KN_residential1,0.587,0.058,0.746,0.18,63488
+DE_KN_residential2,0.627,0.091,0.767,0.095,99756
+DE_KN_residential5,0.572,0.038,0.772,0.201,70620
+DE_KN_residential6,0.6,0.05,0.73,0.198,86132
+OVERALL,0.598,0.06,0.752,0.153,319996
