@@ -23,6 +23,15 @@ import argparse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import sys, os
+# Ensure Unicode-friendly output even on Windows cmd
+if os.name == "nt":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+import json
 from pathlib import Path
 from datetime import datetime, timedelta
 import common
@@ -152,9 +161,8 @@ def setup_duckdb_connection(building_id):
     """
     print(f"📊 Setting up DuckDB connection for {building_id}...")
     
-    # MANDATORY: Use DuckDB data access layer
-    con = common.get_con()
-    view_name = f"{building_id}_processed_data"
+    # MANDATORY: Use DuckDB data access layer with registered parquet view
+    con, view_name = common.get_view_con(building_id)
     
     # Validate data exists and get metadata
     row_count = con.execute(f"SELECT COUNT(*) as count FROM {view_name}").df()['count'][0]
@@ -848,6 +856,17 @@ def main():
         # End MLflow run
         mlflow_tracker.end_run()
         print("✓ MLflow tracking completed")
+
+        # Persist metrics for aggregation
+        try:
+            output_dir = Path("results") / "output"
+            output_dir.mkdir(parents=True, exist_ok=True)
+            metrics_path = output_dir / f"{building_id}_metrics.json"
+            with open(metrics_path, "w", encoding="utf-8") as f:
+                json.dump(final_metrics, f, indent=2)
+            print(f"✓ Saved metrics to {metrics_path}")
+        except Exception as dump_err:
+            print(f"⚠ Failed to write metrics JSON: {dump_err}")
     
     return True
 

@@ -9,15 +9,19 @@ This file is imported across the project to ensure complete consistency.
 # Device Agents
 # --------------------------
 BATTERY_PARAMS = {
+    "capacity": 15.0,
     "max_charge_rate": 5.0,
     "max_discharge_rate": 5.0,
     "initial_soc": 8.0,
     "soc_min": 0.6,
-    "soc_max": 12.0,
+    "soc_max": 14.0,
     "degradation_rate": 0.00001,
     "temperature_coefficient": 1.0,
-    "max_ramp_rate": 1.0
+    "max_ramp_rate": 1.0,
+    "efficiency_charge": 0.95,
+    "efficiency_discharge": 0.95
 }
+
 
 EV_PARAMS = {
     "capacity": 60.0,
@@ -25,12 +29,12 @@ EV_PARAMS = {
     "efficiency_charge": 0.92,
     "max_discharge_rate": 11.0,
     "max_charge_rate": 11.0,
-    "initial_soc": 0.3,
-    "soc_min": 0.1,
-    "soc_max": 0.9,
+    "initial_soc": 20,
+    "soc_min":3,
+    "soc_max": 57,
     "power_rating": 11.0,
     "must_be_full_by_hour": 7,
-    "degradation_cost": 0.07
+    "degradation_cost": 0.007
 }
 
 # --------------------------
@@ -179,7 +183,8 @@ EXPORT_PRICE       = GRID_AGENT_PARAMS["export_price"]
 MAX_BUILDING_LOAD  = GLOBAL_CONNECTION_PARAMS["max_building_load"]
 
 # Parameters passed via **kwargs
-GRID_PARAMS       = { "max_import": GRID_AGENT_PARAMS["max_import"], "max_export": GRID_AGENT_PARAMS["max_export"] }
+GRID_PARAMS       = {"import_price": GRID_AGENT_PARAMS["import_price"], "export_price": GRID_AGENT_PARAMS["export_price"], "max_import": GRID_AGENT_PARAMS["max_import"], "max_export": GRID_AGENT_PARAMS["max_export"] }
 FLEXIBLE_PARAMS   = FLEXIBLE_DEVICE_PARAMS
 PV_PARAMS         = PV_AGENT_PARAMS
 EV_PARAMS         = EV_PARAMS
+

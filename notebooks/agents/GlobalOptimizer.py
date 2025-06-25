@@ -746,6 +746,10 @@ class GlobalOptimizer:
                 if not dev.is_flexible or not np.any(consumption_24 > 0):
                     print(f"  {dev.device_name}: Skipping optimization (not flexible or no consumption)")
                     continue
+                # Skip battery/storage devices - they're handled separately
+                if hasattr(dev, 'get_battery_state'):
+                    print(f"  {dev.device_name}: Skipping shift variables (handled as storage device)")
+                    continue
 
                 print(f"  {dev.device_name}: Creating shift variables")
                 max_shift = dev.max_shift_hours
@@ -836,13 +840,26 @@ class GlobalOptimizer:
                     
                     # Enable extensive debugging
                     import tempfile, os
+                    from pathlib import Path
                     from pulp import COIN_CMD, PULP_CBC_CMD
                     
-                    # Write LP file to disk for inspection if needed
-                    temp_dir = tempfile.gettempdir()
+                    # Create a custom temp directory in the project instead of using system temp
+                    # Find the project root directory
+                    script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+                    project_root = script_dir.parent.parent  # Go up two levels from agents/ folder
+                    
+                    # Create a temp dir inside the project
+                    temp_dir = project_root / 'temp_optimizations'
+                    os.makedirs(temp_dir, exist_ok=True)
+                    
+                    # Write LP file to custom directory
                     lp_path = os.path.join(temp_dir, 'debug_optimization.lp')
                     print(f"Writing LP file to {lp_path} for debugging")
-                    prob.writeLP(lp_path)
+                    try:
+                        prob.writeLP(lp_path)
+                    except Exception as write_error:
+                        print(f"Warning: Failed to write LP file: {write_error}")
+                        # Continue without the LP file if writing fails
                     
                     try:
                         # Try first with CBC CMD
@@ -1524,8 +1541,16 @@ class GlobalOptimizer:
             # EV must have minimum charge by departure hour (realistic constraint)
             must_full = ev_agent.spec.get("must_be_full_by_hour", 7)
             # Instead of forcing full charge, ensure minimum viable charge (40% + buffer for daily usage)
-            min_departure_soc = max(ev_agent.soc_min + 10.0, ev_agent.soc_max * 0.4)  # 40% or 24kWh minimum
-            prob += ev_soc[must_full] >= min_departure_soc, "EV_min_departure_charge"
+            min_departure_soc = max(ev_agent.soc_min + 10.0, ev_agent.soc_max * 0.95)  # 40% or 24kWh minimum
+            # EV must be fully charged BEFORE departure  
+            if must_full > 0:
+                prob += ev_soc[must_full - 1] >= min_departure_soc, "EV_fully_charged_before_departure"
+            else:
+                prob += ev_soc[0] >= min_departure_soc, "EV_fully_charged_before_departure"
+
+            # No charging allowed at or after departure time
+            for t in range(must_full, len(hours)):
+                prob += ev_charge[t] == 0, f"EV_no_charge_after_departure_{t}"
             
             # Add to objective
             for t in hours:

@@ -1,0 +1,4 @@
+day,total_load_kwh,baseline_cost_€,decentralized_cost_€,centralized_cost_€,dec_savings_€,cent_savings_€,dec_savings_%,cent_savings_%,devices_optimized,dec_time_s,cent_time_s
+2015-05-22,9.43,0.349,0.349,0.349,0.0,0.0,0.0,0.0,1,0.262,0.462
+2015-05-23,7.354,0.054,0.054,0.054,0.0,0.0,0.0,0.0,2,0.246,0.001
+2015-05-24,5.677,0.252,0.252,0.252,0.0,0.0,0.0,0.0,2,0.276,0.002

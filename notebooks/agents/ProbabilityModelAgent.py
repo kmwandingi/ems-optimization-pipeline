@@ -1,5 +1,5 @@
 # ────────────────────────────────────────────────────────────────
-#  ProbabilityModelAgent – Adaptive-PMF edition
+#  ProbabilityModelAgent – Adaptive-PMF edition with DuckDB priors
 #  100 % compatible with your existing notebooks & scripts
 #  2025-05-20
 # ────────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ PROBABILITY_THRESHOLD = 0.05      # Used for allowed_hours pruning
 #  ProbabilityModelAgent
 # ╚══════════════════════════════════════════════════════════════╝
 class ProbabilityModelAgent:
-    """Per-event Adaptive PMF identical to the stand-alone demo."""
+    """Per-event Adaptive PMF with DuckDB priors support."""
 
     # class-level defaults
     LR_TAU      = LR_TAU
@@ -49,19 +49,67 @@ class ProbabilityModelAgent:
     PROBABILITY_THRESHOLD = PROBABILITY_THRESHOLD
 
     # ───────── initialisation ───────────────────────────────────
-    def __init__(self, prob_dist_df: Optional[pd.DataFrame] = None):
-        self.prob_dist_df = prob_dist_df            # optional parquet of priors
+    def __init__(self, prob_dist_df: Optional[pd.DataFrame] = None, building_id: str = None, use_duckdb_priors: bool = True):
+        self.prob_dist_df = prob_dist_df            # optional parquet of priors (backward compatibility)
+        self.building_id = building_id
+        self.use_duckdb_priors = use_duckdb_priors
         self.latest_distributions: Dict[str, Dict[int,float]] = {}
         self.observation_counts: Dict[str, int] = {}
         self.probability_updates_history: Dict[str, List[Dict]] = {}
         self.first_day_seen: Dict[str, str] = {}   # key → "YYYY-MM-DD"
-        print("ProbabilityModelAgent ready (adaptive PMF)")
+        print("ProbabilityModelAgent ready (adaptive PMF with DuckDB priors)")
 
-    # ───────── PRIORS ───────────────────────────────────────────
-    def get_prior_from_parquet(self, device_type: Optional[str]) -> Dict[int,float]:
-        """Return parquet prior if available else uniform."""
-        if (self.prob_dist_df is None) or (device_type not in self.prob_dist_df.index):
+    # ───────── PRIORS FROM DUCKDB ───────────────────────────────
+    def get_prior_from_duckdb(self, device_type: Optional[str]) -> Dict[int,float]:
+        """Return device-specific hour probabilities from parquet file or uniform distribution."""
+        if not self.use_duckdb_priors or not device_type:
             return {h: 1.0/24.0 for h in range(24)}
+        
+        # Skip DuckDB entirely and directly load from parquet file
+        try:
+            import os
+            import pandas as pd
+            from pathlib import Path
+            
+            # Find the project root directory using relative path
+            script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+            project_root = script_dir.parent.parent  # Go up two levels from agents/ folder
+            
+            # Known location for the probability file
+            prob_file = project_root / 'notebooks' / 'probabilities' / 'device_hourly_probabilities.parquet'
+            
+            if prob_file.exists():
+                # Load the parquet file - device_type is the index with integer columns 0-23 for hours
+                df = pd.read_parquet(prob_file)
+                
+                # Check if the requested device type exists in the index
+                if device_type in df.index:
+                    # Get the row for this device type
+                    row = df.loc[device_type]
+                    
+                    # Extract hour probabilities (columns are integer values 0-23)
+                    prior = {h: float(row[h]) for h in range(24)}
+                    
+                    # Normalize to ensure it's a valid probability distribution
+                    total = sum(prior.values())
+                    if total > 0:
+                        prior = {h: v/total for h, v in prior.items()}
+                        print(f"✓ Loaded prior for {device_type}: max={max(prior.values()):.3f}, min={min(prior.values()):.3f}")
+                        return prior
+                    
+                print(f"⚠ Device '{device_type}' not found in probability file. Available devices: {df.index.tolist()[:5]}...")
+        except Exception as e:
+            print(f"⚠ Failed to load probability file: {e}")
+        
+        # Fallback to uniform distribution
+        print(f"→ Using uniform fallback for {device_type}")
+        return {h: 1.0/24.0 for h in range(24)}
+
+    # ───────── PRIORS (backward compatibility) ──────────────────
+    def get_prior_from_parquet(self, device_type: Optional[str]) -> Dict[int,float]:
+        """Return parquet prior if available else DuckDB/uniform."""
+        if (self.prob_dist_df is None) or (device_type not in self.prob_dist_df.index):
+            return self.get_prior_from_duckdb(device_type)
         row   = self.prob_dist_df.loc[device_type]
         prior = {h: float(row[h]) for h in range(24)}
         s     = sum(prior.values())
@@ -88,76 +136,6 @@ class ProbabilityModelAgent:
         vals=[ self.js_div(seq[i-1]['distribution'], seq[i]['distribution'])
                for i in range(1,len(seq)) ]
         return float(np.mean(vals))
-        
-    def train(self, building_id: str, days_list: list[str], device_specs: dict,
-             weather_df: pd.DataFrame, forecast_df: pd.DataFrame,
-             parquet_dir: str = "processed_data", max_building_load: float = 10.0,
-             battery_params=None, flexible_params=None,
-             grid_params=None, pv_params=None, cleaner=None) -> tuple[dict, dict]:
-        """
-        Train the probability model on historical data.
-        
-        Args:
-            building_id: ID of the building
-            days_list: List of days to train on (YYYY-MM-DD)
-            device_specs: Dictionary of device specifications
-            weather_df: Weather data
-            forecast_df: Forecast data
-            parquet_dir: Directory containing parquet files
-            max_building_load: Maximum building load
-            
-        Returns:
-            Tuple of (updated_specs, device_probs)
-        """
-        # Collapse "…_phase1" / "…_L1" → one physical appliance key
-        def base_id(name: str) -> str:
-            for t in ("_phase", "_L"):
-                if t in name:
-                    return name.split(t)[0]
-            return name
-
-        updated_specs, device_probs = device_specs.copy(), {}
-        from utils.helper import load_building_day_devices
-
-        for day in days_list:
-            raw = load_building_day_devices(building_id, day, parquet_dir, updated_specs)
-
-            for dev in raw:
-                key = base_id(dev.device_name)
-
-                # Hydrate / init
-                if key not in self.latest_distributions:  # First sight
-                    self.update_user_probability_model(
-                        device=dev, day="PRIOR", actual_hour=0,
-                        max_per_day_update=True, day_type=self.day_type(day))
-                else:  # Resume
-                    dev.hour_probability = self.latest_distributions[key].copy()
-                    dev.observation_count = self.observation_counts[key]
-                    dev.probability_updates = self.probability_updates_history[key].copy()
-
-                # ONE update per active *hour*
-                kwh_per_hour = dev.data.groupby("hour")[dev.device_name].sum()
-                active_hours = kwh_per_hour[kwh_per_hour > 0].index
-                dev.updates_today = 0  # Reset counter for this day
-
-                for hr in active_hours:
-                    self.update_user_probability_model(
-                        device=dev, day=day, actual_hour=int(hr),
-                        max_per_day_update=False, day_type=self.day_type(day))
-
-                # Persist state for next day
-                self.latest_distributions[key] = dev.hour_probability.copy()
-                self.observation_counts[key] = dev.observation_count
-                self.probability_updates_history[key] = dev.probability_updates.copy()
-
-                device_probs[key] = {
-                    "hour_probability": dev.hour_probability.copy(),
-                    "observation_count": dev.observation_count,
-                    "estimated_preferred_hour": max(dev.hour_probability, key=dev.hour_probability.get),
-                    "probability_updates": dev.probability_updates.copy(),
-                }
-
-        return updated_specs, device_probs
 
     @staticmethod
     def entropy(pmf: Dict[int,float]) -> float:
@@ -216,11 +194,24 @@ class ProbabilityModelAgent:
         
         if needs_prior_init:
             dtype = getattr(device,'device_type',None)
-            if dtype is None and self.prob_dist_df is not None and hasattr(device,'device_name'):
+            if dtype is None and hasattr(device,'device_name'):
+                # Extract device type from full name
                 dn = device.device_name.lower()
-                for idx in self.prob_dist_df.index:
-                    if str(idx).lower() in dn: dtype = idx; break
-            device.hour_probability = self.get_prior_from_parquet(dtype)
+                # Try to extract device type from name patterns
+                for possible_type in ['dishwasher', 'ev', 'electric_vehicle', 'freezer', 'heat_pump', 'refrigerator', 'washing_machine', 'tumble_dryer']:
+                    if possible_type in dn or possible_type.replace('_', '') in dn:
+                        dtype = possible_type
+                        break
+                # If still no match, use the last part of the device name
+                if dtype is None:
+                    dtype = dn.split('_')[-1]
+                        
+            # Use DuckDB priors first, then parquet fallback
+            if self.use_duckdb_priors:
+                device.hour_probability = self.get_prior_from_duckdb(dtype)
+            else:
+                device.hour_probability = self.get_prior_from_parquet(dtype)
+                
             device.observation_count = 0
             device.probability_updates=[{
                 'day':'PRIOR','actual_hour':None,
@@ -276,9 +267,6 @@ class ProbabilityModelAgent:
             for h in device.hour_probability:
                 device.hour_probability[h] = 1.0 / 24.0
                 
-        # Track updates for this device
-        device.observation_count += 1
-
         # divergence metrics
         js_prior = self.js_div(device.hour_probability,
                                device.probability_updates[0]['distribution'])
@@ -355,6 +343,10 @@ class ProbabilityModelAgent:
         updated_specs = device_specs.copy()
         device_probabilities: Dict[str, Dict[str,Any]] = {}
         print(f"Training PMFs for building={building_id} over {len(days_list)} days")
+        
+        # Set building_id for DuckDB priors if not already set
+        if self.building_id is None:
+            self.building_id = building_id
 
         for i,single_day in enumerate(days_list):
             print(f"  Day {i+1}/{len(days_list)} : {single_day}")
@@ -378,6 +370,15 @@ class ProbabilityModelAgent:
                     dev.observation_count = self.observation_counts[dev_name]
                     dev.probability_updates=self.probability_updates_history[dev_name].copy()
 
+                # Check if data has required columns
+                if 'hour' not in dev.data.columns:
+                    if 'utc_timestamp' in dev.data.columns:
+                        dev.data['hour'] = dev.data['utc_timestamp'].dt.hour
+                    else:
+                        print(f"Warning: No hour data for {dev_name} on {single_day}")
+                        continue
+                
+                # Get usage by hour
                 usage_by_hour = dev.data.groupby("hour")[dev_name].sum()
                 # NEW ▼ — trigger exactly once for each *hour* that saw any usage
                 active_hours = usage_by_hour[usage_by_hour > 0].index.tolist()

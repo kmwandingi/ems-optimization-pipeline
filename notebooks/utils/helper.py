@@ -29,7 +29,11 @@ from agents.GlobalConnectionLayer import GlobalConnectionLayer
 from agents.WeatherAgent import WeatherAgent
 
 # Import device_specs
-from .device_specs import device_specs
+# Support import when `helper` is executed as a standalone module or as part of a package
+try:
+    from .device_specs import device_specs  # type: ignore
+except ImportError:  # fallback when `helper` is imported without package context
+    from device_specs import device_specs
 
 # Default parameters for system components
 BATTERY_PARAMS = {
@@ -63,6 +67,8 @@ GRID_PARAMS = {
     "max_export": 15.0
 }
 
+
+
 def validate_dataframe_for_agents(df, expected_hours=24):
     """
     Validate that DataFrame has correct structure for agent consumption.
@@ -91,45 +97,6 @@ def validate_dataframe_for_agents(df, expected_hours=24):
             raise ValueError(f"Column '{col}' contains missing values")
     
     return True
-
-def compute_device_savings(device):
-    """
-    Compute device savings using original vs optimized consumption.
-    Uses agent-generated schedules only.
-    """
-    if not hasattr(device, 'original_consumption') or not hasattr(device, 'optimized_consumption'):
-        # No fallback allowed - device must have consumption data from agent optimization
-        raise ValueError(f"Device {device.device_name if hasattr(device, 'device_name') else 'Unknown'} "
-                        f"missing required consumption attributes. Agent optimization must be run correctly.")
-    else:
-        # Calculate costs using device data
-        if hasattr(device, 'data') and 'price_per_kwh' in device.data.columns:
-            prices = device.data['price_per_kwh'].values[:24]
-            original_cost = np.sum(np.array(device.original_consumption[:24]) * prices)
-            optimized_cost = np.sum(np.array(device.optimized_consumption[:24]) * prices)
-        else:
-            # Use default prices if not available
-            default_price = 0.25
-            original_cost = np.sum(np.array(device.original_consumption[:24])) * default_price
-            optimized_cost = np.sum(np.array(device.optimized_consumption[:24])) * default_price
-    
-    # Add battery costs if available
-    if hasattr(device, 'battery_charge') and device.battery_charge is not None:
-        if hasattr(device, 'data') and 'price_per_kwh' in device.data.columns:
-            prices = device.data['price_per_kwh'].values[:24]
-        else:
-            prices = [0.25] * 24
-        
-        battery_cost = np.sum(np.array(device.battery_charge[:24]) * prices)
-        battery_savings = np.sum(np.array(device.battery_discharge[:24]) * prices) if hasattr(device, 'battery_discharge') and device.battery_discharge else 0
-        optimized_cost += battery_cost - battery_savings
-    
-    # Calculate savings
-    euro_savings = original_cost - optimized_cost
-    pct_savings = (euro_savings / original_cost * 100) if original_cost > 0 else 0
-    adjusted_cost = optimized_cost
-    
-    return pct_savings, euro_savings, adjusted_cost
 
 def plot_battery_schedule(battery_schedule, building_id, day_str):
     """
@@ -195,94 +162,66 @@ def plot_device_comparison(device, building_id, day_str):
     
     return output_file
 
-def load_building_day_devices(building_id, single_day, parquet_dir, device_specs):
+import math
+import scripts.common as common
+from agents.FlexibleDeviceAgent import FlexibleDevice
+from agents.GlobalConnectionLayer import GlobalConnectionLayer
+from utils.device_specs import device_specs
+def load_building_day_devices(building_id: str, single_day: str, parquet_dir: str = None, device_specs_arg: dict = None):
     """
-    Load building devices for a specific day using DuckDB queries.
-    Loads data from DuckDB only.
+    Load device agents for one day via DuckDB (no file reads).
     """
-    # Import common here to avoid circular imports
-    import common
-    
-    # Get DuckDB connection
-    con = common.get_con()
-    view_name = f"{building_id}_processed_data"
-    
-    # Query data for this day from DuckDB
-    day_data = con.execute(f"""
-        SELECT *, EXTRACT(hour FROM utc_timestamp) as hour, DATE(utc_timestamp) as day
-        FROM {view_name} 
-        WHERE DATE(utc_timestamp) = '{single_day}' 
-        ORDER BY utc_timestamp
-    """).df()
-    
-    if len(day_data) != 24:
-        raise ValueError(f"Day {single_day} does not have exactly 24 hours. Found: {len(day_data)} hours")
-    
-    # Create devices
-    devices = []
-    
-    # Create global connection layer
-    max_building_load = 65.0  # Default building load limit
-    global_layer = GlobalConnectionLayer(max_building_load=max_building_load, total_hours=24)
-    
-    # Query DuckDB for device columns (exclude grid and PV)
-    columns_df = con.execute(f"DESCRIBE {view_name}").df()
-    device_columns = [col for col in columns_df['column_name'] if building_id in col 
-                     and 'grid_export' not in col and 'grid_import' not in col and 'pv' not in col]
-    
-    for device_id in device_columns:
-        if device_id in day_data.columns:
-            # Extract device type from column name
-            parts = device_id.split('_')
-            if len(parts) >= 4 and '_'.join(parts[-2:]) in ['heat_pump', 'washing_machine']:
-                device_type = '_'.join(parts[-2:])
-            else:
-                device_type = parts[-1]
-            
-            # Get device specification
-            if device_type in device_specs:
-                spec = device_specs[device_type].copy()
-            elif device_type in globals()['device_specs']:
-                spec = globals()['device_specs'][device_type].copy()
-            else:
-                # Default spec if not found
-                spec = {'category': 'Non-Flexible', 'power_rating': 1.0}
-            
-            # Reset index for proper agent data handling
-            day_data_reset = day_data.reset_index(drop=True).copy()
-            
-            # Create FlexibleDevice agent
-            device = FlexibleDevice(
-                device_name=device_id,
-                data=day_data_reset,
-                category=spec.get('category', 'Non-Flexible'),
-                power_rating=spec.get('power_rating', 1.0),
-                global_layer=global_layer,
-                battery_agent=None,  # No battery for probability training
-                spec=spec
-            )
-            
-            # Initialize with uniform probabilities and proper probability tracking
-            device.hour_probability = {h: 1/24 for h in range(24)}
-            device.observation_count = 0
-            device.probability_updates = []  # Initialize empty updates list
-            
-            # Add initial prior entry to probability_updates to avoid IndexError
-            device.probability_updates.append({
-                'day': 'INITIAL_PRIOR',
-                'actual_hour': 0,
-                'distribution': device.hour_probability.copy(),
-                'learning_rate': 0.0,
-                'entropy': np.log(24),  # Maximum entropy for uniform distribution
-                'day_type': 'weekday',
-                'js_prior': 0.0,
-                'js_prev': 0.0
-            })
-            
-            devices.append(device)
-    
-    return devices
+    # open connection & view
+    con = common.get_con(read_only=False)
+    view_name = common.register_processed_view(con, building_id)
 
+    # Simple query - just get the data for the day
+    query = f"""
+        SELECT *
+        FROM {view_name}
+        WHERE DATE(utc_timestamp) = '{single_day}'
+        ORDER BY utc_timestamp
+    """
+    df = con.execute(query).df()
+    
+    # Fill missing hours with zeros if needed
+    if len(df) < 24:
+        print(f"Warning: Only {len(df)} hours found for {single_day}")
+
+    # prepare global layer
+    global_layer = GlobalConnectionLayer(max_building_load=65.0, total_hours=24)
+    devices = []
+
+    # identify device columns
+    sensor_cols = [c for c in df.columns if c.startswith(building_id) and 'grid_' not in c and 'pv' not in c.lower()]
+    
+    for col in sensor_cols:
+        device_type = col.split('_')[-1]  # e.g., 'dishwasher', 'ev'
+        spec = device_specs.get(device_type, {
+            'category': 'Non-Flexible',
+            'power_rating': 1.0
+        })
+        
+        # Create device data with proper columns
+        device_data = df[['utc_timestamp'] + [c for c in df.columns if c != 'utc_timestamp']].copy()
+        
+        device = FlexibleDevice(
+            data=device_data,
+            device_name=col,
+            category=spec.get('category', 'Non-Flexible'),
+            power_rating=spec.get('power_rating', 1.0),
+            global_layer=global_layer,
+            spec=spec
+        )
+        
+        # uniform prior
+        device.hour_probability = {h: 1/24 for h in range(24)}
+        device.observation_count = 0
+        device.probability_updates = []
+        devices.append(device)
+    
+    con.close()
+    return devices
 def validate_agent_results(devices, optimizer, battery_agent=None, ev_agent=None):
     """
     Validate that agent optimization results are consistent.

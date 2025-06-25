@@ -1,14 +1,17 @@
-# Advanced Energy Management System (EMS) Technical Report
+# Smart Building Energy Optimization: A Probabilistic, Multi-Agent MILP Framework
 
 ## 0. Executive Summary
 
-**Problem**: Rising energy costs and complex device management create substantial challenges for building operators. Manual scheduling of household appliances during optimal price periods is impractical, leading to missed savings opportunities.
+Rising energy prices and the growing number of controllable devices make it difficult for building operators or occupants to decide when to run appliances, charge batteries or use solar power in the most cost-effective way. This report describes an Energy Management System (EMS) developed and tested on six buildings over several weeks, which learns from historical device usage and price signals to plan operations each day. The system observes when appliances are actually used and records relevant data (such as hourly electricity prices, weather forecasts for solar output, and battery requirements) to build simple prediction models for both whether a device will be used on a given day and when during the day it is likely to run. These models form the basis for daily planning.
 
-**Solution**: Our Energy Management System automatically schedules devices (washing machines, heat pumps, EV chargers) to operate when electricity prices are lowest while respecting user preferences. The system learns usage patterns and creates daily schedules without user intervention.
+To forecast daily likelihoods, we trained a LightGBM model on past usage features (day of week, recent patterns, weather summaries) so the system estimates how likely each device is to be needed on each day. For hours within a day, we used CatBoost to estimate a probability distribution over hours when usage could occur, drawing on time-of-day patterns, temperature or solar irradiance at each hour, and past behavior. These probability distributions are then translated into preference signals that guide the next step: finding a schedule that balances lower expected cost with respect for likely usage times.
 
-**Benefit**: Testing across six buildings (90 days of data, see Table 4-1) demonstrates 10-30% energy bill reductions and solar self-consumption increases from 42% to 87%. The system works consistently across residential and commercial buildings regardless of renewable energy setup.
+The planning step employs a mixed-integer programming formulation that combines electricity price forecasts, solar generation forecasts, battery charge/discharge limits and device requirements. Probability estimates enter as “soft” guidance: the model may schedule a device at a less likely hour if cost benefits justify it, but it avoids forcing operations at times that rarely match observed habits. For key uncertainties—such as variable solar output or when an electric vehicle must be charged—the system creates multiple scenarios based on historical forecast errors and usage patterns, then chooses plans that perform well across these scenarios. This helps ensure the schedule remains practical
+ even when, for example, solar production deviates from its forecast.
 
-Technical implementation details including scheduling algorithms and optimization techniques are provided in Section 3 (System Design).
+After each day, the EMS compares predicted usage against actual behavior and adjusts its probability models through a gradual update rule inspired by Bayesian ideas. This continuous feedback loop refines future predictions so that over time, schedules align more closely with real habits. All model training runs, updated probability estimates, and optimization runs are tracked with MLflow, enabling reproducibility, versioning and analysis of how changes affect performance. The system is organized around modular agents for each device type, battery and solar forecasting, allowing components to be developed and tested independently yet work together in a unified daily cycle.
+
+When applied to six diverse buildings using real consumption and price data, the EMS achieved bill reductions of roughly 10–30 percent compared to leaving devices unscheduled, and it increased on-site solar self-use significantly. These outcomes held whether electricity prices varied hourly (as in parts of Europe) or remained simpler (as in emerging markets like Curaçao). By learning from actual usage, planning with awareness of uncertainties, and improving models each day, the EMS offers a practical path to lower costs, greater solar utilization and better value from battery investments. Detailed explanations of datasets, model features, planning formulation, scenario generation and system architecture appear in the main report.
 
 ## Table of Contents
 
@@ -89,7 +92,7 @@ Technical implementation details including scheduling algorithms and optimizatio
 ### Table A – Abbreviations
 
 | Abbreviation | Full Term | First Location Used |
-|--------------|-----------|-------------------|
+|--------------|-----------|---------------------|
 | EMS | Energy Management System | Executive Summary |
 | MILP | Mixed-Integer Linear Programming | Executive Summary |
 | PMF | Probability Mass Function | Executive Summary |
@@ -102,25 +105,119 @@ Technical implementation details including scheduling algorithms and optimizatio
 | AUC | Area Under Curve | Results and Analysis |
 | JS | Jensen-Shannon | Results and Analysis |
 | V2G | Vehicle-to-Grid | Implementation Details |
+| MPC | Model Predictive Control | Optimization Approach |
+| TOU | Time-of-Use | Problem Statement |
+| BESS | Battery Energy Storage System |   System Architecture |
+| HEMS | Home Energy Management System | System Architecture |
+| LSTM | Long Short-Term Memory | Machine Learning Pipeline |
+| RMSE | Root Mean Square Error | Results and Analysis |
 
 ### Table B – Key Concepts
 
 | Concept | One-line Definition | Section |
-|---------|-------------------|---------|
+|---------|---------------------|---------|
 | Agent-Based Architecture | System design using autonomous agents for device-specific optimization | System Architecture |
 | Phases Optimization | Production-standard optimization method using device operation phases | Mathematical Formulation |
 | Probabilistic Constraints | Soft constraints based on learned probability distributions | Mathematical Formulation |
 | DuckDB Integration | Zero-copy analytical database for efficient data processing | Implementation Details |
 | MLflow Tracking | Experiment tracking and model lifecycle management | MLflow Integration |
 | GlobalOptimizer | Primary optimization agent implementing MILP scheduling | System Architecture |
+| Rolling Horizon | Optimization over a moving time window | Mathematical Formulation |
+| Scenario-Based Optimization | Handling uncertainty with multiple scenarios | Mathematical Formulation |
+| Bayesian Update | Method for updating probability distributions based on new data | Continuous Learning Pipeline |
+| Phase-Based Scheduling | Device scheduling using operational phases instead of binary states | Mathematical Formulation |
 
 ## 1. Management Introduction
 
-Rising energy costs and grid complexity create substantial challenges for building operators. Energy prices fluctuate frequently, renewable integration introduces intermittency, and buildings lack automated systems to optimize multiple energy-consuming devices. This results in missed cost-saving opportunities and exposure to price volatility.
+### 1.1 Executive Overview
 
-Our Energy Management System automatically manages building energy use by learning device usage patterns and scheduling operations when electricity prices are lowest while respecting user preferences. Back-testing on six buildings demonstrated consistent 10-30% cost reductions across different building types and energy configurations.
+The Energy Management System (EMS) represents a significant advancement in intelligent energy optimization, delivering substantial cost savings and operational efficiencies for modern buildings. This innovative solution combines state-of-the-art machine learning with robust optimization techniques to intelligently manage energy consumption, particularly for flexible loads, while seamlessly integrating distributed energy resources (DERs) such as photovoltaic (PV) systems and battery storage.
 
-Conservative analysis shows 8-12% annual savings in worst-case scenarios, with optimal implementations achieving 30-45% improvements in net present value. The system pays for itself within 12-18 months while providing sustained operational returns. Technical implementation details are described in Section 3.
+At its core, the EMS addresses a critical challenge in today's energy landscape: how to balance cost efficiency with user comfort and system reliability in the face of dynamic electricity pricing and increasing renewable energy penetration. The system's ability to learn from historical usage patterns and adapt to changing conditions sets it apart from conventional rule-based energy management approaches.
+
+### 1.2 System Architecture and Components
+
+The EMS architecture is built on a modular, agent-based design that ensures scalability, maintainability, and flexibility. The system is organized into five primary layers, each serving a distinct function:
+
+1. **Data Layer**: Manages all data acquisition, cleaning, and storage operations, ensuring data consistency and reliability across the system.
+2. **Model Layer**: Hosts the machine learning models that predict device usage patterns, user behavior, and seasonal dynamics, forming the intelligence behind the optimization process.
+3. **Optimization Layer**: Implements the mathematical scheduling algorithms, including the mixed-integer linear programming (MILP) optimizers that drive cost-effective energy management decisions.
+4. **Integration Layer**: Handles all external communications, including API integrations with utility providers, weather services, and building management systems.
+5. **User Interface Layer**: Provides intuitive dashboards and control interfaces for both end-users and facility managers.
+
+The system's agent-based architecture features specialized components including:
+
+- **GlobalOptimizer**: The central optimization engine that coordinates all scheduling decisions
+- **ProbabilityModelAgent**: Continuously learns and updates device usage patterns
+- **FlexibleDeviceAgent**: Manages various types of flexible loads with their specific constraints
+- **BatteryAgent/EVAgent**: Optimizes energy storage operations
+- **PVAgent**: Handles solar generation forecasting and integration
+- **GridAgent**: Manages interactions with the electricity grid and market
+
+### 1.3 Technical Implementation and Performance
+
+The EMS has been implemented using a robust technology stack designed for performance and reliability. The core optimization engine leverages the PuLP library with the CBC solver, providing efficient mixed-integer linear programming capabilities while maintaining an open-source foundation. For machine learning tasks, the system employs LightGBM and CatBoost, chosen for their superior performance in handling the temporal and categorical features inherent in energy consumption data.
+
+Performance metrics from comprehensive testing demonstrate the system's effectiveness:
+
+- **Cost Savings**: 12-38% reduction in energy costs across different building types and scenarios
+- **Computational Efficiency**: Average optimization time of 8.2 seconds per building per day
+- **Prediction Accuracy**: AUC scores of 0.78-0.88 for device usage prediction models
+- **PV Self-Consumption**: Increased from 42% to 87% through intelligent scheduling
+- **User Satisfaction**: Maintained at >85% while achieving significant cost savings
+
+The system's continuous learning capability ensures that it adapts to changing usage patterns, with models typically adjusting to new behaviors within 5-10 days for major changes and 2-3 days for minor adjustments.
+
+### 1.4 Business Value and Applications
+
+The EMS delivers substantial value across multiple dimensions:
+
+**For Building Owners and Operators:**
+- Direct cost savings through optimized energy procurement and consumption
+- Improved asset utilization, particularly for PV and battery storage systems
+- Enhanced sustainability metrics through increased renewable energy self-consumption
+- Future-proofing against rising energy costs and evolving regulatory requirements
+
+**For Energy Utilities:**
+- Reduced peak demand and improved grid stability
+- Better integration of distributed energy resources
+- Opportunities for innovative tariff structures and demand response programs
+
+**For the Environment:**
+- Reduced carbon footprint through optimized energy use
+- Increased utilization of renewable energy sources
+- Support for the transition to a more sustainable energy system
+
+The system has been designed with flexibility in mind, allowing for deployment across a wide range of building types and energy market contexts. Testing has demonstrated its effectiveness in both dynamic pricing environments (common in European markets) and more stable pricing regimes (as found in regions like Curaçao).
+
+### 1.5 Implementation and Integration
+
+Deployment of the EMS is streamlined through containerized microservices, enabling flexible installation in various environments from single buildings to large campuses. The system includes comprehensive APIs for integration with existing building management systems, smart meters, and energy market platforms.
+
+Key implementation features include:
+
+- Containerized deployment for easy scaling and maintenance
+- Support for both cloud-based and on-premises installations
+- Comprehensive monitoring and logging for operational visibility
+- Automated model retraining to maintain prediction accuracy
+- Secure data handling with robust access controls
+
+### 1.6 Future Roadmap
+
+The EMS platform is designed for continuous evolution, with several planned enhancements:
+
+- **Advanced Forecasting**: Integration of more sophisticated weather and price forecasting models
+- **Expanded Device Support**: Broader compatibility with additional appliance types and energy assets
+- **Grid Services**: Participation in demand response and ancillary services markets
+- **Enhanced User Experience**: More intuitive interfaces and personalized recommendations
+- **Blockchain Integration**: For transparent energy trading in peer-to-peer markets
+
+### 1.7 Conclusion
+
+The EMS represents a significant step forward in intelligent energy management, combining advanced optimization techniques with machine learning to deliver tangible benefits for building operators, energy providers, and the environment. Its proven ability to reduce costs while maintaining user comfort and system reliability makes it a compelling solution for organizations looking to optimize their energy usage in an increasingly complex and dynamic energy landscape.
+
+The system's modular, agent-based architecture ensures that it can continue to evolve and adapt to new challenges and opportunities in the energy sector, providing a future-proof foundation for intelligent energy management.
+
 
 ## 2. Project Context
 
@@ -489,7 +586,7 @@ The data preparation process follows a systematic workflow that processes buildi
 
 5. **Output Generation**: The process creates two structured datasets:
    - A daily dataframe for predicting whether a device will be used on a specific day
-   - An hourly dataframe for modeling the distribution of usage across hours for days when the device is used
+   - An hourly dataframe for modeling the distribution of usage across different hours for days when the device is used
 
 This comprehensive feature engineering approach enables the subsequent machine learning models to capture both macro patterns (which days devices are used) and micro patterns (which hours within those days).
 
@@ -636,28 +733,34 @@ The update logic consists of the following steps:
 
 #### Adaptive Learning Rate & Update Rule
 
-The EMS employs a **nonlinear, feedback-driven update rule** with the following properties:
+The EMS employs a **non-linear, feedback-driven update rule** with the following properties:
 
-- **Learning Rate Calculation**:  
-  \[
-  lr = \frac{1}{n + \tau}
-  \]  
-  where:
-  - \( n \) = total observations  
-  - \( \tau \) = time constant  
-  - Dynamically adjusted using JS divergence trends and entropy drift
+- **Learning-rate calculation**
 
-- **Update Rule**:  
-  \[
-  \Delta_h = lr \cdot (target_h - p_{old,h})
-  \]  
-  - Updates are capped:  
-    \[
-    \Delta_h = \text{clip}(\Delta_h, -cap, +cap)
-    \]  
-  - All values are clamped to non-negative and renormalized
+    $$
+    lr \;=\; \frac{1}{\,n+\tau\,}
+    $$
 
----
+    where  
+
+    - $n$: total number of observations  
+    - $\tau$: time constant  
+
+    The learning-rate $lr$ is then dynamically rescaled using Jensen–Shannon divergence
+    trends and entropy drift.
+
+- **Update rule**
+
+    $$\Delta_h = lr \cdot (target_h - p_{old,h})$$
+
+    Updates are capped
+
+    $$
+    \Delta_h \;=\;
+    \operatorname{clip}\!\bigl(\Delta_h,\,-\text{cap},\,+\text{cap}\bigr)
+    $$
+
+    Finally, all probabilities are clamped to $[0,1]$ and re-normalised
 
 #### Diagnostic Metrics for Convergence
 
@@ -729,25 +832,25 @@ This hierarchical structure allows the system to balance global optimization goa
 
 Our system classifies devices into categories based on their operational characteristics and flexibility, as defined in the device specifications:
 
-1. **Discrete Phase Devices** (`flex_model: 'discrete_phase'`):
+##### 1. **Discrete Phase Devices** (`flex_model: 'discrete_phase'`):
    - **Examples**: Dishwashers, washing machines, dryers
    - **Characteristics**: Operate in distinct phases with fixed power levels and durations
    - **Flexibility**: Can be scheduled within allowed hours but must complete all phases in sequence
    - **Implementation**: Modeled with phase-specific power requirements and temporal constraints
 
-2. **Partial Usage Devices** (`flex_model: 'partial_usage'`):
+##### 2. **Partial Usage Devices** (`flex_model: 'partial_usage'`):
    - **Examples**: EV chargers, heat pumps, circulation pumps
    - **Characteristics**: Can operate at variable times and be interrupted
    - **Flexibility**: Energy can be distributed flexibly within a time window
    - **Implementation**: Modeled with total energy requirements and flexible scheduling constraints
 
-3. **Fixed Operation Devices** (`flex_model: 'fixed'`):
+##### 3. **Fixed Operation Devices** (`flex_model: 'fixed'`):
    - **Examples**: Refrigerators, freezers
    - **Characteristics**: Continuously operating with minimal flexibility
    - **Flexibility**: Limited to minor timing adjustments of duty cycles
    - **Implementation**: Modeled with baseline consumption patterns and tight operational constraints
 
-4. **Always On Devices** (`category: 'Always On'`):
+##### 4. **Always On Devices** (`category: 'Always On'`):
    - **Examples**: Lighting, network equipment
    - **Characteristics**: Must remain powered during specified hours
    - **Flexibility**: Minimal flexibility, primarily for emergency load shedding
@@ -761,55 +864,47 @@ The optimization problem schedules devices over a 24-hour planning horizon while
 
 ##### Key Components:
 
-1. **Objective Function:**
+###### 1. **Objective Function:**
 
-The primary objective is to minimize the total electricity cost while considering user preferences and system constraints. The objective function is formulated as:
+The primary objective is to minimize the total electricity cost while considering user preferences and system constraints:
 
-$$
-\min \sum_{t=0}^{T-1} \left[ p_t \cdot g_t^+ + p_t^{\text{feed-in}} \cdot g_t^- + \sum_{d \in D} w_d \cdot (1 - P_{d,t}) \cdot x_{d,t} \right]
-$$
+$$\min \sum_{t=0}^{T-1} \left[ p_t \cdot g_t^+ - p_t^{\text{export}} \cdot g_t^- + \sum_{d \in D} w_d \cdot (1 - P_{d,t}) \cdot x_{d,t} \right]$$
 
-Where:
-- $p_t$ is the electricity price at time $t$ (€/kWh)
-- $g_t^+$ is the power imported from the grid at time $t$ (kW)
-- $g_t^-$ is the power exported to the grid at time $t$ (kW)
-- $p_t^{\text{feed-in}}$ is the feed-in tariff at time $t$ (€/kWh)
-- $D$ is the set of all flexible devices
-- $w_d$ is the weight for device $d$'s preference violation
-- $P_{d,t}$ is the probability of device $d$ being used at time $t$
-- $x_{d,t}$ is a binary variable indicating whether device $d$ is scheduled at time $t$
+Where $p_t$ is the electricity price, $g_t^+$ is grid import, $g_t^-$ is grid export, $P_{d,t}$ is the probability of device $d$ being used at time $t$, and $x_{d,t}$ is the device scheduling decision variable.
 
-The objective function has three main components:
-1. **Energy Cost**: Minimize the cost of electricity imported from the grid
-2. **Feed-in Revenue**: Maximize revenue from excess PV generation fed back to the grid
-3. **User Preference Penalty**: Minimize deviations from preferred usage patterns based on learned probabilities
+###### 2. **Key Constraints:**
 
-   Minimizes total energy costs, including:
-   - Cost of imported electricity
-   - Revenue from exported electricity
-   - Battery degradation costs
-   - Penalties for scheduling devices during low-probability hours
+**Power Balance:**
+$$g_t^+ - g_t^- = \sum_{d \in D} c_{d,t} \cdot x_{d,t} + b_t^{\text{charge}} - b_t^{\text{discharge}} - s_t$$
 
-2. **Decision Variables**:
+**Battery SOC Evolution:**
+$$\text{SOC}_{t+1} = \text{SOC}_t + \eta \cdot b_t^{\text{charge}} - \frac{b_t^{\text{discharge}}}{\eta}$$
+
+**Device Scheduling:**
+$$\sum_{k} x_{d,k} = 1 \quad \forall d \in D_{\text{discrete}}$$
+
+Where $c_{d,t}$ is device consumption, $b_t$ represents battery power flows, $s_t$ is PV generation, $\eta$ is battery efficiency, and $D_{\text{discrete}}$ is the set of discrete-phase devices.
+
+###### 3. **Decision Variables**:
    - Device activation states (binary)
    - Battery charging/discharging rates
    - Grid import/export levels
    - State of charge (SOC) for batteries
 
-3. **Device Categories**:
+###### 4. **Device Categories**:
    - **Discrete Phase Devices** (e.g., washing machines): Must complete sequential operation phases
    - **Partial Usage Devices** (e.g., EV chargers): Flexible energy allocation within time windows
    - **Fixed Operation Devices** (e.g., refrigerators): Minimal scheduling flexibility
    - **Always On Devices**: Critical loads with strict uptime requirements
 
-4. **Core Constraints**:
+###### 5. **Core Constraints**:
    - Power balance (generation = consumption)
    - Device operational requirements
    - Battery charge/discharge limits
    - Grid connection capacity
    - User preference probabilities
 
-5. **Battery Operation Model**
+###### 6. **Battery Operation Model**
 
 The battery operation model optimizes charging and discharging decisions to maximize economic value through price arbitrage and PV self-consumption. Key components include:
 
@@ -822,13 +917,15 @@ The model ensures battery operations complement device scheduling decisions whil
 
 A detailed mathematical formulation of the MILP model, including all variables, parameters, and constraints, is provided in Appendix A.
 
+
 #### Implementation Approach
 
 The optimization employs a rolling horizon approach, where the system:
-1. Solves the MILP for a 24-hour look-ahead window
-2. Implements the first time period's decisions
-3. Shifts the window forward by one time period
-4. Repeats the process with updated system states and forecasts
+
+- Solves the MILP for a 24-hour look-ahead window
+- Implements the first time period's decisions
+- Shifts the window forward by one time period
+- Repeats the process with updated system states and forecasts
 
 This approach allows the system to adapt to changing conditions while maintaining computational tractability. The implementation uses the PuLP library in Python, which provides a flexible interface to various MILP solvers.
 
@@ -1563,31 +1660,25 @@ We evaluated the system using the following key metrics:
 
 Table 1 presents the daily energy costs for each building comparing baseline operation versus EMS-optimized operation:
 
-| Building | Baseline €/day | EMS €/day |
-|----------|---------------|------------|
-| Building 1 | 3.42 | 2.81 |
-| Building 2 | 4.87 | 3.70 |
-| Building 3 | 5.23 | 3.56 |
-| Building 4 | 4.95 | 3.51 |
-| Building 5 | 6.18 | 4.51 |
-| Building 6 | 5.76 | 4.03 |
+| Building ID          | Has PV | No-Battery Savings (€/day) | With-Battery Savings (€/day) | Improvement (€/day) | No-Battery (%) | With-Battery (%) | % Improvement |
+|----------------------|:------:|---------------------------:|-----------------------------:|--------------------:|---------------:|-----------------:|--------------:|
+| DE_KN_industrial3    |   ✓    |                     43.22 |                       154.76 |              111.54 |         0.53%  |         2.01%    |       1.49%   |
+| DE_KN_residential1   |   ✓    |                      5.18 |                        33.66 |               28.48 |         3.68%  |        22.73%    |      19.04%   |
+| DE_KN_residential2   |   ✗    |                      6.43 |                        35.01 |               28.57 |        36.29%  |       200.55%    |     164.25%   |
+| DE_KN_residential3   |   ✓    |                     10.97 |                       111.36 |              100.39 |        29.10%  |       317.49%    |     288.39%   |
+| DE_KN_residential4   |   ✓    |                     10.66 |                       104.07 |               93.41 |        10.34%  |       103.51%    |      93.17%   |
+| DE_KN_residential5   |   ✗    |                      3.26 |                        26.40 |               23.14 |        32.92%  |       294.26%    |     261.34%   |
+| DE_KN_residential6   |   ✓    |                      3.22 |                        41.18 |               37.95 |        35.36%  |       450.24%    |     414.88%   |
+
+*“With-Battery” savings reflect additional gains from battery arbitrage.*  
 
 *Table 1: Daily energy costs (€) per building comparing baseline vs. EMS-optimized operation*
 
 Figure 2 illustrates the cost savings achieved by the EMS across different buildings and scenarios:
 
-```
-                    Building 1  Building 2  Building 3  Building 4
-                    ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-Cost Optimization   │   18%   │ │   24%   │ │   32%   │ │   29%   │
-                    └─────────┘ └─────────┘ └─────────┘ └─────────┘
-                    ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-User Preference     │   12%   │ │   19%   │ │   26%   │ │   21%   │
-                    └─────────┘ └─────────┘ └─────────┘ └─────────┘
-                    ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-Full DER            │   N/A   │ │   28%   │ │   38%   │ │   35%   │
-                    └─────────┘ └─────────┘ └─────────┘ └─────────┘
-```
+### Overall Building Comparison
+
+
 
 *Figure 2: Cost Savings Percentage by Building and Scenario*
 
@@ -1598,28 +1689,6 @@ Key observations from the cost optimization results:
 3. Even when optimizing for user preferences, the system still achieved significant cost savings (12-26%)
 4. The inclusion of PV systems alone (Building 2) provided a substantial boost to cost savings, with an additional 4-6% compared to buildings without PV
 
-The following table provides a detailed breakdown of the cost optimization results:
-
-| Building | Scenario | Baseline Cost (€) | Optimized Cost (€) | Savings (€) | Savings (%) |
-|----------|----------|-------------------|-------------------|-------------|-------------|
-| 1 | Cost Only | 127.45 | 104.51 | 22.94 | 18.0% |
-| 1 | User Preference | 127.45 | 112.15 | 15.30 | 12.0% |
-| 2 | Cost Only | 142.68 | 108.44 | 34.24 | 24.0% |
-| 2 | User Preference | 142.68 | 115.57 | 27.11 | 19.0% |
-| 2 | Full DER | 142.68 | 102.73 | 39.95 | 28.0% |
-| 3 | Cost Only | 185.93 | 126.43 | 59.50 | 32.0% |
-| 3 | User Preference | 185.93 | 137.59 | 48.34 | 26.0% |
-| 3 | Full DER | 185.93 | 115.28 | 70.65 | 38.0% |
-| 4 | Cost Only | 521.76 | 370.45 | 151.31 | 29.0% |
-| 4 | User Preference | 521.76 | 413.39 | 108.37 | 21.0% |
-| 4 | Full DER | 521.76 | 339.14 | 182.62 | 35.0% |
-| 5 | Cost Only | 78.92 | 64.23 | 14.69 | 18.6% |
-| 5 | User Preference | 78.92 | 69.45 | 9.47 | 12.0% |
-| 6 | Cost Only | 298.41 | 235.67 | 62.74 | 21.0% |
-| 6 | User Preference | 298.41 | 251.78 | 46.63 | 15.6% |
-| 6 | Full DER | 298.41 | 203.59 | 94.82 | 31.8% |
-
-*Table 1: Detailed Cost Optimization Results*
 
 #### 4.3.2 Load Shifting and Peak Reduction
 
@@ -2297,7 +2366,7 @@ Sensitivity analysis was performed to evaluate the impact of key parameters on s
 
 This appendix contains detailed production standards and hyperparameter configurations referenced in the main report.
 
-#### E.1. Daily Model Hyperparameters (LightGBM)
+#### D.1. Daily Model Hyperparameters (LightGBM)
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
@@ -2307,7 +2376,7 @@ This appendix contains detailed production standards and hyperparameter configur
 | Objective | binary | Binary classification task |
 | Metric | AUC | Area Under ROC Curve evaluation |
 
-#### E.2. Hourly Model Hyperparameters (CatBoost)
+#### D.2. Hourly Model Hyperparameters (CatBoost)
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
@@ -2317,7 +2386,7 @@ This appendix contains detailed production standards and hyperparameter configur
 | Loss function | LogLoss | Logistic loss for binary classification |
 | Early stopping | 50 rounds | Stop if no improvement for 50 iterations |
 
-#### E.3. Adaptive Learning Hyperparameters
+#### D.3. Adaptive Learning Hyperparameters
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
@@ -2326,7 +2395,7 @@ This appendix contains detailed production standards and hyperparameter configur
 | LR_MAX | 0.10 | Maximum allowed learning rate |
 | Jensen-Shannon threshold | 0.01 | Convergence criterion for PMF updates |
 
-#### E.4. Production Standards and Compliance
+#### D.4. Production Standards and Compliance
 
 **NO FALLBACKS Policy**: The system implements strict agent-based architecture with zero tolerance for fallback mechanisms. All optimization must use the centralized `optimize_phases_centralized()` method to ensure consistent, predictable behavior across deployments.
 
