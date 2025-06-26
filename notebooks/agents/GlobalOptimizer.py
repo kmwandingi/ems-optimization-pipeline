@@ -15,226 +15,6 @@ from pulp import LpProblem, LpVariable, lpSum, LpMinimize, PULP_CBC_CMD, LpStatu
 # Helper functions 
 ###########################################################
 
-# FIXED: Cost evaluation function in GlobalOptimizer.py
-# Replace the existing _evaluate_costs_for_day method with this corrected version
-
-def _evaluate_costs_for_day(
-        self,
-        day_idx: int,
-        price_vec: np.ndarray,
-        pv_vec: np.ndarray | None = None,
-        tag: str = "continuous",
-        solver_obj: float = None
-    ) -> None:
-    """
-    FIXED: Properly calculate costs with correct storage arbitrage accounting.
-    
-    The key fix: Battery/EV discharge REDUCES net grid import and creates savings,
-    not additional costs.
-    """
-    if pv_vec is None:
-        pv_vec = np.zeros_like(price_vec)
-
-    print(f"\n=== COST EVALUATION DEBUG for {tag.upper()} (Day {day_idx}) ===")
-    
-    # Get export price for grid sales
-    export_price = 0.04  # Default
-    if self.grid_agent:
-        export_price = self.grid_agent.export_price
-    
-    print(f"Import price: {np.mean(price_vec):.4f} €/kWh")
-    print(f"Export price: {export_price:.4f} €/kWh")
-
-    # ------------------------------------------------------------------
-    # 1) Calculate per-device costs
-    # ------------------------------------------------------------------
-    total_device_orig_cost = 0.0
-    total_device_opt_cost = 0.0
-    
-    for dev in self.devices:
-        # Get the optimized schedule based on the tag
-        if tag == "continuous":
-            opt_schedule = getattr(dev, 'centralized_optimized_schedule', None)
-        elif tag == "phases":
-            opt_schedule = getattr(dev, 'nextday_optimized_schedule', None)
-        else:
-            opt_schedule = getattr(dev, 'optimized_consumption', None)
-        
-        # No fallback allowed - raise error if no optimized schedule
-        if opt_schedule is None:
-            raise ValueError(f"Device {dev.device_name} has no {tag} schedule. Agent optimization must be run correctly.")
-        
-        # Ensure arrays are the right length
-        orig_len = min(len(dev.original_consumption), len(price_vec))
-        opt_len = min(len(opt_schedule), len(price_vec))
-        
-        orig_cost = np.sum(dev.original_consumption[:orig_len] * price_vec[:orig_len])
-        opt_cost = np.sum(opt_schedule[:opt_len] * price_vec[:opt_len])
-        
-        total_device_orig_cost += orig_cost
-        total_device_opt_cost += opt_cost
-        
-        # Store per-device costs
-        if not hasattr(dev, 'costs'):
-            dev.costs = {}
-        dev.costs[tag] = {
-            "orig": orig_cost,
-            "opt": opt_cost, 
-            "sav": orig_cost - opt_cost
-        }
-        
-        print(f"{dev.device_name}: €{orig_cost:.3f} → €{opt_cost:.3f} (Δ€{orig_cost-opt_cost:.3f})")
-
-    # ------------------------------------------------------------------
-    # 2) Calculate storage flows and grid impact
-    # ------------------------------------------------------------------
-    
-    # Get storage arrays (ensure proper length)
-    n_hours = len(price_vec)
-    batt_charge = np.zeros(n_hours)
-    batt_discharge = np.zeros(n_hours) 
-    ev_charge = np.zeros(n_hours)
-    ev_discharge = np.zeros(n_hours)
-    
-    if self.battery_agent:
-        batt_charge = np.array(self.battery_agent.hourly_charge[:n_hours])
-        batt_discharge = np.array(self.battery_agent.hourly_discharge[:n_hours])
-        if len(batt_charge) < n_hours:
-            batt_charge = np.pad(batt_charge, (0, n_hours - len(batt_charge)))
-        if len(batt_discharge) < n_hours:
-            batt_discharge = np.pad(batt_discharge, (0, n_hours - len(batt_discharge)))
-    
-    if self.ev_agent:
-        ev_charge = np.array(self.ev_agent.hourly_charge[:n_hours])
-        ev_discharge = np.array(self.ev_agent.hourly_discharge[:n_hours])
-        if len(ev_charge) < n_hours:
-            ev_charge = np.pad(ev_charge, (0, n_hours - len(ev_charge)))
-        if len(ev_discharge) < n_hours:
-            ev_discharge = np.pad(ev_discharge, (0, n_hours - len(ev_discharge)))
-
-    # Calculate grid flows
-    grid_orig = np.zeros(n_hours)  # Original grid import (no storage)
-    grid_opt = np.zeros(n_hours)   # Optimized grid import (with storage)
-    
-    total_orig_consumption = np.zeros(n_hours)
-    total_opt_consumption = np.zeros(n_hours)
-    
-    # Sum up device consumption for each hour
-    for dev in self.devices:
-        # Skip EV device consumption if it's being handled as storage
-        if hasattr(dev, 'category') and 'ev' in dev.category.lower():
-            continue  # EV consumption handled separately as storage
-            
-        for h in range(n_hours):
-            if h < len(dev.original_consumption):
-                total_orig_consumption[h] += dev.original_consumption[h]
-            
-            # Get optimized consumption
-            if tag == "continuous":
-                opt_schedule = getattr(dev, 'centralized_optimized_schedule', dev.original_consumption)
-            elif tag == "phases":
-                opt_schedule = getattr(dev, 'nextday_optimized_schedule', dev.original_consumption)
-            else:
-                opt_schedule = getattr(dev, 'optimized_consumption', dev.original_consumption)
-            
-            if h < len(opt_schedule):
-                total_opt_consumption[h] += opt_schedule[h]
-
-    # Calculate net grid flows
-    for h in range(n_hours):
-        # Original: just device consumption + PV (no storage)
-        grid_orig[h] = total_orig_consumption[h] + pv_vec[h]
-        
-        # Optimized: device consumption + storage flows + PV
-        # CRITICAL FIX: Discharge REDUCES grid import (creates revenue)
-        grid_opt[h] = (total_opt_consumption[h] + 
-                       batt_charge[h] - batt_discharge[h] +  # Charge increases, discharge decreases
-                       ev_charge[h] - ev_discharge[h] +      # Same for EV
-                       pv_vec[h])
-
-    # ------------------------------------------------------------------
-    # 3) Calculate grid costs with proper import/export handling
-    # ------------------------------------------------------------------
-    
-    def calculate_grid_cost(grid_flow, prices, export_price):
-        """Calculate cost where positive flow = import, negative = export"""
-        cost = 0.0
-        for h in range(len(grid_flow)):
-            if grid_flow[h] >= 0:
-                # Import: pay full price
-                cost += grid_flow[h] * prices[h]
-            else:
-                # Export: receive export price (negative cost = revenue)
-                cost += grid_flow[h] * export_price  # grid_flow is negative, so this subtracts cost
-        return cost
-    
-    cost_orig = calculate_grid_cost(grid_orig, price_vec, export_price)
-    cost_opt = calculate_grid_cost(grid_opt, price_vec, export_price)
-    
-    # ------------------------------------------------------------------
-    # 4) Add storage degradation costs
-    # ------------------------------------------------------------------
-    degradation_cost = 0.0
-    
-    if self.battery_agent:
-        daily_throughput = np.sum(batt_charge + batt_discharge)
-        degradation_cost += daily_throughput * self.battery_agent.degradation_rate
-    
-    if self.ev_agent and hasattr(self.ev_agent, 'degradation_rate'):
-        daily_throughput = np.sum(ev_charge + ev_discharge) 
-        degradation_cost += daily_throughput * getattr(self.ev_agent, 'degradation_rate', 0.0)
-    
-    cost_opt += degradation_cost
-    
-    # ------------------------------------------------------------------
-    # 5) Debug output and validation
-    # ------------------------------------------------------------------
-    
-    print(f"\nGrid Flow Analysis:")
-    print(f"Total original consumption: {np.sum(total_orig_consumption):.2f} kWh")
-    print(f"Total optimized consumption: {np.sum(total_opt_consumption):.2f} kWh")
-    print(f"Battery charge/discharge: +{np.sum(batt_charge):.2f}/-{np.sum(batt_discharge):.2f} kWh")
-    print(f"EV charge/discharge: +{np.sum(ev_charge):.2f}/-{np.sum(ev_discharge):.2f} kWh")
-    print(f"PV generation: {np.sum(pv_vec):.2f} kWh")
-    print(f"Degradation cost: €{degradation_cost:.3f}")
-    
-    print(f"\nCost Calculation:")
-    print(f"Original grid cost: €{cost_orig:.3f}")
-    print(f"Optimized grid cost: €{cost_opt:.3f}")
-    if solver_obj:
-        print(f"Solver objective: €{solver_obj:.3f}")
-    
-    savings = cost_orig - cost_opt
-    print(f"Total savings: €{savings:.3f}")
-    
-    # ------------------------------------------------------------------
-    # 6) Store results
-    # ------------------------------------------------------------------
-    
-    # Store day-level results
-    if not hasattr(self, 'costs_by_day'):
-        self.costs_by_day = {}
-    if tag not in self.costs_by_day:
-        self.costs_by_day[tag] = {}
-        
-    self.costs_by_day[tag][day_idx] = {
-        "orig": cost_orig,
-        "opt": cost_opt,
-        "sav": savings,
-        "solver": solver_obj or cost_opt,
-        "degradation": degradation_cost
-    }
-    
-    # Store totals
-    setattr(self, f"total_savings_{tag}", 
-            sum(d["sav"] for d in self.costs_by_day[tag].values()))
-    
-    if solver_obj:
-        setattr(self, f"solver_savings_{tag}",
-                sum((d["orig"] - d["solver"]) for d in self.costs_by_day[tag].values()))
-    
-    print(f"=== END COST EVALUATION DEBUG ===\n")
-           
 def _add_storage_vars(prob: LpProblem,
                       tag: str,
                       hours: range,
@@ -918,7 +698,7 @@ class GlobalOptimizer:
                         tag="continuous",
                         solver_obj=solver_objective
                     )
-                    print(f"Day {day_val}: Costs evaluated and stored using solver objective value: {solver_objective}")
+                    print(f"Day {day_val}: Costs evaluated and stored.")
 
                     # 8) Reconstruct schedules for each device
                     print("\nReconstructing optimized schedules...")
@@ -1863,7 +1643,7 @@ class GlobalOptimizer:
             price_vec:    np.ndarray,
             pv_vec:       np.ndarray | None,
             tag:          str,                   # "continuous" | "phases"
-            solver_obj:   float = None,          # Objective value directly from solver
+            solver_obj:   float = None
         ) -> None:
         """
         Compute and store original / optimised € for *this* day **and**
@@ -1884,6 +1664,7 @@ class GlobalOptimizer:
         attr_map = {
             "continuous": "centralized_optimized_schedule",
             "phases"    : "phases_optimized_schedule",
+            "decentralized": "optimized_consumption",
         }
         sched_attr = attr_map[tag]
 
@@ -2005,154 +1786,60 @@ class GlobalOptimizer:
 
         # store day–tag pair
         by_day = self.__dict__.setdefault("costs_by_day", {}).setdefault(tag, {})
-        by_day[day_idx] = {"orig": cost_o, "opt": cost_n, "sav": cost_o-cost_n, "solver": solver_cost}
+        by_day[day_idx] = {"orig": cost_o, "opt": cost_n, "sav": cost_o-cost_n, "solver": solver_obj or cost_n}
 
         # convenience rolling totals
         self.__dict__[f"total_savings_{tag}"] = \
             sum(d["sav"] for d in by_day.values())
             
-        # Also store the solver-based savings
-        self.__dict__[f"solver_savings_{tag}"] = \
-            sum((d["orig"] - d["solver"]) for d in by_day.values())
+        # Also store the solver-based savings if solver objective was provided
+        if solver_obj is not None:
+            self.__dict__[f"solver_savings_{tag}"] = \
+                sum((d["orig"] - d["solver"]) for d in by_day.values())
 
-    def evaluate_performance(self):
+    def evaluate_performance(self, tag="decentralized"):
         """
-        Computes the baseline vs. current cost across all devices.
-        FIXED to properly account for battery usage and avoid double-counting.
-        Enhanced to ensure consistent positive savings.
+        Computes the baseline vs. current cost across all devices for a given optimization type.
+        This method now correctly calculates costs by leveraging the robust `_evaluate_costs_for_day` method.
         """
-        if not hasattr(self, "iteration_results") or not self.iteration_results:
-            return 0.0  # No optimization performed yet
+        total_savings = 0.0
+        total_original_cost = 0.0
+        total_optimized_cost = 0.0
 
-        best_iter = self.best_iteration or 0
-        if best_iter < 0 or best_iter >= len(self.iteration_results):
-            return 0.0  # Invalid best iteration index
+        # Get all unique days from the first device's data
+        if not self.devices:
+            return {"baseline_cost": 0, "current_cost": 0, "cost_reduction_percentage": 0}
 
-        # Get the best iteration data
-        iter_data = self.iteration_results[best_iter]
-        
-        # Sum up savings from all devices
-        total_savings = sum(dev_data.get("savings", 0.0) for dev_data in iter_data.values())
-        
-        # Ensure the savings are never negative (i.e., optimization always benefits)
-        return max(0.0, total_savings)
-        if hasattr(self, 'battery_charge_global') and self.battery_charge_global is not None:
-            for dev in self.devices:
-                for idx, row in dev.data.iterrows():
-                    if idx < len(self.battery_charge_global):
-                        day, hour = row['day'], row['hour']
-                        hour_mapping[(day, hour)]['battery_charge'] = self.battery_charge_global[idx]
-                        hour_mapping[(day, hour)]['battery_discharge'] = self.battery_discharge_global[idx]
-        
-        # Add EV usage if available (using global EV data for consistency)
-        if hasattr(self, 'ev_charge_global') and self.ev_charge_global is not None:
-            for dev in self.devices:
-                for idx, row in dev.data.iterrows():
-                    if idx < len(self.ev_charge_global):
-                        day, hour = row['day'], row['hour']
-                        hour_mapping[(day, hour)]['ev_charge'] = self.ev_charge_global[idx]
-                        hour_mapping[(day, hour)]['ev_discharge'] = self.ev_discharge_global[idx]
-        
-        # Calculate costs hour by hour
-        battery_savings = 0.0
-        ev_savings = 0.0
-        for (day, hour), data in hour_mapping.items():
-            price = data['price']
-            
-            # Baseline: original consumption * price
-            orig_cost = data['total_orig_consumption'] * price
-            baseline_cost += orig_cost
-            
-            # Calculate net grid draw with battery and EV
-            net_consumption = (data['total_opt_consumption'] + 
-                              data['battery_charge'] - data['battery_discharge'] +
-                              data['ev_charge'] - data['ev_discharge'])
-            
-            # Calculate storage arbitrage benefits
-            avg_price = sum(d['price'] for d in hour_mapping.values()) / max(1, len(hour_mapping))
-            
-            # Battery arbitrage value (extra benefit of having charged at low price, discharged at high)
-            battery_arbitrage_benefit = 0.0
-            if data['battery_discharge'] > 0 and price > avg_price:
-                # Approximate arbitrage benefit
-                battery_arbitrage_benefit = data['battery_discharge'] * (price - avg_price) * 0.5  # Discounted to be conservative
-            
-            # EV arbitrage value (similar to battery)
-            ev_arbitrage_benefit = 0.0
-            if data['ev_discharge'] > 0 and price > avg_price:
-                # Approximate arbitrage benefit
-                ev_arbitrage_benefit = data['ev_discharge'] * (price - avg_price) * 0.5  # Discounted to be conservative
-            
-            # For grid imports, use full price
-            if net_consumption > 0:
-                net_consumption = max(0.0, net_consumption)  # Ensure non-negative
-                opt_cost = net_consumption * price
-            else:
-                # For exports, use 80% of price (standard export discount)
-                opt_cost = net_consumption * price * 0.8
-            
-            # Subtract arbitrage benefits from cost
-            opt_cost -= (battery_arbitrage_benefit + ev_arbitrage_benefit)
-            
-            # Add degradation costs
-            if self.battery_agent is not None and hasattr(self.battery_agent, 'degradation_rate'):
-                battery_degradation_cost = self.battery_agent.degradation_rate * (data['battery_charge'] + data['battery_discharge'])
-                opt_cost += battery_degradation_cost
-            
-            if self.ev_agent is not None and hasattr(self.ev_agent, 'degradation_rate'):
-                ev_degradation_cost = self.ev_agent.degradation_rate * (data['ev_charge'] + data['ev_discharge'])
-                opt_cost += ev_degradation_cost
-            
-            optimized_cost += opt_cost
-            
-            # Track storage contribution to savings
-            battery_supply = min(data['battery_discharge'], data['total_opt_consumption'])
-            battery_savings += battery_supply * price
-            
-            ev_supply = min(data['ev_discharge'], max(0, data['total_opt_consumption'] - data['battery_discharge']))
-            ev_savings += ev_supply * price
-        
-        # CRITICAL: Ensure optimized cost never exceeds baseline cost
-        # This is essential for guaranteeing positive savings
-        if optimized_cost > baseline_cost:
-            logging.warning(f"Optimized cost ({optimized_cost:.4f}) exceeds baseline cost ({baseline_cost:.4f}). Applying correction.")
-            # Apply a correction factor to ensure positive savings
-            correction = optimized_cost - baseline_cost + 0.01  # Ensure at least 0.01 savings
-            optimized_cost = baseline_cost - 0.01
-            logging.info(f"Applied correction factor: {correction:.4f}")
-        
-        # Calculate cost reduction percentage
-        reduction_pct = ((baseline_cost - optimized_cost) / max(baseline_cost, 1e-9)) * 100.0
-        
-        # Perform additional validation if the function is available
-        validation_results = None
-        if validate_available:
-            try:
-                validation_results = validate_optimization_savings(self.devices, self)
-                logging.info(f"Validation complete: All devices positive: {validation_results['all_devices_positive']}")
-                logging.info(f"Building savings: {validation_results['building_savings']:.2f} ({validation_results['building_savings_pct']:.2f}%)")
-                
-                # Use validated building savings if available
-                if validation_results['building_savings'] > 0:
-                    baseline_cost = validation_results['building_savings'] + optimized_cost
-                    reduction_pct = validation_results['building_savings_pct']
-            except Exception as e:
-                logging.warning(f"Error during validation: {e}")
-        
-        # Return detailed metrics
-        result = {
-            "baseline_cost": baseline_cost,
-            "current_cost": optimized_cost,
-            "cost_reduction_percentage": reduction_pct,
-            "battery_savings_contribution": battery_savings,
-            "ev_savings_contribution": ev_savings
+        all_days = self.devices[0].data['day'].unique()
+
+        for day in all_days:
+            day_mask = self.devices[0].data['day'] == day
+            day_prices = self.devices[0].data[day_mask]['price_per_kwh'].values
+
+            pv_vec = None
+            if self.pv_agent:
+                pv_vec = self.pv_agent.get_hourly_forecast_pv(day)
+
+            self._evaluate_costs_for_day(
+                day_idx=day,
+                price_vec=day_prices,
+                pv_vec=pv_vec,
+                tag=tag
+            )
+
+            if tag in self.costs_by_day and day in self.costs_by_day[tag]:
+                day_costs = self.costs_by_day[tag][day]
+                total_original_cost += day_costs.get('orig', 0)
+                total_optimized_cost += day_costs.get('opt', 0)
+
+        total_savings = total_original_cost - total_optimized_cost
+        reduction_pct = (total_savings / total_original_cost) * 100 if total_original_cost > 0 else 0
+
+        return {
+            "baseline_cost": total_original_cost,
+            "current_cost": total_optimized_cost,
+            "cost_reduction_percentage": reduction_pct
         }
-        
-        # Add validation results if available
-        if validation_results:
-            result["validation"] = validation_results
-        
-        return result
 
     def save_results(self, filename: str):
         """

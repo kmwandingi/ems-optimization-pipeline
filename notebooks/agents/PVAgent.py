@@ -27,6 +27,11 @@ class PVAgent:
                 self.pv_profile = np.zeros(len(self.profile_data))
             else:
                 logging.info(f"PVAgent: Found profile columns: {profile_cols}")
+            
+            # Store profile_cols as instance attribute for later access
+            self.profile_cols = profile_cols
+            
+            if len(profile_cols) > 0:
                 self.profile_data['pv_summed'] = self.profile_data[profile_cols].sum(axis=1)
                 # Convert to negative since generation is represented as negative load.
                 self.profile_data['pv_summed'] = -self.profile_data['pv_summed']
@@ -34,6 +39,7 @@ class PVAgent:
                 self.pv_profile = self.profile_data['pv_summed'].values
         else:
             self.profile_data = None
+            self.profile_cols = profile_cols if profile_cols is not None else []
             self.pv_profile = None
 
         # =========== Handle PV forecast_data ===========
@@ -210,3 +216,23 @@ class PVAgent:
         #     # print(f"Stats for {target_date}: min={hourly_std.min():.4f}, max={hourly_std.max():.4f}, mean={hourly_std.mean():.4f}")
         
         return hourly_std
+    
+    def set_forecast_data(self, forecast_data):
+        """Set forecast data for the PV agent."""
+        import pandas as pd
+        import numpy as np
+        import logging
+        
+        if forecast_data is not None:
+            self.forecast_data = forecast_data.copy()
+            if hasattr(self, 'profile_cols') and len(self.profile_cols) > 0:
+                if all(col in forecast_data.columns for col in self.profile_cols):
+                    self.forecast_data['pv_summed'] = self.forecast_data[self.profile_cols].sum(axis=1)
+                    self.forecast_data['pv_summed'] = -self.forecast_data['pv_summed']
+                    logging.info(f"Updated PV forecast data with {len(self.profile_cols)} columns")
+                else:
+                    logging.warning("Not all PV columns found in forecast data")
+            else:
+                logging.info("No PV columns available for forecast data")
+        else:
+            self.forecast_data = None
