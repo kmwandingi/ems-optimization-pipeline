@@ -1,0 +1,76 @@
+KPI ANALYSIS RESULTS
+===================
+
+Building ID: DE_KN_residential1
+Days analyzed: 3
+
+Configuration: Battery + EV
+--------------------------
+ERROR: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\direct_file_output.py", line 44, in <module>
+    results_all = run_kpi_analysis(
+                  ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+Configuration: No Battery, with EV
+---------------------------------
+ERROR: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\direct_file_output.py", line 72, in <module>
+    results_no_battery = run_kpi_analysis(
+                         ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+Configuration: With Battery, No EV
+---------------------------------
+ERROR: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\direct_file_output.py", line 100, in <module>
+    results_no_ev = run_kpi_analysis(
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+Configuration: Basic (No Battery, No EV)
+---------------------------------------
+ERROR: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\direct_file_output.py", line 128, in <module>
+    results_basic = run_kpi_analysis(
+                    ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (72,) (24,) 
+
+COMPARISON OF CONFIGURATIONS
+============================
+
+ERROR creating comparison: name 'results_all' is not defined
+
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\direct_file_output.py", line 159, in <module>
+    "Baseline": results_all['cost_baseline'].mean(),
+                ^^^^^^^^^^^
+NameError: name 'results_all' is not defined

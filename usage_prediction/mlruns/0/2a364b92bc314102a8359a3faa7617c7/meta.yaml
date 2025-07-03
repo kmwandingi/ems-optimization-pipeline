@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/2a364b92bc314102a8359a3faa7617c7/artifacts
+end_time: 1747926436352
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 2a364b92bc314102a8359a3faa7617c7
+run_name: upset-smelt-941
+run_uuid: 2a364b92bc314102a8359a3faa7617c7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747926388548
+status: 4
+tags: []
+user_id: '20235149'

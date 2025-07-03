@@ -686,8 +686,15 @@ def main():
     # 3. Initialize agents
     battery_agent, ev_agent, pv_agent, grid_agent, weather_agent = initialize_agents(building_id, con, view_name, battery_enabled, ev_enabled)
     
-    # Results storage
+    # KPI accumulators across all processed days
     results = []
+    kpi_acc = {
+        "pv_gen": 0.0,
+        "pv_export": 0.0,
+        "grid_import": 0.0,
+        "grid_export": 0.0,
+        "peak_import_kw": 0.0,
+    }
     
     # 4. Process each day using DuckDB queries
     for day_idx, day in enumerate(selected_days):
@@ -711,6 +718,29 @@ def main():
         # Create devices for this day using DuckDB
         devices = create_devices_from_duckdb(con, view_name, building_id, day, battery_agent, ev_agent)
         
+        # --- Collect raw energy KPIs using DuckDB BEFORE optimisation results overwrite any state ---
+        # We derive column names dynamically to stay schema-agnostic.
+        def _find_column(candidates):
+            cols = [row[1] for row in con.execute(f"PRAGMA table_info({view_name})").fetchall()]
+            for cand in candidates:
+                if cand in cols:
+                    return cand
+            return None
+        pv_col = _find_column(["pv_generation_kwh", "pv_generation", "pv_gen_kwh"])
+        imp_col = _find_column(["grid_import_kwh", "grid_import", "import_energy_kwh"])
+        exp_col = _find_column(["grid_export_kwh", "grid_export", "export_energy_kwh"])
+        peak_col = _find_column(["grid_import_power_kw", "grid_import_power", "import_power_kw"])
+        if pv_col:
+            kpi_acc["pv_gen"] += con.execute(f"SELECT SUM({pv_col}) FROM {view_name} WHERE DATE(timestamp)=?", [day]).fetchone()[0] or 0
+        if exp_col:
+            kpi_acc["pv_export"] += con.execute(f"SELECT SUM({exp_col}) FROM {view_name} WHERE DATE(timestamp)=?", [day]).fetchone()[0] or 0
+            kpi_acc["grid_export"] += kpi_acc["pv_export"]  # treat same
+        if imp_col:
+            kpi_acc["grid_import"] += con.execute(f"SELECT SUM({imp_col}) FROM {view_name} WHERE DATE(timestamp)=?", [day]).fetchone()[0] or 0
+        if peak_col:
+            peak_val = con.execute(f"SELECT MAX({peak_col}) FROM {view_name} WHERE DATE(timestamp)=?", [day]).fetchone()[0]
+            if peak_val and peak_val > kpi_acc["peak_import_kw"]:
+                kpi_acc["peak_import_kw"] = peak_val
         # Run optimizations based on mode
         if mode == "decentralised" or mode is None:
             # Run decentralized optimization
@@ -836,7 +866,16 @@ def main():
         # Log final summary metrics
         final_metrics = {
             "total_days_processed": len(results),
-            "pipeline_success": 1.0
+            "pipeline_success": 1.0,
+            "total_cost_eur": results_df['cost_decentralised'].sum() if 'cost_decentralised' in results_df else None,
+            "avg_daily_cost_eur": results_df['cost_decentralised'].mean() if 'cost_decentralised' in results_df else None,
+            # Energy KPIs
+            "pv_generation_kwh": round(kpi_acc["pv_gen"], 3),
+            "pv_export_kwh": round(kpi_acc["pv_export"], 3),
+            "grid_import_kwh": round(kpi_acc["grid_import"], 3),
+            "grid_export_kwh": round(kpi_acc["grid_export"], 3),
+            "peak_grid_import_kw": round(kpi_acc["peak_import_kw"], 3),
+            "pv_self_consumption_pct": round((kpi_acc["pv_gen"] - kpi_acc["pv_export"]) / kpi_acc["pv_gen"], 4) if kpi_acc["pv_gen"] > 0 else None
         }
         
         if mode == "centralised" or mode == "centralised_phases":

@@ -24,7 +24,7 @@ class PVAgent:
                                 if 'pv' in c.lower() and c != 'price_per_kwh']
             if len(profile_cols) == 0:
                 logging.info("No PV profile columns found. Using all zeros for pv_profile.")
-                self.pv_profile = np.zeros(len(self.profile_data))
+                self.pv_profile = pd.Series(0.0, index=self.profile_data.index)
             else:
                 logging.info(f"PVAgent: Found profile columns: {profile_cols}")
             
@@ -36,7 +36,7 @@ class PVAgent:
                 # Convert to negative since generation is represented as negative load.
                 self.profile_data['pv_summed'] = -self.profile_data['pv_summed']
                 # print(self.profile_data)
-                self.pv_profile = self.profile_data['pv_summed'].values
+                self.pv_profile = self.profile_data['pv_summed']
         else:
             self.profile_data = None
             self.profile_cols = profile_cols if profile_cols is not None else []
@@ -97,14 +97,16 @@ class PVAgent:
             else:
                 logging.info("PV Forecast array is empty. Using zeros for forecasts.")
 
-    def get_pv_profile(self, indices: np.ndarray) -> np.ndarray:
-        """Returns measured PV profile (negative sign for generation) at given indices."""
-        import numpy as np
+    def get_pv_profile(self, indices):
+        """
+        Returns the PV profile for the given indices (which should be a DatetimeIndex).
+        """
         if self.pv_profile is None:
-            return np.zeros(len(indices))
-        # Clip indices that are out of range
-        indices = [i for i in indices if (0 <= i < len(self.pv_profile))]
-        return self.pv_profile[indices]
+            # If no profile, return a series of zeros with the requested index
+            return pd.Series(0.0, index=indices)
+
+        # Reindex the profile to match the requested indices, filling missing values with 0
+        return self.pv_profile.reindex(indices, fill_value=0.0)
 
     def get_hourly_forecast_pv(self, target_date):
         """
@@ -137,7 +139,7 @@ class PVAgent:
                                   .reindex(range(24), fill_value=0).values
 
         # Scale factor assumption: typical max ~32704 → scale to negative
-        scale_factor = 1.0 / 32704.0
+        scale_factor = 1.0 / 1.0
         hourly_scaled = -hourly_sums * scale_factor
         return hourly_scaled
     # 

@@ -1,0 +1,8 @@
+Building,Total Load (kWh),PV Gen (kWh),Non-Sched Cost (€),Sched-Only Cost (€),Sched-Batt Cost (€),% Cost Red. – Sched-Only,% Cost Red. – Sched-Batt,PV Used – Non-Sched (kWh),PV Used – Sched-Only (kWh),PV Used – Sched-Batt (kWh),% PV Self-Consumption – Non-Sched,% PV Self-Consumption – Sched-Only,% PV Self-Consumption – Sched-Batt,PAR – Non-Sched,PAR – Sched-Only,PAR – Sched-Batt
+DE_KN_residential1,512.05,2.67,17.52,34.37,34.37,-96.14,-96.14,2.6,2.55,2.55,97.46,95.62,95.62,3.44,3.49,3.49
+DE_KN_residential2,53.41,0.0,1.93,2.78,2.78,-43.81,-43.81,0.0,0.0,0.0,0.0,0.0,0.0,7.17,5.24,5.24
+DE_KN_residential3,122.36,120.7,2.08,2.28,2.28,-10.01,-10.01,38.96,39.61,39.61,32.28,32.82,32.82,5.77,5.61,5.61
+DE_KN_residential4,348.48,17.67,11.33,21.2,21.2,-87.09,-87.09,15.78,17.23,17.23,89.31,97.5,97.5,2.55,2.16,2.16
+DE_KN_residential5,40.35,0.0,1.39,1.09,1.09,21.55,21.55,0.0,0.0,0.0,0.0,0.0,0.0,7.4,9.27,9.27
+DE_KN_residential6,29.11,149.09,-1.84,-1.55,-1.55,0.0,0.0,10.05,12.93,12.93,6.74,8.67,8.67,10.4,7.96,7.96
+DE_KN_industrial3,23927.28,926.16,497.98,74.67,74.67,85.01,85.01,926.16,926.16,926.16,100.0,100.0,100.0,1.63,1.52,1.52

@@ -1,0 +1,15 @@
+{
+  "feature_names": [
+    "temperature",
+    "solar_radiation",
+    "pv_forecast",
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "day_cumulative_usage",
+    "hour_sin",
+    "hour_cos",
+    "prev_hour_on",
+    "plain_device_type"
+  ]
+}

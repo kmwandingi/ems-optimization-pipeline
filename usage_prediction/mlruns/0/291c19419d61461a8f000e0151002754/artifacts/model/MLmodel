@@ -1,0 +1,58 @@
+artifact_path: model
+flavors:
+  lightgbm:
+    code: null
+    data: model.pkl
+    lgb_version: 4.6.0
+    model_class: lightgbm.sklearn.LGBMClassifier
+  python_function:
+    data: model.pkl
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.lightgbm
+    python_version: 3.12.9
+is_signature_from_type_hint: false
+mlflow_version: 2.22.0
+model_size_bytes: 16684
+model_uuid: 622fddfcc6464be88b5ea1478e1c8779
+prompts: null
+run_id: 291c19419d61461a8f000e0151002754
+signature:
+  inputs: '[{"type": "float", "name": "temperature", "required": true}, {"type": "float",
+    "name": "solar_radiation", "required": true}, {"type": "float", "name": "pv_forecast",
+    "required": true}, {"type": "float", "name": "day_of_week", "required": true},
+    {"type": "float", "name": "rolling_7d_usage", "required": false}, {"type": "float",
+    "name": "rolling_3d_usage", "required": true}, {"type": "float", "name": "rolling_14d_usage",
+    "required": true}, {"type": "float", "name": "lag_7d_usage", "required": true},
+    {"type": "float", "name": "peak_hour_sin", "required": false}, {"type": "float",
+    "name": "peak_hour_cos", "required": false}, {"type": "float", "name": "temp_month",
+    "required": true}, {"type": "float", "name": "dow_pv", "required": true}, {"type":
+    "float", "name": "is_holiday", "required": true}, {"type": "float", "name": "is_weekend",
+    "required": true}, {"type": "float", "name": "building_DE_KN_industrial3", "required":
+    true}, {"type": "float", "name": "building_DE_KN_residential1", "required": true},
+    {"type": "float", "name": "building_DE_KN_residential2", "required": true}, {"type":
+    "float", "name": "building_DE_KN_residential3", "required": true}, {"type": "float",
+    "name": "building_DE_KN_residential4", "required": true}, {"type": "float", "name":
+    "building_DE_KN_residential5", "required": true}, {"type": "float", "name": "building_DE_KN_residential6",
+    "required": true}, {"type": "float", "name": "building_house2", "required": true},
+    {"type": "float", "name": "building_house3", "required": true}, {"type": "float",
+    "name": "building_house4", "required": true}, {"type": "float", "name": "building_house5",
+    "required": true}, {"type": "float", "name": "device_type_2", "required": true},
+    {"type": "float", "name": "device_type_3", "required": true}, {"type": "float",
+    "name": "device_type_4", "required": true}, {"type": "float", "name": "device_type_5",
+    "required": true}, {"type": "float", "name": "device_type_aggregate", "required":
+    true}, {"type": "float", "name": "device_type_charge", "required": true}, {"type":
+    "float", "name": "device_type_compressor", "required": true}, {"type": "float",
+    "name": "device_type_decharge", "required": true}, {"type": "float", "name": "device_type_dishwasher",
+    "required": true}, {"type": "float", "name": "device_type_ev", "required": true},
+    {"type": "float", "name": "device_type_freezer", "required": true}, {"type": "float",
+    "name": "device_type_offices", "required": true}, {"type": "float", "name": "device_type_pump",
+    "required": true}, {"type": "float", "name": "device_type_pumps", "required":
+    true}, {"type": "float", "name": "device_type_refrigerator", "required": true},
+    {"type": "float", "name": "device_type_ventilation", "required": true}, {"type":
+    "float", "name": "device_type_washing_machine", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "uint8", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-05-22 10:41:37.065320'

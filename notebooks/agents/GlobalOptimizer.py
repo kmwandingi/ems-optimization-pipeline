@@ -3,10 +3,14 @@ import pandas as pd
 import logging
 import datetime
 from datetime import timedelta
-import pickle
-import matplotlib.pyplot as plt
-import seaborn as sns
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, List, Tuple, Any, Optional
+from pulp import (LpProblem, LpVariable, LpStatus,
+                  LpMinimize, lpSum, PULP_CBC_CMD)
+
+from agents.ProbabilityModelAgent import ProbabilityModelAgent
+from agents.WeatherAgent import WeatherAgent
+import time
+from notebooks.utils.config import PV_WEIGHT
 from agents.FlexibleDeviceAgent import FlexibleDevice, calculate_preference_penalty
 from agents.GlobalConnectionLayer import GlobalConnectionLayer
 from pulp import LpProblem, LpVariable, lpSum, LpMinimize, PULP_CBC_CMD, LpStatus, LpContinuous
@@ -142,15 +146,27 @@ class GlobalOptimizer:
         self.best_savings = None
         
         # results holders – filled after optimisation
-        self.battery_charge_global = None
-        self.battery_discharge_global = None
-        self.battery_soc_global = None
+        if self.battery_agent:
+            # Initialize with a default size, will be resized later if needed
+            data_length = 24 # Default, will be updated in optimize method
+            if self.devices and len(self.devices[0].data) > 0:
+                data_length = len(self.devices[0].data)
+            self.battery_charge_global = np.zeros(data_length)
+            self.battery_discharge_global = np.zeros(data_length)
+            self.battery_soc_global = np.full(data_length, self.battery_agent.current_soc if self.battery_agent else 0.0)
+        else:
+            self.battery_charge_global = np.array([])
+            self.battery_discharge_global = np.array([])
+            self.battery_soc_global = np.array([])
         
         self.ev_charge_global = None
         self.ev_discharge_global = None
         self.ev_soc_global = None
-    
-# In GlobalOptimizer.py, modify the optimize method:
+        
+        # Store the solved schedules in the respective agents for later analysis
+        if self.battery_agent:
+            self.battery_agent.charge_schedule = self.battery_charge_global
+            self.battery_agent.discharge_schedule = self.battery_discharge_global
 
     def optimize(self):
         """
@@ -328,23 +344,6 @@ class GlobalOptimizer:
         import logging
         import numpy as np
 
-        print("=" * 80)
-        print("STARTING CENTRALIZED OPTIMIZATION")
-        print("=" * 80)
-        
-        # Initialize global arrays for battery and EV state tracking
-        n_hours = 24  # We always optimize for 24 hours
-        self.battery_charge_global = np.zeros(n_hours)
-        self.battery_discharge_global = np.zeros(n_hours)
-        self.battery_soc_global = np.zeros(n_hours)
-        
-        # Initialize EV global arrays if EV agent exists
-        if self.ev_agent is not None:
-            self.ev_charge_global = np.zeros(n_hours)
-            self.ev_discharge_global = np.zeros(n_hours)
-            self.ev_soc_global = np.zeros(n_hours)
-
-        # 1) Collect the union of all days across devices
         all_days = set()
         for dev in self.devices:
             all_days |= set(dev.data['day'].unique())
@@ -382,21 +381,40 @@ class GlobalOptimizer:
         for day_val in sorted(all_days):
             print(f"\nProcessing day: {day_val}")
             prob = LpProblem(f"Centralized_Optimization_{day_val}", LpMinimize)
-
+            
             x = {}            # shift variables
             cost_terms = []   # objective
             device_indices = {}
-
+            
             # Get battery state if battery agent is available
             battery_state = None
             if self.battery_agent is not None:
                 battery_state = self.battery_agent.get_battery_state()
                 print(f"Battery available with capacity: {battery_state['soc_max']} kWh, " 
                      f"current SOC: {battery_state['current_soc']} kWh")
-
+            
+            # Get PV data from PV agent if available
+            pv_data = None
+            pv_uncertainty = np.ones(n_hours) * 0.1  # Default 10% uncertainty
+            if self.pv_agent is not None:
+                pv_data = self.pv_agent.get_hourly_forecast_pv(day_val)
+                # Debug output for PV data
+                if pv_data is not None and len(pv_data) > 0:
+                    print(f"PV forecast available: {len(pv_data)} hours, max generation: {-np.min(pv_data):.3f} kWh")
+                print(f"Using PV forecast for day {day_val}")
+                
+                # Calculate PV forecast uncertainty if available
+                if hasattr(self.pv_agent, 'compute_hourly_error_std'):
+                    try:
+                        pv_uncertainty = self.pv_agent.compute_hourly_error_std(day_val)
+                    except Exception as e:
+                        print(f"Could not compute PV forecast uncertainty: {e}")
+            
             # Build partial day data for each device
             for d_idx, dev in enumerate(self.devices):
+                # Check which rows belong to this day
                 day_mask = (dev.data['day'] == day_val)
+                
                 # We build consumption_24 of length 24, filling missing hour(s) with 0
                 if not np.any(day_mask):
                     # This device has no rows at all for day_val => 0 usage
@@ -440,6 +458,9 @@ class GlobalOptimizer:
                 print(f"WARNING: No price data available for day {day_val}. Skipping optimization.")
                 continue
 
+            # Export price is determined by a factor from the config, reflecting a realistic scenario
+            export_price = [p * self.grid_agent.export_price_factor for p in day_prices]
+
             # --- Battery Variables ---
             # Create battery variables if battery_state is provided
             if battery_state is not None:
@@ -465,7 +486,7 @@ class GlobalOptimizer:
                         prices=day_prices,
                         y=y,
                         cost_terms=cost_terms,
-                        force_arbitrage=True,
+                        force_arbitrage=False,
                         problem_type="centralized",
                         name_prefix="Batt"
                     )
@@ -517,6 +538,22 @@ class GlobalOptimizer:
                 
                 print(f"EV constraints added. EV must be charged to {ev_state['soc_max']*0.98:.2f} kWh by hour {self.ev_agent.must_be_full_by_hour}")
             
+            # Store these for later use when building the overall net load expressions
+            pv_incentive_hours = []
+            pv_incentive_values = []
+            
+            # Calculate PV incentive information for reporting
+            pv_hours_available = 0
+            pv_total_generation = 0.0
+            if pv_data is not None:
+                for h in range(len(pv_data)):
+                    if pv_data[h] < -0.05:  # Threshold for significant PV generation
+                        pv_hours_available += 1
+                        pv_total_generation += -pv_data[h]  # Convert to positive value
+                
+                if pv_hours_available > 0:
+                    print(f"PV available in {pv_hours_available} hours, total generation: {pv_total_generation:.2f} kWh")
+            
             # 4) Now build the shift variables for all devices
             print("\nCreating shift variables...")
             for dev, (d_idx, consumption_24, prices_24) in device_indices.items():
@@ -531,18 +568,14 @@ class GlobalOptimizer:
                     print(f"  {dev.device_name}: Skipping shift variables (handled as storage device)")
                     continue
 
-                print(f"  {dev.device_name}: Creating shift variables")
+                # print(f"  {dev.device_name}: Creating shift variables")
                 max_shift = dev.max_shift_hours
-                print(f"    Max shift hours: {max_shift}")
                 
                 # IMPORTANT: Check if there's price variation in this day
                 price_range = np.max(prices_24) - np.min(prices_24) if len(prices_24) > 0 else 0
                 if price_range <= 0.0001:  # Effectively no price variation
-                    print(f"    WARNING: No price variation on {day_val}, optimization won't change anything")
+                    print(f"    WARNING: No price variation for {dev.device_name} on {day_val}, skipping optimization")
                     continue
-                    
-                print(f"    Price range: {price_range:.4f} (min={np.min(prices_24):.4f}, max={np.max(prices_24):.4f})")
-                print(f"    Hours with consumption: {np.where(consumption_24 > 0)[0]}")
                 
                 # Create shifting variables x[d_idx, t, h]
                 for t in range(n_hours):
@@ -556,9 +589,37 @@ class GlobalOptimizer:
                                 x[(d_idx, t, h)] = LpVariable(var_name, lowBound=0, upBound=1)
                                 # Store the key for later reference
                                 shift_key = (d_idx, t, h)
-                                # CRITICAL FIX: Ensure cost calculation is meaningful
-                                # To incentivize shifting from higher to lower price hours
-                                cost_terms.append(prices_24[target] * consumption_24[t] * x[shift_key])
+                                
+                                # Initialize with regular price
+                                eff_price = prices_24[target]
+                                
+                                # Apply a strong discount during PV generation hours
+                                if pv_data is not None and target < len(pv_data):
+                                    pv_generation = abs(pv_data[target])  # Convert to positive value
+                                    
+                                    # If we have significant PV generation, apply discount
+                                    if pv_generation > 0.001:  # Minimum threshold
+                                        pv_peak = max(0.1, -pv_data.min())  # Avoid divide-by-zero
+                                        pv_ratio = pv_generation / pv_peak  # 0-1 ratio of current to peak
+                                        
+                                        # MODIFIED DISCOUNT CALCULATION: Make discount less dependent on price differential
+                                        # and more directly tied to PV generation to improve PV utilization
+                                        
+                                        # Get the base price and the minimum price in the day
+                                        base_price = prices_24[target]
+                                        min_price = min(prices_24)
+                                        
+                                        # Calculate a more substantial discount based on absolute pricing advantage
+                                        # plus a fixed incentive, rather than relative to export price
+                                        discount = (base_price - min_price + 0.05) * pv_ratio * PV_WEIGHT
+                                        
+                                        # Apply discount to make PV hours more attractive
+                                        eff_price = prices_24[target] - discount
+                                # -----------------------------------------------------------------
+                                
+                                # CRITICAL FIX: Use effective price that accounts for PV availability
+                                # This incentivizes shifting to PV generation hours
+                                cost_terms.append(eff_price * consumption_24[t] * x[shift_key])
                                 shift_vars_created += 1
 
                         # The sum of shifts for hour t must equal 1 (100% of consumption is allocated)
@@ -567,12 +628,14 @@ class GlobalOptimizer:
                                         if (d_idx, t, hh) in x]
                         if relevant_vars:
                             # Use safe variable naming for constraints
-                            prob += lpSum(relevant_vars) == 1, f"Conservation_{dev.device_name.replace('-','_')}_t{t}"
+                            prob += lpSum(relevant_vars) == 1, f"Conservation_{d_idx}_{dev.device_name.replace('-','_')}_t{t}"
                 
-                print(f"    Created {shift_vars_created} shift variables")
+                if shift_vars_created > 0:
+                    print(f"    Created {shift_vars_created} shift variables for {dev.device_name}")
 
             # 5) Enforce building load each hour with battery integration
             print("\nEnforcing building load constraints...")
+            net_loads = {}
             for hour in range(n_hours):
                 hour_load_list = []
                 
@@ -591,8 +654,8 @@ class GlobalOptimizer:
                                     hour_load_list.append(x[key] * consumption_24[t])
                 
                 # Add building load constraint integrating the battery and EV if available
-                if hour_load_list:  # Only add constraint if there are loads to consider
-                    load_sum = lpSum(hour_load_list)
+                if hour_load_list or battery_state is not None or ev_state is not None:  # Only add constraint if there are components to consider
+                    load_sum = lpSum(hour_load_list) if hour_load_list else 0
                     
                     # Add battery charge/discharge impact if available
                     if battery_state is not None:
@@ -602,8 +665,15 @@ class GlobalOptimizer:
                     if ev_state is not None and ev_charge is not None:
                         load_sum += ev_charge[hour] - ev_discharge[hour]
                         
+                    # Store net load 
+                    net_loads[hour] = load_sum
+                        
                     # Add the constraint with all components
                     prob += load_sum <= self.global_layer.max_building_load, f"BuildingLoad_hour_{hour}"
+                    
+            # No separate PV self-utilization incentive needed - 
+            # we're now directly modifying the hourly prices in the cost function instead
+            # This is more direct and avoids the complex feedback issues
             
             print(f"Added {len(prob.constraints)} constraints in total")
 
@@ -825,6 +895,12 @@ class GlobalOptimizer:
                                     self.battery_agent.hourly_discharge[t] = 0.0
                                     self.battery_agent.hourly_soc[t] = self.battery_agent.hourly_soc[t-1] if t > 0 else self.battery_agent.current_soc
                             
+                            # CRITICAL FIX: Store the solved schedules in the agent for analysis
+                            solved_battery_charge = np.array([charge[t].varValue if hasattr(charge[t], 'varValue') and charge[t].varValue is not None else 0.0 for t in range(n_hours)])
+                            solved_battery_discharge = np.array([discharge[t].varValue if hasattr(discharge[t], 'varValue') and discharge[t].varValue is not None else 0.0 for t in range(n_hours)])
+                            self.battery_agent.charge_schedule = solved_battery_charge
+                            self.battery_agent.discharge_schedule = solved_battery_discharge
+
                             print(f"  Updated battery agent: SOC={final_soc:.2f}, day charge={day_charge:.2f}, day discharge={day_discharge:.2f}")
                     
                     # Process EV results if available
@@ -1256,7 +1332,8 @@ class GlobalOptimizer:
                     # Apply same discounts as for discrete devices
                     discount = 0.0
                     if pv_forecast is not None and t < len(pv_forecast):
-                        pot = min(abs(pv_forecast[t]) / 32704.0, 1.0)
+                        max_pv = max(abs(pv_forecast)) if pv_forecast is not None and len(pv_forecast) > 0 else 1.0
+                        pot = min(abs(pv_forecast[t]) / max_pv, 1.0) if max_pv > 0 else 0.0
                         discount = 0.4 / (1 + np.exp(-10 * (pot - 0.5)))
                     
                     # Weather factor (same as discrete devices)

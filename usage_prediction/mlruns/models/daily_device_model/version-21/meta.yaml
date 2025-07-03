@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1747928673604
+current_stage: None
+description: null
+last_updated_timestamp: 1747928673604
+name: daily_device_model
+run_id: d494c997b3b143f68e122c0e921a50e2
+run_link: null
+source: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/d494c997b3b143f68e122c0e921a50e2/artifacts/daily_model
+status: READY
+status_message: null
+storage_location: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/d494c997b3b143f68e122c0e921a50e2/artifacts/daily_model
+user_id: null
+version: 21

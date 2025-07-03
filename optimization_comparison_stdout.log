@@ -1,0 +1,5 @@
+Script execution started
+Parsing command line arguments...
+DEBUG: Created output directory: results/comparison\20250619_122327
+Error: 'Logger' object has no attribute 'add'
+Check optimization_comparison.log for details.

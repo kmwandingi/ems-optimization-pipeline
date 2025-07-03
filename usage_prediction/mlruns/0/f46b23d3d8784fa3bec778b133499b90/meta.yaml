@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/f46b23d3d8784fa3bec778b133499b90/artifacts
+end_time: 1747934270978
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: f46b23d3d8784fa3bec778b133499b90
+run_name: sedate-elk-640
+run_uuid: f46b23d3d8784fa3bec778b133499b90
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747934267695
+status: 4
+tags: []
+user_id: '20235149'

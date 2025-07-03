@@ -1,0 +1,16 @@
+name: device_usage_env
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - mlflow
+    - lightgbm
+    - catboost
+    - pandas
+    - numpy
+    - scikit-learn
+    - matplotlib
+    - great-expectations
+    - feast

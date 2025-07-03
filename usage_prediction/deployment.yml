@@ -1,0 +1,18 @@
+name: device-usage-deployment
+endpoint_name: device-usage-endpoint
+model: azureml:device-usage-model@latest
+instance_type: Standard_DS3_v2
+instance_count: 1
+environment_variables:
+  AZUREML_MODEL_DIR: ./azureml-models
+  INFERENCE_CONFIG: ./inference_config.json
+scaling:
+  min_instances: 1
+  max_instances: 3
+  scale_rule_name: request-count-rule
+  scale_threshold: 100
+  scale_cooldown_seconds: 300
+tags:
+  project: energy-management-system
+  version: "1.0"
+  continuous_devices: "refrigerator,freezer"

@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/3d5ac630ba7f4c8c901478f1b9f07413/artifacts
+end_time: 1747917033297
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3d5ac630ba7f4c8c901478f1b9f07413
+run_name: masked-tern-979
+run_uuid: 3d5ac630ba7f4c8c901478f1b9f07413
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747917008278
+status: 4
+tags: []
+user_id: '20235149'

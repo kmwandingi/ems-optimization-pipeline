@@ -94,6 +94,13 @@ BATTERY_TUNING_PARAMETERS = [
 ]
 
 # --------------------------
+# PV Self-Utilization Parameters
+# --------------------------
+# PV_WEIGHT = 1.0 means "self-consuming PV is worth as much as exporting it is bad"
+# Values > 1.0 make the optimizer more strongly prefer PV self-consumption over any tariff spread
+PV_WEIGHT = 1000.0
+
+# --------------------------
 # Flexible Device Parameters
 # --------------------------
 FLEXIBLE_DEVICE_PARAMS = {
@@ -117,21 +124,15 @@ FLEXIBLE_DEVICE_PARAMS = {
 }
 
 # --------------------------
-# Grid Agent Parameters
+# Grid & Building Parameters
 # --------------------------
-GRID_AGENT_PARAMS = {
-    "import_price": 0.25,
-    "export_price": 0.10,
-    "max_import": 50.0,
-    "max_export": 20.0
-}
-
-# --------------------------
-# Global Connection Layer Parameters
-# --------------------------
-GLOBAL_CONNECTION_PARAMS = {
-    "max_building_load": 100.0
-    # total_hours is set at runtime (24 hours per day)
+GRID_PARAMS = {
+    "max_building_load": 100.0,      # kW, maximum total load for the building
+    "max_import": 50.0,             # kW, maximum import from grid
+    "max_export": 20.0,             # kW, maximum export to grid
+    "import_price": 0.25,           # fallback or default import price
+    "export_price": 0.10,           # fallback or default export price
+    "export_price_factor": 0.9,     # factor to determine export price from dynamic import price
 }
 
 # --------------------------
@@ -176,14 +177,9 @@ LOGGING_LEVEL = "INFO"
 OPTIMIZATION_RESULTS_FILE = "all_building_results_without_simulation.json"
 
 # --------------------------
-# Derived Settings
+# Parameters for direct import
 # --------------------------
-IMPORT_PRICE       = GRID_AGENT_PARAMS["import_price"]
-EXPORT_PRICE       = GRID_AGENT_PARAMS["export_price"]
-MAX_BUILDING_LOAD  = GLOBAL_CONNECTION_PARAMS["max_building_load"]
-
-# Parameters passed via **kwargs
-GRID_PARAMS       = {"import_price": GRID_AGENT_PARAMS["import_price"], "export_price": GRID_AGENT_PARAMS["export_price"], "max_import": GRID_AGENT_PARAMS["max_import"], "max_export": GRID_AGENT_PARAMS["max_export"] }
+# GRID_PARAMS is now defined above and used directly.
 FLEXIBLE_PARAMS   = FLEXIBLE_DEVICE_PARAMS
 PV_PARAMS         = PV_AGENT_PARAMS
 EV_PARAMS         = EV_PARAMS

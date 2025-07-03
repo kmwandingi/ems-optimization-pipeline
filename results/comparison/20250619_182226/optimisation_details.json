@@ -1,0 +1,1275 @@
+{
+  "DE_KN_industrial3": {},
+  "DE_KN_residential1": {
+    "2017-03-06": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A7DA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF7FBE12E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309A630>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B39E0>"
+        ],
+        "pv_utilization": 0.0002315554325556047
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A7DA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF7FBE12E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309A630>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B39E0>"
+        ],
+        "pv_utilization": 1.2933434608529007e-05
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A7DA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF7FBE12E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309A630>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B39E0>"
+        ],
+        "pv_utilization": 1.2933434608529007e-05
+      }
+    },
+    "2017-03-07": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4770>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF03119700>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311A900>"
+        ],
+        "pv_utilization": 0.00031793562698306067
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4770>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF03119700>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311A900>"
+        ],
+        "pv_utilization": 8.863305282921759e-09
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4770>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF03119700>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311A900>"
+        ],
+        "pv_utilization": 8.863305282921759e-09
+      }
+    },
+    "2017-03-08": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2150>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B0F80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF03119E80>"
+        ],
+        "pv_utilization": 0.00020633803116345745
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2150>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B0F80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF03119E80>"
+        ],
+        "pv_utilization": 1.806180215309024e-08
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2150>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B0F80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF03119E80>"
+        ],
+        "pv_utilization": 1.806180215309024e-08
+      }
+    },
+    "2017-03-09": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1F10>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0306B980>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4500>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410E180>"
+        ],
+        "pv_utilization": 0.0002577965406567417
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1F10>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0306B980>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4500>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410E180>"
+        ],
+        "pv_utilization": 1.4326885311249863e-05
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1F10>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0306B980>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4500>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410E180>"
+        ],
+        "pv_utilization": 1.4326885311249863e-05
+      }
+    },
+    "2017-03-10": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410C5C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410D910>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410F7D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410CD10>"
+        ],
+        "pv_utilization": 8.462977685146837e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410C5C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410D910>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410F7D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410CD10>"
+        ],
+        "pv_utilization": 3.524846380000058e-06
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410C5C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410D910>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410F7D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410CD10>"
+        ],
+        "pv_utilization": 3.524846380000058e-06
+      }
+    },
+    "2017-03-11": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410EAB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410DC40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B440>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311ACF0>"
+        ],
+        "pv_utilization": 5.6143661141219775e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410EAB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410DC40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B440>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311ACF0>"
+        ],
+        "pv_utilization": 8.094568339816968e-07
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410EAB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410DC40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B440>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311ACF0>"
+        ],
+        "pv_utilization": 8.094568339816968e-07
+      }
+    },
+    "2017-03-12": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A46E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A7F80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04144D40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04146F00>"
+        ],
+        "pv_utilization": 6.34919498721352e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A46E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A7F80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04144D40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04146F00>"
+        ],
+        "pv_utilization": 1.531823818786674e-06
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A46E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A7F80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04144D40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04146F00>"
+        ],
+        "pv_utilization": 1.531823818786674e-06
+      }
+    }
+  },
+  "DE_KN_residential2": {
+    "2018-01-27": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B0230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B25A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B50D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5490>"
+        ],
+        "pv_utilization": 1.9784392493663644e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B0230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B25A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B50D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5490>"
+        ],
+        "pv_utilization": 1.3624178026938715e-05
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B0230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B25A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B50D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5490>"
+        ],
+        "pv_utilization": 1.3624178026938715e-05
+      }
+    },
+    "2018-01-28": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410CAD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1B20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041417F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041439E0>"
+        ],
+        "pv_utilization": 7.063378625318876e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410CAD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1B20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041417F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041439E0>"
+        ],
+        "pv_utilization": 1.5834705360858333e-05
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410CAD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1B20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041417F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041439E0>"
+        ],
+        "pv_utilization": 1.5834705360858333e-05
+      }
+    },
+    "2018-01-29": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B73B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B800>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C99D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C93D0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B73B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B800>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C99D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C93D0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B73B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B800>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C99D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C93D0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-01-30": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041469F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2D80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311B9B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3FB0>"
+        ],
+        "pv_utilization": 2.1929584104918876e-08
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041469F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2D80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311B9B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3FB0>"
+        ],
+        "pv_utilization": 7.309861295380532e-09
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041469F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2D80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311B9B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3FB0>"
+        ],
+        "pv_utilization": 7.309861295380532e-09
+      }
+    },
+    "2018-01-31": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410FE00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1130>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2A80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3920>"
+        ],
+        "pv_utilization": 0.0001279013830426945
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410FE00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1130>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2A80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3920>"
+        ],
+        "pv_utilization": 2.400280637402285e-05
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410FE00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1130>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2A80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3920>"
+        ],
+        "pv_utilization": 2.400280637402285e-05
+      }
+    },
+    "2018-02-01": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8110>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CB260>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CA9F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C1A00>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8110>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CB260>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CA9F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C1A00>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8110>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CB260>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CA9F0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C1A00>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-02-02": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04141B80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04140C20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04145280>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04146BA0>"
+        ],
+        "pv_utilization": 2.857102041331847e-08
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04141B80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04140C20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04145280>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04146BA0>"
+        ],
+        "pv_utilization": 2.8571020413994088e-08
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04141B80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04140C20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04145280>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04146BA0>"
+        ],
+        "pv_utilization": 2.8571020413994088e-08
+      }
+    }
+  },
+  "DE_KN_residential3": {
+    "2018-09-18": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8F20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041454C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6DB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7770>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6360>"
+        ],
+        "pv_utilization": 2.1809511124319704e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8F20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041454C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6DB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7770>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6360>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8F20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041454C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6DB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7770>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6360>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-09-19": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B9E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B2C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B41D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8290>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CAB70>"
+        ],
+        "pv_utilization": 2.917911994895164e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B9E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B2C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B41D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8290>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CAB70>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B9E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0309B2C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B41D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8290>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042CAB70>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-09-20": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5430>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04143560>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7FB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F4A40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F6510>"
+        ],
+        "pv_utilization": 2.9005207511366095e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5430>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04143560>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7FB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F4A40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F6510>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5430>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04143560>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7FB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F4A40>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F6510>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-09-21": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B78C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A19D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A6DE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5AC0>"
+        ],
+        "pv_utilization": 2.8525662467472573e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B78C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A19D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A6DE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5AC0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B78C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A19D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A6DE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5AC0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-09-22": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A7CB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5670>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8B90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2EA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5550>"
+        ],
+        "pv_utilization": 3.3028748173237307e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A7CB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5670>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8B90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2EA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5550>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A7CB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5670>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C8B90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2EA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5550>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-09-23": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C36E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C28D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A7590>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4710>"
+        ],
+        "pv_utilization": 8.81107323398637e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C36E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C28D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A7590>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4710>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C36E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C28D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A7590>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A5520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4710>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-09-24": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438DBE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E2D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E0C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438C2C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2900>"
+        ],
+        "pv_utilization": 2.2933661655996654e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438DBE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E2D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E0C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438C2C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2900>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438DBE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E2D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E0C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438C2C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2900>"
+        ],
+        "pv_utilization": 0.0
+      }
+    }
+  },
+  "DE_KN_residential4": {
+    "2018-01-29": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438F230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E570>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A6900>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F6DE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A03B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438F980>"
+        ],
+        "pv_utilization": 8.204527790621813e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438F230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E570>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A6900>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F6DE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A03B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438F980>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438F230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438E570>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A6900>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F6DE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A03B0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438F980>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-01-30": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C0260>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04143B90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05467B60>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041436E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054651C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05467B30>"
+        ],
+        "pv_utilization": 7.395411041048585e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C0260>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04143B90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05467B60>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041436E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054651C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05467B30>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C0260>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04143B90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05467B60>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041436E0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054651C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05467B30>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-01-31": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349EE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434AA20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A810>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349EB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438D820>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438C9B0>"
+        ],
+        "pv_utilization": 8.969516886165637e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349EE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434AA20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A810>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349EB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438D820>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438C9B0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349EE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434AA20>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A810>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349EB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438D820>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438C9B0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-02-01": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C1910>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4380>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7500>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5F70>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F43E0>"
+        ],
+        "pv_utilization": 0.00010504377215501203
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C1910>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4380>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7500>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5F70>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F43E0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C1910>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4380>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7500>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5F70>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F43E0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-02-02": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04140890>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1BB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05465520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547F7A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547CC80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05464D70>"
+        ],
+        "pv_utilization": 3.973435610517472e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04140890>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1BB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05465520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547F7A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547CC80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05464D70>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04140890>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B1BB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05465520>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547F7A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547CC80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05464D70>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-02-03": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7560>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7DD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547FCE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2CC0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547DA90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547DBB0>"
+        ],
+        "pv_utilization": 5.396650217010044e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7560>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7DD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547FCE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2CC0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547DA90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547DBB0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7560>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F7DD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547FCE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2CC0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547DA90>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547DBB0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-02-04": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6F00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4B60>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547EB10>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438ED80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A780>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434AB70>"
+        ],
+        "pv_utilization": 5.643019816355207e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6F00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4B60>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547EB10>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438ED80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A780>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434AB70>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B6F00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A4B60>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547EB10>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0438ED80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A780>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434AB70>"
+        ],
+        "pv_utilization": 0.0
+      }
+    }
+  },
+  "DE_KN_residential5": {
+    "2018-06-26": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1850>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0080>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0FE0>"
+        ],
+        "pv_utilization": 1.0424507573709383e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1850>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0080>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0FE0>"
+        ],
+        "pv_utilization": 7.535429757255915e-06
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1850>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0080>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0FE0>"
+        ],
+        "pv_utilization": 7.535429757255915e-06
+      }
+    },
+    "2018-06-27": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054460C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05444E30>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445910>"
+        ],
+        "pv_utilization": 3.832598528603546e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054460C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05444E30>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445910>"
+        ],
+        "pv_utilization": 1.6476471954580582e-06
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054460C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05444E30>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445910>"
+        ],
+        "pv_utilization": 1.6476471954580582e-06
+      }
+    },
+    "2018-06-28": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A0C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043487A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349B50>"
+        ],
+        "pv_utilization": 4.880336737202126e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A0C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043487A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349B50>"
+        ],
+        "pv_utilization": 3.062124756247088e-06
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A0C0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043487A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF04349B50>"
+        ],
+        "pv_utilization": 3.062124756247088e-06
+      }
+    },
+    "2018-06-29": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1E50>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A22A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054640E0>"
+        ],
+        "pv_utilization": 7.082335180371689e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1E50>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A22A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054640E0>"
+        ],
+        "pv_utilization": 5.956151656145103e-06
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1E50>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A22A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054640E0>"
+        ],
+        "pv_utilization": 5.956151656145103e-06
+      }
+    },
+    "2018-06-30": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1700>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A28D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547ECC0>"
+        ],
+        "pv_utilization": 8.355885520467817e-09
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1700>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A28D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547ECC0>"
+        ],
+        "pv_utilization": 3.1334570700714114e-09
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A1700>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A28D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0547ECC0>"
+        ],
+        "pv_utilization": 3.1334570700714114e-09
+      }
+    },
+    "2018-07-01": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05572690>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05573B00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF055713D0>"
+        ],
+        "pv_utilization": 5.768260148530224e-07
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05572690>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05573B00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF055713D0>"
+        ],
+        "pv_utilization": 1.963374919645496e-07
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05572690>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05573B00>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF055713D0>"
+        ],
+        "pv_utilization": 1.963374919645496e-07
+      }
+    },
+    "2018-07-02": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F4950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5310>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2030>"
+        ],
+        "pv_utilization": 1.586840333125034e-08
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F4950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5310>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2030>"
+        ],
+        "pv_utilization": 1.3601488654587506e-08
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F4950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042F5310>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042A2030>"
+        ],
+        "pv_utilization": 1.3601488654587506e-08
+      }
+    }
+  },
+  "DE_KN_residential6": {
+    "2018-04-02": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445220>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447BF0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445190>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054464E0>"
+        ],
+        "pv_utilization": 1.0213316137921927e-05
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445220>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447BF0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445190>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054464E0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445220>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447BF0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05445190>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054464E0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-04-03": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A3AA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3590>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041418E0>"
+        ],
+        "pv_utilization": 8.474279516089769e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A3AA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3590>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041418E0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A3AA0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF043A0230>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C3590>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041418E0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-04-04": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05465280>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054459A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7FE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041456A0>"
+        ],
+        "pv_utilization": 8.4631309942147e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05465280>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054459A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7FE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041456A0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05465280>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF054459A0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7FE0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041456A0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-04-05": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C0680>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A090>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311BCB0>"
+        ],
+        "pv_utilization": 8.241732233915211e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C0680>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A090>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311BCB0>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C2270>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF042C0680>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0434A090>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311BCB0>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-04-06": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041474D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF01863FB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4EC0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2090>"
+        ],
+        "pv_utilization": 6.73338833355718e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041474D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF01863FB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4EC0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2090>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041474D0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF01863FB0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030A4EC0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF030B2090>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-04-07": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7530>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410ECF0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5B80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05444B00>"
+        ],
+        "pv_utilization": 6.901092531916876e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7530>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410ECF0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5B80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05444B00>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B7530>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0410ECF0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF041B5B80>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05444B00>"
+        ],
+        "pv_utilization": 0.0
+      }
+    },
+    "2018-04-08": {
+      "baseline": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447530>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311ABD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05490B60>"
+        ],
+        "pv_utilization": 5.9626357065901355e-06
+      },
+      "decentralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447530>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311ABD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05490B60>"
+        ],
+        "pv_utilization": 0.0
+      },
+      "centralised": {
+        "devices": [
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447950>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05447530>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF0311ABD0>",
+          "<agents.FlexibleDeviceAgent.FlexibleDevice object at 0x000001FF05490B60>"
+        ],
+        "pv_utilization": 0.0
+      }
+    }
+  }
+}

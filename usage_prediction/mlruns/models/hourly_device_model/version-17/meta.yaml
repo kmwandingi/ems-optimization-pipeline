@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1747934678099
+current_stage: None
+description: null
+last_updated_timestamp: 1747934678099
+name: hourly_device_model
+run_id: bc3e807cc2d34c189244f8b7632f7d8c
+run_link: null
+source: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/bc3e807cc2d34c189244f8b7632f7d8c/artifacts/hourly_model
+status: READY
+status_message: null
+storage_location: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/bc3e807cc2d34c189244f8b7632f7d8c/artifacts/hourly_model
+user_id: null
+version: 17

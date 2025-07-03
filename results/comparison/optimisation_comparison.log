@@ -1,0 +1,1027 @@
+2025-06-19 16:28:27,949  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 16:28:28,112  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 16:28:28,128  ERROR    Building DE_KN_residential1 failed – Binder Error: Referenced column "day" not found in FROM clause!
+Candidate bindings: "DE_KN_residential1_grid_import", "DE_KN_residential1_washing_machine", "year"
+
+LINE 2:         SELECT DISTINCT day
+                                ^
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 224, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 182, in process_building
+    days      = select_days_from_duckdb(con, view, n_days)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 153, in select_days_from_duckdb
+    return [r[0] for r in con.execute(q).fetchall()][::-1]  # ascending
+                          ^^^^^^^^^^^^^^
+duckdb.duckdb.BinderException: Binder Error: Referenced column "day" not found in FROM clause!
+Candidate bindings: "DE_KN_residential1_grid_import", "DE_KN_residential1_washing_machine", "year"
+
+LINE 2:         SELECT DISTINCT day
+                                ^
+2025-06-19 16:28:28,134  INFO     Detailed results saved
+2025-06-19 16:36:18,449  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 16:36:18,502  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 16:36:18,504  ERROR    Building DE_KN_residential1 failed – Binder Error: Referenced column "day" not found in FROM clause!
+Candidate bindings: "DE_KN_residential1_grid_import", "DE_KN_residential1_washing_machine", "year"
+
+LINE 2:         SELECT DISTINCT day
+                                ^
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 271, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 224, in process_building
+    days      = select_days_from_duckdb(con, view, n_days)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 153, in select_days_from_duckdb
+    return [r[0] for r in con.execute(q).fetchall()][::-1]  # ascending
+                          ^^^^^^^^^^^^^^
+duckdb.duckdb.BinderException: Binder Error: Referenced column "day" not found in FROM clause!
+Candidate bindings: "DE_KN_residential1_grid_import", "DE_KN_residential1_washing_machine", "year"
+
+LINE 2:         SELECT DISTINCT day
+                                ^
+2025-06-19 16:36:18,511  INFO     Detailed results saved
+2025-06-19 16:38:04,311  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 16:38:04,336  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 16:38:04,338  ERROR    Building DE_KN_residential1 failed – Binder Error: Referenced column "day" not found in FROM clause!
+Candidate bindings: "DE_KN_residential1_grid_import", "DE_KN_residential1_washing_machine", "year"
+
+LINE 2:         SELECT DISTINCT day
+                                ^
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 271, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 224, in process_building
+    days      = select_days_from_duckdb(con, view, n_days)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 153, in select_days_from_duckdb
+    return [r[0] for r in con.execute(q).fetchall()][::-1]  # ascending
+                          ^^^^^^^^^^^^^^
+duckdb.duckdb.BinderException: Binder Error: Referenced column "day" not found in FROM clause!
+Candidate bindings: "DE_KN_residential1_grid_import", "DE_KN_residential1_washing_machine", "year"
+
+LINE 2:         SELECT DISTINCT day
+                                ^
+2025-06-19 16:38:04,344  INFO     Detailed results saved
+2025-06-19 16:40:55,315  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 16:40:55,318  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_164055
+2025-06-19 16:40:55,333  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 16:40:55,388  ERROR    Building DE_KN_residential1 failed – PVAgent.__init__() got an unexpected keyword argument 'building_id'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 276, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 238, in process_building
+    pv      = AG["PVAgent"](building_id=building_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: PVAgent.__init__() got an unexpected keyword argument 'building_id'
+2025-06-19 16:40:55,394  INFO     Detailed results saved
+2025-06-19 17:03:28,629  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:03:28,631  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_170328
+2025-06-19 17:03:28,783  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:03:28,842  ERROR    Building DE_KN_residential1 failed – PVAgent.__init__() got an unexpected keyword argument 'building_id'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 276, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 238, in process_building
+    pv      = AG["PVAgent"](building_id=building_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: PVAgent.__init__() got an unexpected keyword argument 'building_id'
+2025-06-19 17:03:28,848  INFO     Detailed results saved
+2025-06-19 17:06:34,964  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:06:34,966  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_170634
+2025-06-19 17:06:34,991  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:06:35,011  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 17:06:35,013  ERROR    Building DE_KN_residential1 failed – WeatherAgent.__init__() missing 1 required positional argument: 'weather_df'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 249, in process_building
+    weather = AG["WeatherAgent"]()
+              ^^^^^^^^^^^^^^^^^^^^
+TypeError: WeatherAgent.__init__() missing 1 required positional argument: 'weather_df'
+2025-06-19 17:06:35,022  INFO     Detailed results saved
+2025-06-19 17:09:38,203  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:09:38,205  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_170938
+2025-06-19 17:09:38,219  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:09:38,227  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 17:09:38,229  ERROR    Building DE_KN_residential1 failed – WeatherAgent.__init__() missing 1 required positional argument: 'weather_df'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 249, in process_building
+    weather = AG["WeatherAgent"]()
+              ^^^^^^^^^^^^^^^^^^^^
+TypeError: WeatherAgent.__init__() missing 1 required positional argument: 'weather_df'
+2025-06-19 17:09:38,236  INFO     Detailed results saved
+2025-06-19 17:12:23,598  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:12:23,600  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_171223
+2025-06-19 17:12:23,616  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:12:23,624  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 17:12:23,626  ERROR    Building DE_KN_residential1 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:12:23,634  INFO     Detailed results saved
+2025-06-19 17:18:09,770  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:18:09,771  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_171809
+2025-06-19 17:18:09,795  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 17:18:09,805  INFO     -> DE_KN_industrial3  day 2017-05-29
+2025-06-19 17:18:09,805  ERROR    Building DE_KN_industrial3 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:18:09,838  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:18:09,846  INFO     -> DE_KN_residential1  day 2017-03-06
+2025-06-19 17:18:09,848  ERROR    Building DE_KN_residential1 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:18:09,876  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 17:18:09,887  INFO     -> DE_KN_residential2  day 2018-01-27
+2025-06-19 17:18:09,888  ERROR    Building DE_KN_residential2 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:18:09,916  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 17:18:09,927  INFO     -> DE_KN_residential3  day 2018-09-18
+2025-06-19 17:18:09,928  ERROR    Building DE_KN_residential3 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:18:09,959  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 17:18:09,970  INFO     -> DE_KN_residential4  day 2018-01-29
+2025-06-19 17:18:09,971  ERROR    Building DE_KN_residential4 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:18:09,998  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 17:18:10,009  INFO     -> DE_KN_residential5  day 2018-06-26
+2025-06-19 17:18:10,010  ERROR    Building DE_KN_residential5 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:18:10,038  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 17:18:10,047  INFO     -> DE_KN_residential6  day 2018-04-02
+2025-06-19 17:18:10,048  ERROR    Building DE_KN_residential6 failed – module 'common' has no attribute 'create_devices_from_duckdb'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 285, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 250, in process_building
+    devices, layer = common.create_devices_from_duckdb(   # type: ignore[attr-defined]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'common' has no attribute 'create_devices_from_duckdb'
+2025-06-19 17:18:10,056  INFO     Detailed results saved
+2025-06-19 17:20:24,870  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:20:24,871  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_172024
+2025-06-19 17:20:24,888  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:20:24,897  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 17:20:27,518  ERROR    Building DE_KN_residential1 failed – too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+    ^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2025-06-19 17:20:27,525  INFO     Detailed results saved
+2025-06-19 17:30:55,279  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:30:55,281  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_173055
+2025-06-19 17:30:55,416  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 17:30:55,442  INFO     -> DE_KN_industrial3  day 2017-05-29
+2025-06-19 17:30:57,956  ERROR    Building DE_KN_industrial3 failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\01_run.py", line 311, in create_devices_from_duckdb
+    raise ValueError(f"Unknown device type '{device_type}' not found in device_specs.py. Add {device_type} to device_specs.py first.")
+ValueError: Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:30:57,993  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:30:58,001  INFO     -> DE_KN_residential1  day 2017-03-06
+2025-06-19 17:30:58,037  ERROR    Building DE_KN_residential1 failed – too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+    ^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2025-06-19 17:30:58,065  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 17:30:58,076  INFO     -> DE_KN_residential2  day 2018-01-27
+2025-06-19 17:30:58,098  ERROR    Building DE_KN_residential2 failed – too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+    ^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2025-06-19 17:30:58,128  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 17:30:58,140  INFO     -> DE_KN_residential3  day 2018-09-18
+2025-06-19 17:30:58,170  ERROR    Building DE_KN_residential3 failed – too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+    ^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2025-06-19 17:30:58,200  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 17:30:58,211  INFO     -> DE_KN_residential4  day 2018-01-29
+2025-06-19 17:30:58,240  ERROR    Building DE_KN_residential4 failed – too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+    ^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2025-06-19 17:30:58,274  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 17:30:58,285  INFO     -> DE_KN_residential5  day 2018-06-26
+2025-06-19 17:30:58,306  ERROR    Building DE_KN_residential5 failed – too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+    ^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2025-06-19 17:30:58,338  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 17:30:58,349  INFO     -> DE_KN_residential6  day 2018-04-02
+2025-06-19 17:30:58,374  ERROR    Building DE_KN_residential6 failed – too many values to unpack (expected 2)
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 303, in main
+    all_results[bld] = process_building(bld, days)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 268, in process_building
+    devices, layer = _create_devices_from_duckdb(
+    ^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+2025-06-19 17:30:58,381  INFO     Detailed results saved
+2025-06-19 17:41:37,520  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 17:41:37,522  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_174137
+2025-06-19 17:41:37,543  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 17:41:37,552  INFO     -> DE_KN_industrial3  day 2017-05-29
+2025-06-19 17:41:37,616  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:41:37,617  INFO     -> DE_KN_industrial3  day 2017-05-30
+2025-06-19 17:41:37,641  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:41:37,643  INFO     -> DE_KN_industrial3  day 2017-05-31
+2025-06-19 17:41:37,668  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:41:37,670  INFO     -> DE_KN_industrial3  day 2017-06-01
+2025-06-19 17:41:37,701  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:41:37,703  INFO     -> DE_KN_industrial3  day 2017-06-02
+2025-06-19 17:41:37,731  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:41:37,731  INFO     -> DE_KN_industrial3  day 2017-06-03
+2025-06-19 17:41:37,753  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:41:37,754  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 17:41:37,777  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 17:41:37,795  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 17:41:37,801  INFO     -> DE_KN_residential1  day 2017-03-06
+2025-06-19 17:41:37,827  ERROR    Optimisation failed for 2017-03-06 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:37,828  INFO     -> DE_KN_residential1  day 2017-03-07
+2025-06-19 17:41:37,848  ERROR    Optimisation failed for 2017-03-07 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:37,850  INFO     -> DE_KN_residential1  day 2017-03-08
+2025-06-19 17:41:37,877  ERROR    Optimisation failed for 2017-03-08 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:37,877  INFO     -> DE_KN_residential1  day 2017-03-09
+2025-06-19 17:41:37,898  ERROR    Optimisation failed for 2017-03-09 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:37,900  INFO     -> DE_KN_residential1  day 2017-03-10
+2025-06-19 17:41:37,918  ERROR    Optimisation failed for 2017-03-10 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:37,918  INFO     -> DE_KN_residential1  day 2017-03-11
+2025-06-19 17:41:37,938  ERROR    Optimisation failed for 2017-03-11 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:37,940  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 17:41:37,957  ERROR    Optimisation failed for 2017-03-12 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:37,976  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 17:41:37,985  INFO     -> DE_KN_residential2  day 2018-01-27
+2025-06-19 17:41:38,006  ERROR    Optimisation failed for 2018-01-27 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,007  INFO     -> DE_KN_residential2  day 2018-01-28
+2025-06-19 17:41:38,038  ERROR    Optimisation failed for 2018-01-28 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,039  INFO     -> DE_KN_residential2  day 2018-01-29
+2025-06-19 17:41:38,061  ERROR    Optimisation failed for 2018-01-29 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,062  INFO     -> DE_KN_residential2  day 2018-01-30
+2025-06-19 17:41:38,080  ERROR    Optimisation failed for 2018-01-30 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,084  INFO     -> DE_KN_residential2  day 2018-01-31
+2025-06-19 17:41:38,105  ERROR    Optimisation failed for 2018-01-31 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,106  INFO     -> DE_KN_residential2  day 2018-02-01
+2025-06-19 17:41:38,126  ERROR    Optimisation failed for 2018-02-01 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,127  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 17:41:38,148  ERROR    Optimisation failed for 2018-02-02 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,168  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 17:41:38,179  INFO     -> DE_KN_residential3  day 2018-09-18
+2025-06-19 17:41:38,214  ERROR    Optimisation failed for 2018-09-18 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,215  INFO     -> DE_KN_residential3  day 2018-09-19
+2025-06-19 17:41:38,248  ERROR    Optimisation failed for 2018-09-19 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,249  INFO     -> DE_KN_residential3  day 2018-09-20
+2025-06-19 17:41:38,277  ERROR    Optimisation failed for 2018-09-20 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,278  INFO     -> DE_KN_residential3  day 2018-09-21
+2025-06-19 17:41:38,304  ERROR    Optimisation failed for 2018-09-21 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,305  INFO     -> DE_KN_residential3  day 2018-09-22
+2025-06-19 17:41:38,332  ERROR    Optimisation failed for 2018-09-22 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,333  INFO     -> DE_KN_residential3  day 2018-09-23
+2025-06-19 17:41:38,362  ERROR    Optimisation failed for 2018-09-23 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,363  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 17:41:38,394  ERROR    Optimisation failed for 2018-09-24 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,416  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 17:41:38,424  INFO     -> DE_KN_residential4  day 2018-01-29
+2025-06-19 17:41:38,449  ERROR    Optimisation failed for 2018-01-29 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,450  INFO     -> DE_KN_residential4  day 2018-01-30
+2025-06-19 17:41:38,475  ERROR    Optimisation failed for 2018-01-30 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,476  INFO     -> DE_KN_residential4  day 2018-01-31
+2025-06-19 17:41:38,500  ERROR    Optimisation failed for 2018-01-31 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,501  INFO     -> DE_KN_residential4  day 2018-02-01
+2025-06-19 17:41:38,526  ERROR    Optimisation failed for 2018-02-01 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,527  INFO     -> DE_KN_residential4  day 2018-02-02
+2025-06-19 17:41:38,557  ERROR    Optimisation failed for 2018-02-02 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,558  INFO     -> DE_KN_residential4  day 2018-02-03
+2025-06-19 17:41:38,582  ERROR    Optimisation failed for 2018-02-03 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,583  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 17:41:38,606  ERROR    Optimisation failed for 2018-02-04 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,626  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 17:41:38,635  INFO     -> DE_KN_residential5  day 2018-06-26
+2025-06-19 17:41:38,655  ERROR    Optimisation failed for 2018-06-26 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,656  INFO     -> DE_KN_residential5  day 2018-06-27
+2025-06-19 17:41:38,675  ERROR    Optimisation failed for 2018-06-27 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,677  INFO     -> DE_KN_residential5  day 2018-06-28
+2025-06-19 17:41:38,700  ERROR    Optimisation failed for 2018-06-28 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,702  INFO     -> DE_KN_residential5  day 2018-06-29
+2025-06-19 17:41:38,728  ERROR    Optimisation failed for 2018-06-29 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,729  INFO     -> DE_KN_residential5  day 2018-06-30
+2025-06-19 17:41:38,752  ERROR    Optimisation failed for 2018-06-30 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,753  INFO     -> DE_KN_residential5  day 2018-07-01
+2025-06-19 17:41:38,772  ERROR    Optimisation failed for 2018-07-01 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,773  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 17:41:38,792  ERROR    Optimisation failed for 2018-07-02 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,811  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 17:41:38,818  INFO     -> DE_KN_residential6  day 2018-04-02
+2025-06-19 17:41:38,841  ERROR    Optimisation failed for 2018-04-02 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,843  INFO     -> DE_KN_residential6  day 2018-04-03
+2025-06-19 17:41:38,866  ERROR    Optimisation failed for 2018-04-03 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,867  INFO     -> DE_KN_residential6  day 2018-04-04
+2025-06-19 17:41:38,896  ERROR    Optimisation failed for 2018-04-04 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,897  INFO     -> DE_KN_residential6  day 2018-04-05
+2025-06-19 17:41:38,921  ERROR    Optimisation failed for 2018-04-05 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,923  INFO     -> DE_KN_residential6  day 2018-04-06
+2025-06-19 17:41:38,944  ERROR    Optimisation failed for 2018-04-06 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,945  INFO     -> DE_KN_residential6  day 2018-04-07
+2025-06-19 17:41:38,966  ERROR    Optimisation failed for 2018-04-07 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,966  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 17:41:38,987  ERROR    Optimisation failed for 2018-04-08 – FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 287, in process_building
+    day_res["decentralised"] = run_decentralised_optimisation(devices, layer, pv, grid, battery, ev)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 242, in run_decentralised_optimisation
+    dev.optimize_day()  # real method inside FlexibleDeviceAgent
+    ^^^^^^^^^^^^^^^^^^
+TypeError: FlexibleDevice.optimize_day() missing 3 required positional arguments: 'day', 'effective_prices', and 'pv_forecast'
+2025-06-19 17:41:38,994  INFO     Detailed results saved
+2025-06-19 18:04:37,800  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 18:04:37,801  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_180437
+2025-06-19 18:04:37,936  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 18:04:37,963  INFO     -> DE_KN_industrial3  day 2017-05-29
+2025-06-19 18:04:40,282  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:04:40,283  INFO     -> DE_KN_industrial3  day 2017-05-30
+2025-06-19 18:04:40,303  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:04:40,303  INFO     -> DE_KN_industrial3  day 2017-05-31
+2025-06-19 18:04:40,326  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:04:40,326  INFO     -> DE_KN_industrial3  day 2017-06-01
+2025-06-19 18:04:40,349  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:04:40,349  INFO     -> DE_KN_industrial3  day 2017-06-02
+2025-06-19 18:04:40,370  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:04:40,370  INFO     -> DE_KN_industrial3  day 2017-06-03
+2025-06-19 18:04:40,391  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:04:40,393  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 18:04:40,414  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:04:40,441  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 18:04:40,449  INFO     -> DE_KN_residential1  day 2017-03-06
+2025-06-19 18:04:40,861  INFO     -> DE_KN_residential1  day 2017-03-07
+2025-06-19 18:04:41,173  INFO     -> DE_KN_residential1  day 2017-03-08
+2025-06-19 18:04:41,493  INFO     -> DE_KN_residential1  day 2017-03-09
+2025-06-19 18:04:41,808  INFO     -> DE_KN_residential1  day 2017-03-10
+2025-06-19 18:04:42,111  INFO     -> DE_KN_residential1  day 2017-03-11
+2025-06-19 18:04:42,429  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 18:04:42,770  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 18:04:42,778  INFO     -> DE_KN_residential2  day 2018-01-27
+2025-06-19 18:04:43,081  INFO     -> DE_KN_residential2  day 2018-01-28
+2025-06-19 18:04:43,391  INFO     -> DE_KN_residential2  day 2018-01-29
+2025-06-19 18:04:43,691  INFO     -> DE_KN_residential2  day 2018-01-30
+2025-06-19 18:04:43,999  INFO     -> DE_KN_residential2  day 2018-01-31
+2025-06-19 18:04:44,311  INFO     -> DE_KN_residential2  day 2018-02-01
+2025-06-19 18:04:44,613  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 18:04:44,931  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 18:04:44,944  INFO     -> DE_KN_residential3  day 2018-09-18
+2025-06-19 18:04:45,326  INFO     -> DE_KN_residential3  day 2018-09-19
+2025-06-19 18:04:45,715  INFO     -> DE_KN_residential3  day 2018-09-20
+2025-06-19 18:04:46,087  INFO     -> DE_KN_residential3  day 2018-09-21
+2025-06-19 18:04:46,461  INFO     -> DE_KN_residential3  day 2018-09-22
+2025-06-19 18:04:46,825  INFO     -> DE_KN_residential3  day 2018-09-23
+2025-06-19 18:04:47,198  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 18:04:47,598  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 18:04:47,607  INFO     -> DE_KN_residential4  day 2018-01-29
+2025-06-19 18:04:48,035  INFO     -> DE_KN_residential4  day 2018-01-30
+2025-06-19 18:04:48,477  INFO     -> DE_KN_residential4  day 2018-01-31
+2025-06-19 18:04:48,993  INFO     -> DE_KN_residential4  day 2018-02-01
+2025-06-19 18:04:49,433  INFO     -> DE_KN_residential4  day 2018-02-02
+2025-06-19 18:04:49,891  INFO     -> DE_KN_residential4  day 2018-02-03
+2025-06-19 18:04:50,322  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 18:04:50,815  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 18:04:50,824  INFO     -> DE_KN_residential5  day 2018-06-26
+2025-06-19 18:04:51,067  INFO     -> DE_KN_residential5  day 2018-06-27
+2025-06-19 18:04:51,298  INFO     -> DE_KN_residential5  day 2018-06-28
+2025-06-19 18:04:51,541  INFO     -> DE_KN_residential5  day 2018-06-29
+2025-06-19 18:04:51,776  INFO     -> DE_KN_residential5  day 2018-06-30
+2025-06-19 18:04:52,011  INFO     -> DE_KN_residential5  day 2018-07-01
+2025-06-19 18:04:52,252  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 18:04:52,520  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 18:04:52,528  INFO     -> DE_KN_residential6  day 2018-04-02
+2025-06-19 18:04:52,844  INFO     -> DE_KN_residential6  day 2018-04-03
+2025-06-19 18:04:53,158  INFO     -> DE_KN_residential6  day 2018-04-04
+2025-06-19 18:04:53,463  INFO     -> DE_KN_residential6  day 2018-04-05
+2025-06-19 18:04:53,756  INFO     -> DE_KN_residential6  day 2018-04-06
+2025-06-19 18:04:54,051  INFO     -> DE_KN_residential6  day 2018-04-07
+2025-06-19 18:04:54,352  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 18:04:54,649  INFO     Detailed results saved
+2025-06-19 18:15:22,247  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 18:15:22,251  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_181522
+2025-06-19 18:15:22,269  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 18:15:22,278  INFO     -> DE_KN_industrial3  day 2017-05-29
+2025-06-19 18:15:22,335  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:15:22,335  INFO     -> DE_KN_industrial3  day 2017-05-30
+2025-06-19 18:15:22,355  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:15:22,356  INFO     -> DE_KN_industrial3  day 2017-05-31
+2025-06-19 18:15:22,376  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:15:22,376  INFO     -> DE_KN_industrial3  day 2017-06-01
+2025-06-19 18:15:22,396  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:15:22,397  INFO     -> DE_KN_industrial3  day 2017-06-02
+2025-06-19 18:15:22,418  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:15:22,418  INFO     -> DE_KN_industrial3  day 2017-06-03
+2025-06-19 18:15:22,438  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:15:22,438  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 18:15:22,459  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:15:22,478  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 18:15:22,486  INFO     -> DE_KN_residential1  day 2017-03-06
+2025-06-19 18:15:22,810  INFO     -> DE_KN_residential1  day 2017-03-07
+2025-06-19 18:15:23,143  INFO     -> DE_KN_residential1  day 2017-03-08
+2025-06-19 18:15:23,479  INFO     -> DE_KN_residential1  day 2017-03-09
+2025-06-19 18:15:23,821  INFO     -> DE_KN_residential1  day 2017-03-10
+2025-06-19 18:15:24,182  INFO     -> DE_KN_residential1  day 2017-03-11
+2025-06-19 18:15:24,520  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 18:15:24,845  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 18:15:24,855  INFO     -> DE_KN_residential2  day 2018-01-27
+2025-06-19 18:15:25,150  INFO     -> DE_KN_residential2  day 2018-01-28
+2025-06-19 18:15:25,470  INFO     -> DE_KN_residential2  day 2018-01-29
+2025-06-19 18:15:25,781  INFO     -> DE_KN_residential2  day 2018-01-30
+2025-06-19 18:15:26,093  INFO     -> DE_KN_residential2  day 2018-01-31
+2025-06-19 18:15:26,397  INFO     -> DE_KN_residential2  day 2018-02-01
+2025-06-19 18:15:26,726  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 18:15:27,051  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 18:15:27,062  INFO     -> DE_KN_residential3  day 2018-09-18
+2025-06-19 18:15:27,458  INFO     -> DE_KN_residential3  day 2018-09-19
+2025-06-19 18:15:27,854  INFO     -> DE_KN_residential3  day 2018-09-20
+2025-06-19 18:15:28,230  INFO     -> DE_KN_residential3  day 2018-09-21
+2025-06-19 18:15:28,598  INFO     -> DE_KN_residential3  day 2018-09-22
+2025-06-19 18:15:28,982  INFO     -> DE_KN_residential3  day 2018-09-23
+2025-06-19 18:15:29,380  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 18:15:29,785  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 18:15:29,794  INFO     -> DE_KN_residential4  day 2018-01-29
+2025-06-19 18:15:30,259  INFO     -> DE_KN_residential4  day 2018-01-30
+2025-06-19 18:15:30,683  INFO     -> DE_KN_residential4  day 2018-01-31
+2025-06-19 18:15:31,206  INFO     -> DE_KN_residential4  day 2018-02-01
+2025-06-19 18:15:31,750  INFO     -> DE_KN_residential4  day 2018-02-02
+2025-06-19 18:15:32,209  INFO     -> DE_KN_residential4  day 2018-02-03
+2025-06-19 18:15:32,651  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 18:15:33,149  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 18:15:33,158  INFO     -> DE_KN_residential5  day 2018-06-26
+2025-06-19 18:15:33,400  INFO     -> DE_KN_residential5  day 2018-06-27
+2025-06-19 18:15:33,640  INFO     -> DE_KN_residential5  day 2018-06-28
+2025-06-19 18:15:33,875  INFO     -> DE_KN_residential5  day 2018-06-29
+2025-06-19 18:15:34,111  INFO     -> DE_KN_residential5  day 2018-06-30
+2025-06-19 18:15:34,360  INFO     -> DE_KN_residential5  day 2018-07-01
+2025-06-19 18:15:34,614  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 18:15:34,894  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 18:15:34,902  INFO     -> DE_KN_residential6  day 2018-04-02
+2025-06-19 18:15:35,211  INFO     -> DE_KN_residential6  day 2018-04-03
+2025-06-19 18:15:35,520  INFO     -> DE_KN_residential6  day 2018-04-04
+2025-06-19 18:15:35,833  INFO     -> DE_KN_residential6  day 2018-04-05
+2025-06-19 18:15:36,138  INFO     -> DE_KN_residential6  day 2018-04-06
+2025-06-19 18:15:36,477  INFO     -> DE_KN_residential6  day 2018-04-07
+2025-06-19 18:15:36,781  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 18:15:37,091  INFO     Detailed results saved
+2025-06-19 18:22:26,743  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 18:22:26,745  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_182226
+2025-06-19 18:22:26,884  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 18:22:26,913  INFO     -> DE_KN_industrial3  day 2017-05-29
+2025-06-19 18:22:29,400  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:29,401  INFO     -> DE_KN_industrial3  day 2017-05-30
+2025-06-19 18:22:29,420  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:29,420  INFO     -> DE_KN_industrial3  day 2017-05-31
+2025-06-19 18:22:29,443  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:29,444  INFO     -> DE_KN_industrial3  day 2017-06-01
+2025-06-19 18:22:29,463  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:29,464  INFO     -> DE_KN_industrial3  day 2017-06-02
+2025-06-19 18:22:29,485  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:29,485  INFO     -> DE_KN_industrial3  day 2017-06-03
+2025-06-19 18:22:29,506  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:29,506  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 18:22:29,527  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:29,555  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 18:22:29,565  INFO     -> DE_KN_residential1  day 2017-03-06
+2025-06-19 18:22:29,934  INFO     -> DE_KN_residential1  day 2017-03-07
+2025-06-19 18:22:30,252  INFO     -> DE_KN_residential1  day 2017-03-08
+2025-06-19 18:22:30,583  INFO     -> DE_KN_residential1  day 2017-03-09
+2025-06-19 18:22:30,908  INFO     -> DE_KN_residential1  day 2017-03-10
+2025-06-19 18:22:31,271  INFO     -> DE_KN_residential1  day 2017-03-11
+2025-06-19 18:22:31,605  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 18:22:31,942  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 18:22:31,953  INFO     -> DE_KN_residential2  day 2018-01-27
+2025-06-19 18:22:32,283  INFO     -> DE_KN_residential2  day 2018-01-28
+2025-06-19 18:22:32,611  INFO     -> DE_KN_residential2  day 2018-01-29
+2025-06-19 18:22:32,924  INFO     -> DE_KN_residential2  day 2018-01-30
+2025-06-19 18:22:33,276  INFO     -> DE_KN_residential2  day 2018-01-31
+2025-06-19 18:22:33,598  INFO     -> DE_KN_residential2  day 2018-02-01
+2025-06-19 18:22:33,927  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 18:22:34,292  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 18:22:34,304  INFO     -> DE_KN_residential3  day 2018-09-18
+2025-06-19 18:22:34,712  INFO     -> DE_KN_residential3  day 2018-09-19
+2025-06-19 18:22:35,132  INFO     -> DE_KN_residential3  day 2018-09-20
+2025-06-19 18:22:35,562  INFO     -> DE_KN_residential3  day 2018-09-21
+2025-06-19 18:22:35,958  INFO     -> DE_KN_residential3  day 2018-09-22
+2025-06-19 18:22:36,383  INFO     -> DE_KN_residential3  day 2018-09-23
+2025-06-19 18:22:36,779  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 18:22:37,189  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 18:22:37,197  INFO     -> DE_KN_residential4  day 2018-01-29
+2025-06-19 18:22:37,661  INFO     -> DE_KN_residential4  day 2018-01-30
+2025-06-19 18:22:38,115  INFO     -> DE_KN_residential4  day 2018-01-31
+2025-06-19 18:22:38,583  INFO     -> DE_KN_residential4  day 2018-02-01
+2025-06-19 18:22:39,069  INFO     -> DE_KN_residential4  day 2018-02-02
+2025-06-19 18:22:39,185  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 18:22:39,188  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_182239
+2025-06-19 18:22:39,204  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 18:22:39,213  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 18:22:39,279  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 18:22:39,296  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 18:22:39,307  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 18:22:39,569  INFO     -> DE_KN_residential4  day 2018-02-03
+2025-06-19 18:22:39,677  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 18:22:39,687  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 18:22:40,026  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 18:22:40,039  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 18:22:40,059  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 18:22:40,487  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 18:22:40,498  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 18:22:40,622  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 18:22:40,635  INFO     -> DE_KN_residential5  day 2018-06-26
+2025-06-19 18:22:40,999  INFO     -> DE_KN_residential5  day 2018-06-27
+2025-06-19 18:22:41,008  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 18:22:41,017  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 18:22:41,275  INFO     -> DE_KN_residential5  day 2018-06-28
+2025-06-19 18:22:41,305  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 18:22:41,316  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 18:22:41,541  INFO     -> DE_KN_residential5  day 2018-06-29
+2025-06-19 18:22:41,645  INFO     Detailed results saved
+2025-06-19 18:22:41,804  INFO     -> DE_KN_residential5  day 2018-06-30
+2025-06-19 18:22:42,050  INFO     -> DE_KN_residential5  day 2018-07-01
+2025-06-19 18:22:42,309  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 18:22:42,577  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 18:22:42,585  INFO     -> DE_KN_residential6  day 2018-04-02
+2025-06-19 18:22:42,892  INFO     -> DE_KN_residential6  day 2018-04-03
+2025-06-19 18:22:43,199  INFO     -> DE_KN_residential6  day 2018-04-04
+2025-06-19 18:22:43,494  INFO     -> DE_KN_residential6  day 2018-04-05
+2025-06-19 18:22:43,798  INFO     -> DE_KN_residential6  day 2018-04-06
+2025-06-19 18:22:44,097  INFO     -> DE_KN_residential6  day 2018-04-07
+2025-06-19 18:22:44,406  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 18:22:44,713  INFO     Detailed results saved
+2025-06-19 19:28:51,494  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 19:28:51,496  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_192851
+2025-06-19 19:28:51,644  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 19:28:51,671  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 19:28:54,146  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 19:28:54,174  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 19:28:54,183  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 19:28:54,715  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 19:28:54,725  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 19:28:55,063  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 19:28:55,075  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 19:28:55,471  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 19:28:55,482  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 19:28:56,002  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 19:28:56,011  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 19:28:56,288  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 19:28:56,297  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 19:28:56,588  INFO     Detailed results saved
+2025-06-19 19:34:42,518  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 19:34:42,521  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_193442
+2025-06-19 19:34:42,686  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 19:34:42,725  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 19:34:45,224  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 19:34:45,255  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 19:34:45,263  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 19:34:45,712  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 19:34:45,722  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 19:34:46,058  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 19:34:46,072  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 19:34:46,490  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 19:34:46,499  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 19:34:46,974  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 19:34:46,983  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 19:34:47,257  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 19:34:47,266  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 19:34:47,563  INFO     Detailed results saved
+2025-06-19 19:47:33,133  INFO     Imported agents from 'notebooks.agents.*'
+2025-06-19 19:47:33,135  INFO     Results -> D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\comparison\20250619_194733
+2025-06-19 19:47:33,274  INFO     DuckDB ready – view 'DE_KN_industrial3_processed_data' for DE_KN_industrial3
+2025-06-19 19:47:33,300  INFO     -> DE_KN_industrial3  day 2017-06-04
+2025-06-19 19:47:35,956  ERROR    Device creation failed – Unknown device type 'offices' not found in device_specs.py. Add offices to device_specs.py first.
+2025-06-19 19:47:35,986  INFO     DuckDB ready – view 'DE_KN_residential1_processed_data' for DE_KN_residential1
+2025-06-19 19:47:35,995  INFO     -> DE_KN_residential1  day 2017-03-12
+2025-06-19 19:47:36,486  INFO     DuckDB ready – view 'DE_KN_residential2_processed_data' for DE_KN_residential2
+2025-06-19 19:47:36,500  INFO     -> DE_KN_residential2  day 2018-02-02
+2025-06-19 19:47:36,868  INFO     DuckDB ready – view 'DE_KN_residential3_processed_data' for DE_KN_residential3
+2025-06-19 19:47:36,882  INFO     -> DE_KN_residential3  day 2018-09-24
+2025-06-19 19:47:37,307  INFO     DuckDB ready – view 'DE_KN_residential4_processed_data' for DE_KN_residential4
+2025-06-19 19:47:37,318  INFO     -> DE_KN_residential4  day 2018-02-04
+2025-06-19 19:47:37,808  INFO     DuckDB ready – view 'DE_KN_residential5_processed_data' for DE_KN_residential5
+2025-06-19 19:47:37,819  INFO     -> DE_KN_residential5  day 2018-07-02
+2025-06-19 19:47:38,098  INFO     DuckDB ready – view 'DE_KN_residential6_processed_data' for DE_KN_residential6
+2025-06-19 19:47:38,108  INFO     -> DE_KN_residential6  day 2018-04-08
+2025-06-19 19:47:38,413  INFO     Detailed results saved

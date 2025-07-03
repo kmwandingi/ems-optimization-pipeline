@@ -1,0 +1,10 @@
+name: device_usage_prediction
+
+# Use your local Python environment (no Conda)
+
+entry_points:
+  main:
+    parameters:
+      parquet_dir: {type: str, default: "../../processed_data"}
+      default_threshold: {type: float, default: 0.05}
+    command: "python run_mlflow.py --parquet_dir {parquet_dir} --default_threshold {default_threshold}"

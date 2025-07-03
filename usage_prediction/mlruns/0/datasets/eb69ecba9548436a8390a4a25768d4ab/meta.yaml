@@ -1,0 +1,36 @@
+digest: 994d8519
+name: dataset
+profile: '{"num_rows": 5249, "num_elements": 199462}'
+schema: '{"mlflow_colspec": [{"type": "float", "name": "temperature", "required":
+  true}, {"type": "float", "name": "solar_radiation", "required": true}, {"type":
+  "float", "name": "pv_forecast", "required": true}, {"type": "float", "name": "day_of_week",
+  "required": true}, {"type": "float", "name": "rolling_7d_usage", "required": true},
+  {"type": "float", "name": "rolling_3d_usage", "required": true}, {"type": "float",
+  "name": "rolling_14d_usage", "required": true}, {"type": "float", "name": "lag_7d_usage",
+  "required": true}, {"type": "float", "name": "peak_hour_sin", "required": true},
+  {"type": "float", "name": "peak_hour_cos", "required": true}, {"type": "float",
+  "name": "temp_month", "required": true}, {"type": "float", "name": "dow_pv", "required":
+  true}, {"type": "float", "name": "is_holiday", "required": true}, {"type": "float",
+  "name": "is_weekend", "required": true}, {"type": "float", "name": "building_DE_KN_industrial3",
+  "required": true}, {"type": "float", "name": "building_DE_KN_residential1", "required":
+  true}, {"type": "float", "name": "building_DE_KN_residential2", "required": true},
+  {"type": "float", "name": "building_DE_KN_residential3", "required": true}, {"type":
+  "float", "name": "building_DE_KN_residential4", "required": true}, {"type": "float",
+  "name": "building_DE_KN_residential5", "required": true}, {"type": "float", "name":
+  "building_DE_KN_residential6", "required": true}, {"type": "float", "name": "device_type_2",
+  "required": true}, {"type": "float", "name": "device_type_3", "required": true},
+  {"type": "float", "name": "device_type_4", "required": true}, {"type": "float",
+  "name": "device_type_5", "required": true}, {"type": "float", "name": "device_type_aggregate",
+  "required": true}, {"type": "float", "name": "device_type_charge", "required": true},
+  {"type": "float", "name": "device_type_compressor", "required": true}, {"type":
+  "float", "name": "device_type_decharge", "required": true}, {"type": "float", "name":
+  "device_type_dishwasher", "required": true}, {"type": "float", "name": "device_type_ev",
+  "required": true}, {"type": "float", "name": "device_type_freezer", "required":
+  true}, {"type": "float", "name": "device_type_offices", "required": true}, {"type":
+  "float", "name": "device_type_pump", "required": true}, {"type": "float", "name":
+  "device_type_pumps", "required": true}, {"type": "float", "name": "device_type_refrigerator",
+  "required": true}, {"type": "float", "name": "device_type_ventilation", "required":
+  true}, {"type": "float", "name": "device_type_washing_machine", "required": true}]}'
+source: '{"tags": {"mlflow.user": "20235149", "mlflow.source.name": "run_mlflow.py",
+  "mlflow.source.type": "LOCAL", "mlflow.source.git.commit": "d4ec6d517d20f72ac8b281178b029547ba2850df"}}'
+source_type: code

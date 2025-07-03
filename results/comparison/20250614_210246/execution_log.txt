@@ -1,0 +1,4 @@
+Execution started at 2025-06-14 21:02:46.552151
+Arguments: buildings=['DE_KN_residential1'], days=1, output=results/comparison
+Starting optimization comparison...
+Execution finished at 2025-06-14 21:02:46.595560

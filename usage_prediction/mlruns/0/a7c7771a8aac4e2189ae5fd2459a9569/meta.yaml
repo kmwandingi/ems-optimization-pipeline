@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/a7c7771a8aac4e2189ae5fd2459a9569/artifacts
+end_time: 1747946020981
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a7c7771a8aac4e2189ae5fd2459a9569
+run_name: learned-snail-330
+run_uuid: a7c7771a8aac4e2189ae5fd2459a9569
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747945910611
+status: 3
+tags: []
+user_id: '20235149'

@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/70be59d932594d26a5b5b8637d43f168/artifacts
+end_time: 1747920001240
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 70be59d932594d26a5b5b8637d43f168
+run_name: casual-bird-963
+run_uuid: 70be59d932594d26a5b5b8637d43f168
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747919997793
+status: 4
+tags: []
+user_id: '20235149'

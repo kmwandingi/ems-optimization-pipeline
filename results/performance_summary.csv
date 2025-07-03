@@ -1,0 +1,7 @@
+total_days_processed,pipeline_success,total_cost_eur,avg_daily_cost_eur,pv_generation_kwh,pv_export_kwh,grid_import_kwh,grid_export_kwh,peak_grid_import_kw,pv_self_consumption_pct,building_id,run_timestamp
+1,1.0,0.28238935,0.28238935,0.0,0.0,0.0,0.0,0.0,,DE_KN_residential1,2025-06-25T14:27:16
+1,1.0,0.04163181,0.04163181,0.0,0.0,0.0,0.0,0.0,,DE_KN_residential2,2025-06-25T14:27:23
+1,1.0,0.2825196000561,0.2825196000561,0.0,0.0,0.0,0.0,0.0,,DE_KN_residential3,2025-06-25T14:27:32
+1,1.0,0.0093062,0.0093062,0.0,0.0,0.0,0.0,0.0,,DE_KN_residential4,2025-06-25T14:27:40
+1,1.0,0.1156263962737,0.1156263962737,0.0,0.0,0.0,0.0,0.0,,DE_KN_residential5,2025-06-25T14:27:47
+1,1.0,0.057147848334144706,0.057147848334144706,0.0,0.0,0.0,0.0,0.0,,DE_KN_residential6,2025-06-25T14:27:56

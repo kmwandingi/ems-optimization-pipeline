@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kennethmwandingi/ems/mlflow_runs/503479985162851227/f5ef435f46c045c094b61053339c2b2f/artifacts
+end_time: 1750852744057
+entry_point_name: ''
+experiment_id: '503479985162851227'
+lifecycle_stage: active
+run_id: f5ef435f46c045c094b61053339c2b2f
+run_name: comparison_DE_KN_residential5_decentralised_20250625_1359
+run_uuid: f5ef435f46c045c094b61053339c2b2f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750852741659
+status: 3
+tags: []
+user_id: '20235149'

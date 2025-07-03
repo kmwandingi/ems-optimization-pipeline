@@ -1,0 +1,20 @@
+artifact_path: daily_model
+flavors:
+  lightgbm:
+    code: null
+    data: model.pkl
+    lgb_version: 4.6.0
+    model_class: sklearn.calibration.CalibratedClassifierCV
+  python_function:
+    data: model.pkl
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.lightgbm
+    python_version: 3.12.9
+mlflow_version: 2.22.0
+model_size_bytes: 528597
+model_uuid: d7f3c67a34bd4de794e5db7dbe716ca1
+prompts: null
+run_id: 71cd2c9088fd489090f9b42969623ae5
+utc_time_created: '2025-05-22 16:00:24.519837'

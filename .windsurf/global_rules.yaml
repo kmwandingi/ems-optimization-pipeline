@@ -1,0 +1,40 @@
+# ───────────────────────── GLOBAL RULE  ✦  writing_workflow ──────────────────────────
+# Applies to:  all Windsurf AI agents **when the deliverable is WRITING**, not code
+# Priority :  HIGH
+#
+# SUMMARY
+#   Follow this 5-step loop for every writing assignment (reports, manuals, release notes,
+#   Markdown docs, etc.):
+#
+#   1. **Analyse & Plan**         – Gather all context (rules, docs, memories). Think
+#                                   step-by-step *internally*. Outline doc structure,
+#                                   style constraints, and potential sources.  Await user
+#                                   approval for large pieces; proceed immediately for
+#                                   minor edits.
+#
+#   2. **Draft**                  – Produce the requested prose section(s) exactly as
+#                                   specified.  No placeholders, no buzz-words, no code
+#                                   snippets unless explicitly asked.  Cite sources if
+#                                   external material is referenced.
+#
+#   3. **Revise**                 – Incorporate user feedback iteratively, maintaining a
+#                                   changelog of what was altered.
+#
+#   4. **Proof & Verify**         – Check grammar, line length ≤ 100 chars, consistent
+#                                   spelling (US English unless user says otherwise),
+#                                   citation completeness, and internal cross-references.
+#
+#   5. **Report & Reflect**       – Summarise what changed, confirm success/failure,
+#                                   propose memory or /docs updates, and wait for
+#                                   confirmation before committing them.
+#
+#   Additional mandatory points:
+#     • Obey all higher-priority rules (`global_rules`, `.windsurfrules`).
+#     • Never invent citations or content not in context.
+#     • For large documents, deliver in bite-sized sections if token limits require.
+#     • Keep responses free of hype adjectives; use clear, factual language.
+#
+# RATIONALE
+#   Ensures every writing task is handled with a transparent plan–draft–revise–proof loop,
+#   prevents unfinished placeholders, and maintains stylistic consistency across docs.
+# ────────────────────────────────────────────────────────────────────────────────────────

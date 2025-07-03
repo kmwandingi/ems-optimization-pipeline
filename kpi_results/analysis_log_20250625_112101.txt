@@ -1,0 +1,78 @@
+Starting single building analysis at 2025-06-25 11:21:01.624161
+Log file: D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\kpi_results\analysis_log_20250625_112101.txt
+Importing modules...
+✅ Successfully imported modules
+Analyzing building DE_KN_residential1 for 10 days
+Testing database connection...
+✅ Connected to database. View: DE_KN_residential1_processed_data, Rows: 15872
+Sample data from view:
+   DE_KN_residential1_dishwasher  DE_KN_residential1_freezer  DE_KN_residential1_grid_import  DE_KN_residential1_heat_pump  DE_KN_residential1_pv  DE_KN_residential1_washing_machine  DE_temperature  DE_radiation_direct_horizontal  DE_radiation_diffuse_horizontal  price_per_kwh  total_consumption                                                                flexibility_category               power_rating  net_energy_usage  cost_without_generation  cost_with_generation  pv_forecast    year             utc_timestamp
+0                            0.0                         0.0                           0.375                         0.500                 -0.754                                 0.0             0.0                             0.0                              0.0        0.03406              0.500  [Partially Flexible, Highly Flexible, Non-Flexible, Highly Flexible, Non-Flexible]  [1.0, 0.2, 3.0, 5.0, 2.0]            -0.254                 0.017030              0.000000      5918.75  2015.0 2015-05-21 18:00:00+02:00
+1                            0.0                         0.0                           0.563                         0.349                 -0.465                                 0.0             0.0                             0.0                              0.0        0.04395              0.349  [Partially Flexible, Highly Flexible, Non-Flexible, Highly Flexible, Non-Flexible]  [1.0, 0.2, 3.0, 5.0, 2.0]            -0.116                 0.015339              0.000000      2667.50  2015.0 2015-05-21 19:00:00+02:00
+2                            0.0                         0.0                           0.527                         0.590                 -0.056                                 0.0             0.0                             0.0                              0.0        0.04501              0.590  [Partially Flexible, Highly Flexible, Non-Flexible, Highly Flexible, Non-Flexible]  [1.0, 0.2, 3.0, 5.0, 2.0]             0.534                 0.026556              0.024035       592.00  2015.0 2015-05-21 20:00:00+02:00
+3                            0.0                         0.0                           0.580                         0.684                 -0.000                                 0.0             0.0                             0.0                              0.0        0.03976              0.684  [Partially Flexible, Highly Flexible, Non-Flexible, Highly Flexible, Non-Flexible]  [1.0, 0.2, 3.0, 5.0, 2.0]             0.684                 0.027196              0.027196        20.25  2015.0 2015-05-21 21:00:00+02:00
+4                            0.0                         0.0                           0.510                         0.508                 -0.000                                 0.0             0.0                             0.0                              0.0        0.02712              0.508  [Partially Flexible, Highly Flexible, Non-Flexible, Highly Flexible, Non-Flexible]  [1.0, 0.2, 3.0, 5.0, 2.0]             0.508                 0.013777              0.013777         0.00  2015.0 2015-05-21 22:00:00+02:00
+============================================================
+Running analysis for configuration: Default (Battery+EV)
+============================================================
+❌ ERROR with configuration Default (Battery+EV): operands could not be broadcast together with shapes (24,) (240,) (24,) 
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\single_building_analysis.py", line 90, in <module>
+    kpi_df = run_kpi_analysis(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (240,) (24,) 
+
+============================================================
+Running analysis for configuration: No Battery
+============================================================
+❌ ERROR with configuration No Battery: operands could not be broadcast together with shapes (24,) (240,) (24,) 
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\single_building_analysis.py", line 90, in <module>
+    kpi_df = run_kpi_analysis(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (240,) (24,) 
+
+============================================================
+Running analysis for configuration: No EV
+============================================================
+❌ ERROR with configuration No EV: operands could not be broadcast together with shapes (24,) (240,) (24,) 
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\single_building_analysis.py", line 90, in <module>
+    kpi_df = run_kpi_analysis(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (240,) (24,) 
+
+============================================================
+Running analysis for configuration: Basic (No Battery, No EV)
+============================================================
+❌ ERROR with configuration Basic (No Battery, No EV): operands could not be broadcast together with shapes (24,) (240,) (24,) 
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\single_building_analysis.py", line 90, in <module>
+    kpi_df = run_kpi_analysis(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 239, in run_kpi_analysis
+    kpi_df = calculate_kpis(
+             ^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\calculate_kpis.py", line 197, in calculate_kpis
+    dec_net += delta
+ValueError: operands could not be broadcast together with shapes (24,) (240,) (24,) 
+⚠️ No results generated from any configuration.
+
+Analysis completed at 2025-06-25 11:21:05.016881
+Results directory: D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\kpi_results
+Log file: D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\kpi_results\analysis_log_20250625_112101.txt

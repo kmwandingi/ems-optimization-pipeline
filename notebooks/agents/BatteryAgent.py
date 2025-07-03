@@ -474,19 +474,51 @@ class BatteryAgent:
                 for t in range(1, n_periods):
                     prob += discharge[t] <= soc[t-1] - battery_state['soc_min'], f"{prefix}DischargeLimit_{t}"
                 
-                # 6. NEW: Ensure minimum daily throughput for battery value
-                # Calculate minimum charge/discharge throughput target based on usable capacity
-                usable_capacity = battery_state['soc_max'] - battery_state['soc_min']
-                min_daily_throughput = usable_capacity * 0.2  # Target 20% of usable capacity daily
+                # 4. soft daily cycle (only if profitable)
+                # Calculate round-trip arbitrage potential more accurately
+                price_min = min(prices)
+                price_max = max(prices) 
                 
-                # Add soft constraint to encourage meeting throughput target
-                total_throughput = lpSum(charge[t] + discharge[t] for t in range(n_periods))
-                throughput_deficit = LpVariable("throughput_deficit", lowBound=0)
-                prob += throughput_deficit >= min_daily_throughput - total_throughput, f"{prefix}DeficitDefinition"
+                # Account for export tariff (80% of import) and round-trip efficiency
+                ηc = battery_state.get('charge_efficiency', 0.95)
+                ηd = battery_state.get('discharge_efficiency', 0.95)
+                net_spread = (price_max * 0.8 * ηd) - (price_min / ηc)
                 
-                # Add penalty for not meeting throughput target
-                throughput_penalty = throughput_deficit * 0.5  # Moderate penalty
-                cost_terms.append(throughput_penalty)
+                # Only add throughput incentive if spread is profitable
+                if net_spread > 0.001:  # At least 0.1 cent/kWh profit potential
+                    usable = battery_state["soc_max"] - battery_state["soc_min"]
+                    # Target 30% of usable capacity for meaningful arbitrage
+                    target_throughput = 0.3 * usable
+                    
+                    # Create soft constraint with slack variable
+                    total_throughput = lpSum(charge[t] + discharge[t] for t in range(n_periods))
+                    slack = LpVariable(f"{name_prefix}_slack_throughput", lowBound=0)
+                    
+                    # Soft constraint: throughput + slack >= target
+                    prob += total_throughput + slack >= target_throughput
+                    
+                    # Penalty for not meeting throughput target
+                    # Use a modest penalty - enough to encourage cycling when profitable,
+                    # but not so large as to force unprofitable cycling
+                    penalty_rate = price_min * 0.5  # 50% of lowest price as penalty rate
+                    cost_terms.append(penalty_rate * slack)
+                    
+                    print(f"  Battery: Profitable spread {net_spread:.4f} €/kWh detected, encouraging arbitrage")
+                else:
+                    print(f"  Battery: Unprofitable spread {net_spread:.4f} €/kWh, no cycling incentive")
+                    
+                # Optional: Add end-of-day SOC soft constraint (less aggressive than throughput)
+                if battery_state.get("prefer_reset", False):
+                    target_soc = battery_state["current_soc"]  # Return to starting SOC
+                    soc_slack = LpVariable(f"{name_prefix}_soc_slack", lowBound=0)
+                    
+                    # Allow deviation from target SOC
+                    prob += soc[n_periods-1] + soc_slack >= target_soc
+                    prob += soc[n_periods-1] - soc_slack <= target_soc
+                    
+                    # Very light penalty for SOC deviation (much lighter than throughput penalty)
+                    soc_penalty_rate = price_min * 0.1  # 10% of lowest price
+                    cost_terms.append(soc_penalty_rate * soc_slack)
         
         # For the hourly_plan integration (specific to standard optimization)
         if problem_type == "standard" and 'hourly_plan' in battery_state:

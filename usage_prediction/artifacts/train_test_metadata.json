@@ -1,0 +1,11 @@
+{
+  "n_train_samples": 540466,
+  "n_test_samples": 67728,
+  "train_positive_rate": 0.3747765816906151,
+  "test_positive_rate": 0.1600519725962674,
+  "continuous_devices": [
+    "refrigerator",
+    "pump",
+    "freezer"
+  ]
+}

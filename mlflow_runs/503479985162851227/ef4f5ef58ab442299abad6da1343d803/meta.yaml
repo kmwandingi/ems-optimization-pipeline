@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kennethmwandingi/ems/mlflow_runs/503479985162851227/ef4f5ef58ab442299abad6da1343d803/artifacts
+end_time: 1750853630276
+entry_point_name: ''
+experiment_id: '503479985162851227'
+lifecycle_stage: active
+run_id: ef4f5ef58ab442299abad6da1343d803
+run_name: comparison_DE_KN_industrial3_decentralised_20250625_1413
+run_uuid: ef4f5ef58ab442299abad6da1343d803
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750853629698
+status: 3
+tags: []
+user_id: '20235149'

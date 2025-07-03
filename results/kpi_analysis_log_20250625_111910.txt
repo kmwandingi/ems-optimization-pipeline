@@ -1,0 +1,63 @@
+Starting KPI analysis at 2025-06-25 11:19:10
+Log file: D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results\kpi_analysis_log_20250625_111910.txt
+
+======================================================================
+KPI ANALYSIS FOR ALL BUILDINGS (10 DAYS)
+======================================================================
+Data directory not found: D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\data
+Searching for buildings in: D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\notebooks\data
+Found building: DE_KN_industrial3
+Found building: DE_KN_residential1
+Found building: DE_KN_residential2
+Found building: DE_KN_residential3
+Found building: DE_KN_residential4
+Found building: DE_KN_residential5
+Found building: DE_KN_residential6
+
+Found 7 buildings: DE_KN_industrial3, DE_KN_residential1, DE_KN_residential2, DE_KN_residential3, DE_KN_residential4, DE_KN_residential5, DE_KN_residential6
+
+======================================================================
+ANALYZING BUILDING: DE_KN_industrial3
+======================================================================
+Testing database connection for building: DE_KN_industrial3...
+ERROR connecting to database: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+======================================================================
+ANALYZING BUILDING: DE_KN_residential1
+======================================================================
+Testing database connection for building: DE_KN_residential1...
+ERROR connecting to database: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+======================================================================
+ANALYZING BUILDING: DE_KN_residential2
+======================================================================
+Testing database connection for building: DE_KN_residential2...
+ERROR connecting to database: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+======================================================================
+ANALYZING BUILDING: DE_KN_residential3
+======================================================================
+Testing database connection for building: DE_KN_residential3...
+ERROR connecting to database: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+======================================================================
+ANALYZING BUILDING: DE_KN_residential4
+======================================================================
+Testing database connection for building: DE_KN_residential4...
+ERROR connecting to database: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+======================================================================
+ANALYZING BUILDING: DE_KN_residential5
+======================================================================
+Testing database connection for building: DE_KN_residential5...
+ERROR connecting to database: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+
+======================================================================
+ANALYZING BUILDING: DE_KN_residential6
+======================================================================
+Testing database connection for building: DE_KN_residential6...
+ERROR connecting to database: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+No results generated for any building
+
+Analysis completed in 1.70 seconds
+Results directory: D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\results

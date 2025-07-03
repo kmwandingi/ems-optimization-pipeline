@@ -1,0 +1,9 @@
+flavors:
+  python_function:
+    env: conda.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+mlflow_version: 2.22.0
+model_uuid: 038f878e-bf4f-4e0b-b4cd-6fb96884568b
+run_id: 2b871cb7b8cb42f2ba3a163ea6f8e214
+utc_time_created: '2025-05-22 20:18:47.349192'

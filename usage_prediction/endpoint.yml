@@ -1,0 +1,6 @@
+name: device-usage-endpoint
+auth_mode: key
+description: "Endpoint for device usage prediction model"
+tags:
+  environment: production
+  project: energy-management-system

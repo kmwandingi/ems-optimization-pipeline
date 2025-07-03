@@ -1,0 +1,12 @@
+{
+  "total_days_processed": 1,
+  "pipeline_success": 1.0,
+  "total_cost_eur": 0.2825196000561,
+  "avg_daily_cost_eur": 0.2825196000561,
+  "pv_generation_kwh": 0.0,
+  "pv_export_kwh": 0.0,
+  "grid_import_kwh": 0.0,
+  "grid_export_kwh": 0.0,
+  "peak_grid_import_kw": 0.0,
+  "pv_self_consumption_pct": null
+}

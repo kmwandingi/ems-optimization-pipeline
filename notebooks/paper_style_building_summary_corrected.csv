@@ -1,0 +1,8 @@
+Building,Total Load (kWh),Total PV Gen (kWh),Baseline Cost (€),Sched-Only Cost (€),Sched-Batt Cost (€),% Improv. (Sched-Only),% Improv. (Sched-Batt),PV Used – Baseline (kWh),PV Used – Sched-Only (kWh),PV Used – Sched-Batt (kWh),PAR – Baseline,PAR – Sched-Only,PAR – Sched-Batt
+industrial3,3654.89,0.0,125.73,125.73,125.73,0.0,0.0,0.0,0.0,0.0,1.37,1.37,1.37
+residential1,407.9,0.0,14.03,14.03,14.03,0.0,0.0,0.0,0.0,0.0,3.62,3.62,3.62
+residential2,12.22,0.0,0.42,0.42,0.42,0.0,0.0,0.0,0.0,0.0,18.3,18.3,18.3
+residential3,9.8,0.0,0.34,0.34,0.34,0.0,0.0,0.0,0.0,0.0,3.09,3.09,3.09
+residential4,38.3,0.0,1.32,1.32,1.32,0.0,0.0,0.0,0.0,0.0,15.97,15.97,15.97
+residential5,16.66,0.0,0.57,0.57,0.57,0.0,0.0,0.0,0.0,0.0,10.85,10.85,10.85
+residential6,28.45,0.0,0.98,0.98,0.98,0.0,0.0,0.0,0.0,0.0,2.83,2.83,2.83

@@ -94,6 +94,10 @@ device_specs = {
         ],
         "flex_model": "partial_usage"
     },
+    # "_pv": {
+    #     "category": "Partially",
+
+    # },
     # -------------------------------------------------------
     # New entries for common household devices
     # -------------------------------------------------------

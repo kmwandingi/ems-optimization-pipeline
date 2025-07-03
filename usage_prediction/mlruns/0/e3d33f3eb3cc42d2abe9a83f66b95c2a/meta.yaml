@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/e3d33f3eb3cc42d2abe9a83f66b95c2a/artifacts
+end_time: 1747928497805
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e3d33f3eb3cc42d2abe9a83f66b95c2a
+run_name: crawling-hare-98
+run_uuid: e3d33f3eb3cc42d2abe9a83f66b95c2a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747928344061
+status: 3
+tags: []
+user_id: '20235149'

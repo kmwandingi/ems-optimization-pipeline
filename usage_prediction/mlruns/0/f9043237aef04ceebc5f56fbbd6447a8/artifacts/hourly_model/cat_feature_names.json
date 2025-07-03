@@ -1,0 +1,8 @@
+{
+  "cat_feature_names": [
+    "day_of_week",
+    "is_weekend",
+    "prev_hour_on",
+    "plain_device_type"
+  ]
+}

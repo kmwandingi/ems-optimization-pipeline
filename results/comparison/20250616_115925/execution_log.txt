@@ -1,0 +1,28 @@
+Execution started at 2025-06-16 11:59:25.116116
+Arguments: buildings=['DE_KN_residential1'], days=1, output=results/comparison
+Starting optimization comparison...
+Error in run_optimization_comparison: PVAgent.__init__() got an unexpected keyword argument 'profile'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 306, in initialize_agents
+    pv_df = con.execute(f"""
+            ^^^^^^^^^^^^^^^^
+duckdb.duckdb.BinderException: Binder Error: Referenced column "pv_power" not found in FROM clause!
+Candidate bindings: "pv_forecast", "power_rating", "price_per_kwh", "cost_with_generation", "cost_without_generation"
+
+LINE 3:             WHERE pv_power IS NOT NULL
+                          ^
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 1171, in <module>
+    summary_df, all_results = run_optimization_comparison(args.buildings, args.days)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 1030, in run_optimization_comparison
+    battery_agent, ev_agent, pv_agent, grid_agent, weather_agent = initialize_agents(
+                                                                   ^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 321, in initialize_agents
+    pv_agent = PVAgent(profile=pd.Series([0] * 24, index=range(24)))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: PVAgent.__init__() got an unexpected keyword argument 'profile'
+Execution finished at 2025-06-16 11:59:29.331827

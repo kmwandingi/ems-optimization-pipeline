@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/Kenneth%20-%20TU%20Eindhoven/Jads/Graduation%20Project%202024-2025/ems_project/notebooks/models/usage_prediction/mlruns/0/8b96a9e56292439cb9d64ee1455dba62/artifacts
+end_time: 1747913194113
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 8b96a9e56292439cb9d64ee1455dba62
+run_name: grandiose-fox-900
+run_uuid: 8b96a9e56292439cb9d64ee1455dba62
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1747913181072
+status: 4
+tags: []
+user_id: '20235149'

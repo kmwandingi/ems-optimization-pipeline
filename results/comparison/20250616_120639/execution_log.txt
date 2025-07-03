@@ -1,0 +1,16 @@
+Execution started at 2025-06-16 12:06:39.554757
+Arguments: buildings=['DE_KN_residential1'], days=1, output=results/comparison
+Starting optimization comparison...
+Error in run_optimization_comparison: WeatherAgent.__init__() missing 1 required positional argument: 'weather_df'
+Traceback (most recent call last):
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 1180, in <module>
+    summary_df, all_results = run_optimization_comparison(args.buildings, args.days)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 1039, in run_optimization_comparison
+    battery_agent, ev_agent, pv_agent, grid_agent, weather_agent = initialize_agents(
+                                                                   ^^^^^^^^^^^^^^^^^^
+  File "D:\Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-optimization-pipeline\scripts\run_optimization_comparison.py", line 342, in initialize_agents
+    weather_agent = WeatherAgent()
+                    ^^^^^^^^^^^^^^
+TypeError: WeatherAgent.__init__() missing 1 required positional argument: 'weather_df'
+Execution finished at 2025-06-16 12:06:43.617815
