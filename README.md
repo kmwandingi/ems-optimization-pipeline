@@ -54,12 +54,35 @@ A sophisticated **multi-agent energy management system** that optimizes energy c
 ## 🚀 Quick Start
 
 ### Prerequisites
+
+#### System Requirements
+- **Python**: 3.8+ (recommended: 3.9 or 3.10)
+- **Memory**: Minimum 8GB RAM (16GB+ recommended for large datasets)
+- **Storage**: 5GB+ free space for data and temporary files
+- **OS**: Windows 10+, macOS 10.15+, or Linux (Ubuntu 18.04+)
+
+#### Environment Setup
 ```bash
-# Install dependencies
+# 1. Create virtual environment (RECOMMENDED)
+python -m venv ems_env
+
+# Activate environment
+# Windows:
+ems_env\Scripts\activate
+# macOS/Linux:
+source ems_env/bin/activate
+
+# 2. Install dependencies
 pip install -r requirements-azure.txt
 
-# Or install individually:
-pip install duckdb pandas numpy matplotlib seaborn pulp scipy mlflow azureml-sdk azureml-mlflow scikit-learn
+# 3. Verify installation
+python -c "import duckdb, pandas, pulp, mlflow; print('All dependencies installed successfully')"
+```
+
+#### Development Dependencies (Optional)
+```bash
+# For development and testing
+pip install pytest black flake8 mypy jupyter notebook
 ```
 
 ### 1. Database Setup
@@ -68,7 +91,28 @@ pip install duckdb pandas numpy matplotlib seaborn pulp scipy mlflow azureml-sdk
 python scripts/build_duckdb.py
 ```
 
-### 2. Run All Pipelines
+### 2. Environment Configuration
+
+#### MLflow Setup
+```bash
+# Initialize MLflow tracking
+export MLFLOW_TRACKING_URI=./mlruns
+# Or on Windows:
+set MLFLOW_TRACKING_URI=./mlruns
+
+# Start MLflow UI (optional)
+mlflow ui --host 0.0.0.0 --port 5000
+```
+
+#### DuckDB Configuration
+```bash
+# Set custom temp directory (recommended for disk space management)
+export DUCKDB_TEMP_DIR=./temp_duckdb
+# Or on Windows:
+set DUCKDB_TEMP_DIR=./temp_duckdb
+```
+
+### 3. Run All Pipelines
 
 #### Pipeline A: Comparison Optimization
 ```bash

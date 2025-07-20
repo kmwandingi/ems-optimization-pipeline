@@ -1,0 +1,25 @@
+[theme]
+# Primary color for interactive elements like buttons, links
+primaryColor = "#00838f"
+
+# Background color for main content area
+backgroundColor = "#ffffff"
+
+# Background color for sidebar and most interactive widgets
+secondaryBackgroundColor = "#f0f2f6"
+
+# Color used for almost all text
+textColor = "#142b42"
+
+# Font family for all text in the app, except code blocks
+font = "sans serif"
+
+# Custom color palette (used in CSS and other styling)
+[theme.colors]
+primary = "#00838f"       # Teal blue - Primary interactive elements
+secondary = "#f4a98a"     # Light salmon - Secondary interactive elements, highlights
+accent = "#88233e"        # Burgundy - Accents, alerts, important notifications
+background = "#142b42"    # Dark navy blue - Background elements, headers
+surface = "#0e6072"       # Deep teal - Surface elements, cards, panels
+golden = "#f4c06d"        # Golden Yellow - Usage probability, PMF indicators
+vivid = "#005f99"         # Vivid Blue - Additional accent, complementary to teal

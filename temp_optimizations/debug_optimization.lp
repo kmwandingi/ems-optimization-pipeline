@@ -1,4 +1,4 @@
-\* Centralized_Optimization_2017-01-25 *\
+\* Centralized_Optimization_2017-03-12 *\
 Minimize
 TotalCost: - 4.96555 charge_0 - 4.96555 charge_1 - 4.96555 charge_10
  - 4.96555 charge_11 - 4.96555 charge_12 - 4.96555 charge_13
@@ -371,7 +371,7 @@ Batt_RampUp_6: - charge_5 + charge_6 + discharge_5 - discharge_6 <= 1
 Batt_RampUp_7: - charge_6 + charge_7 + discharge_6 - discharge_7 <= 1
 Batt_RampUp_8: - charge_7 + charge_8 + discharge_7 - discharge_8 <= 1
 Batt_RampUp_9: - charge_8 + charge_9 + discharge_8 - discharge_9 <= 1
-Batt_SoC0_0: Batt_SoC_decr_0 - Batt_SoC_incr_0 + soc_0 = 13.996471
+Batt_SoC0_0: Batt_SoC_decr_0 - Batt_SoC_incr_0 + soc_0 = 13.997618
 Batt_SoC_1: Batt_SoC_decr_1 - Batt_SoC_incr_1 - soc_0 + soc_1 = 0
 Batt_SoC_10: Batt_SoC_decr_10 - Batt_SoC_incr_10 + soc_10 - soc_9 = 0
 Batt_SoC_11: Batt_SoC_decr_11 - Batt_SoC_incr_11 - soc_10 + soc_11 = 0
@@ -563,102 +563,102 @@ Batt_SoC_incr_le_eff_6: Batt_SoC_incr_6 - 5 Batt_chargeEff_6 <= 0
 Batt_SoC_incr_le_eff_7: Batt_SoC_incr_7 - 5 Batt_chargeEff_7 <= 0
 Batt_SoC_incr_le_eff_8: Batt_SoC_incr_8 - 5 Batt_chargeEff_8 <= 0
 Batt_SoC_incr_le_eff_9: Batt_SoC_incr_9 - 5 Batt_chargeEff_9 <= 0
-Batt_SoCseg_0_0: 15.3955921722 Batt_segBin_0_0 + soc_0 <= 20.0142698239
-Batt_SoCseg_0_1: 15.3955921722 Batt_segBin_0_1 + soc_0 <= 24.6329474755
-Batt_SoCseg_0_2: 15.3955921722 Batt_segBin_0_2 + soc_0 <= 29.391585056
-Batt_SoCseg_10_0: 15.3955921722 Batt_segBin_10_0 + soc_10 <= 20.0142698239
-Batt_SoCseg_10_1: 15.3955921722 Batt_segBin_10_1 + soc_10 <= 24.6329474755
-Batt_SoCseg_10_2: 15.3955921722 Batt_segBin_10_2 + soc_10 <= 29.391585056
-Batt_SoCseg_11_0: 15.3955921722 Batt_segBin_11_0 + soc_11 <= 20.0142698239
-Batt_SoCseg_11_1: 15.3955921722 Batt_segBin_11_1 + soc_11 <= 24.6329474755
-Batt_SoCseg_11_2: 15.3955921722 Batt_segBin_11_2 + soc_11 <= 29.391585056
-Batt_SoCseg_12_0: 15.3955921722 Batt_segBin_12_0 + soc_12 <= 20.0142698239
-Batt_SoCseg_12_1: 15.3955921722 Batt_segBin_12_1 + soc_12 <= 24.6329474755
-Batt_SoCseg_12_2: 15.3955921722 Batt_segBin_12_2 + soc_12 <= 29.391585056
-Batt_SoCseg_13_0: 15.3955921722 Batt_segBin_13_0 + soc_13 <= 20.0142698239
-Batt_SoCseg_13_1: 15.3955921722 Batt_segBin_13_1 + soc_13 <= 24.6329474755
-Batt_SoCseg_13_2: 15.3955921722 Batt_segBin_13_2 + soc_13 <= 29.391585056
-Batt_SoCseg_14_0: 15.3955921722 Batt_segBin_14_0 + soc_14 <= 20.0142698239
-Batt_SoCseg_14_1: 15.3955921722 Batt_segBin_14_1 + soc_14 <= 24.6329474755
-Batt_SoCseg_14_2: 15.3955921722 Batt_segBin_14_2 + soc_14 <= 29.391585056
-Batt_SoCseg_15_0: 15.3955921722 Batt_segBin_15_0 + soc_15 <= 20.0142698239
-Batt_SoCseg_15_1: 15.3955921722 Batt_segBin_15_1 + soc_15 <= 24.6329474755
-Batt_SoCseg_15_2: 15.3955921722 Batt_segBin_15_2 + soc_15 <= 29.391585056
-Batt_SoCseg_16_0: 15.3955921722 Batt_segBin_16_0 + soc_16 <= 20.0142698239
-Batt_SoCseg_16_1: 15.3955921722 Batt_segBin_16_1 + soc_16 <= 24.6329474755
-Batt_SoCseg_16_2: 15.3955921722 Batt_segBin_16_2 + soc_16 <= 29.391585056
-Batt_SoCseg_17_0: 15.3955921722 Batt_segBin_17_0 + soc_17 <= 20.0142698239
-Batt_SoCseg_17_1: 15.3955921722 Batt_segBin_17_1 + soc_17 <= 24.6329474755
-Batt_SoCseg_17_2: 15.3955921722 Batt_segBin_17_2 + soc_17 <= 29.391585056
-Batt_SoCseg_18_0: 15.3955921722 Batt_segBin_18_0 + soc_18 <= 20.0142698239
-Batt_SoCseg_18_1: 15.3955921722 Batt_segBin_18_1 + soc_18 <= 24.6329474755
-Batt_SoCseg_18_2: 15.3955921722 Batt_segBin_18_2 + soc_18 <= 29.391585056
-Batt_SoCseg_19_0: 15.3955921722 Batt_segBin_19_0 + soc_19 <= 20.0142698239
-Batt_SoCseg_19_1: 15.3955921722 Batt_segBin_19_1 + soc_19 <= 24.6329474755
-Batt_SoCseg_19_2: 15.3955921722 Batt_segBin_19_2 + soc_19 <= 29.391585056
-Batt_SoCseg_1_0: 15.3955921722 Batt_segBin_1_0 + soc_1 <= 20.0142698239
-Batt_SoCseg_1_1: 15.3955921722 Batt_segBin_1_1 + soc_1 <= 24.6329474755
-Batt_SoCseg_1_2: 15.3955921722 Batt_segBin_1_2 + soc_1 <= 29.391585056
-Batt_SoCseg_20_0: 15.3955921722 Batt_segBin_20_0 + soc_20 <= 20.0142698239
-Batt_SoCseg_20_1: 15.3955921722 Batt_segBin_20_1 + soc_20 <= 24.6329474755
-Batt_SoCseg_20_2: 15.3955921722 Batt_segBin_20_2 + soc_20 <= 29.391585056
-Batt_SoCseg_21_0: 15.3955921722 Batt_segBin_21_0 + soc_21 <= 20.0142698239
-Batt_SoCseg_21_1: 15.3955921722 Batt_segBin_21_1 + soc_21 <= 24.6329474755
-Batt_SoCseg_21_2: 15.3955921722 Batt_segBin_21_2 + soc_21 <= 29.391585056
-Batt_SoCseg_22_0: 15.3955921722 Batt_segBin_22_0 + soc_22 <= 20.0142698239
-Batt_SoCseg_22_1: 15.3955921722 Batt_segBin_22_1 + soc_22 <= 24.6329474755
-Batt_SoCseg_22_2: 15.3955921722 Batt_segBin_22_2 + soc_22 <= 29.391585056
-Batt_SoCseg_23_0: 15.3955921722 Batt_segBin_23_0 + soc_23 <= 20.0142698239
-Batt_SoCseg_23_1: 15.3955921722 Batt_segBin_23_1 + soc_23 <= 24.6329474755
-Batt_SoCseg_23_2: 15.3955921722 Batt_segBin_23_2 + soc_23 <= 29.391585056
-Batt_SoCseg_2_0: 15.3955921722 Batt_segBin_2_0 + soc_2 <= 20.0142698239
-Batt_SoCseg_2_1: 15.3955921722 Batt_segBin_2_1 + soc_2 <= 24.6329474755
-Batt_SoCseg_2_2: 15.3955921722 Batt_segBin_2_2 + soc_2 <= 29.391585056
-Batt_SoCseg_3_0: 15.3955921722 Batt_segBin_3_0 + soc_3 <= 20.0142698239
-Batt_SoCseg_3_1: 15.3955921722 Batt_segBin_3_1 + soc_3 <= 24.6329474755
-Batt_SoCseg_3_2: 15.3955921722 Batt_segBin_3_2 + soc_3 <= 29.391585056
-Batt_SoCseg_4_0: 15.3955921722 Batt_segBin_4_0 + soc_4 <= 20.0142698239
-Batt_SoCseg_4_1: 15.3955921722 Batt_segBin_4_1 + soc_4 <= 24.6329474755
-Batt_SoCseg_4_2: 15.3955921722 Batt_segBin_4_2 + soc_4 <= 29.391585056
-Batt_SoCseg_5_0: 15.3955921722 Batt_segBin_5_0 + soc_5 <= 20.0142698239
-Batt_SoCseg_5_1: 15.3955921722 Batt_segBin_5_1 + soc_5 <= 24.6329474755
-Batt_SoCseg_5_2: 15.3955921722 Batt_segBin_5_2 + soc_5 <= 29.391585056
-Batt_SoCseg_6_0: 15.3955921722 Batt_segBin_6_0 + soc_6 <= 20.0142698239
-Batt_SoCseg_6_1: 15.3955921722 Batt_segBin_6_1 + soc_6 <= 24.6329474755
-Batt_SoCseg_6_2: 15.3955921722 Batt_segBin_6_2 + soc_6 <= 29.391585056
-Batt_SoCseg_7_0: 15.3955921722 Batt_segBin_7_0 + soc_7 <= 20.0142698239
-Batt_SoCseg_7_1: 15.3955921722 Batt_segBin_7_1 + soc_7 <= 24.6329474755
-Batt_SoCseg_7_2: 15.3955921722 Batt_segBin_7_2 + soc_7 <= 29.391585056
-Batt_SoCseg_8_0: 15.3955921722 Batt_segBin_8_0 + soc_8 <= 20.0142698239
-Batt_SoCseg_8_1: 15.3955921722 Batt_segBin_8_1 + soc_8 <= 24.6329474755
-Batt_SoCseg_8_2: 15.3955921722 Batt_segBin_8_2 + soc_8 <= 29.391585056
-Batt_SoCseg_9_0: 15.3955921722 Batt_segBin_9_0 + soc_9 <= 20.0142698239
-Batt_SoCseg_9_1: 15.3955921722 Batt_segBin_9_1 + soc_9 <= 24.6329474755
-Batt_SoCseg_9_2: 15.3955921722 Batt_segBin_9_2 + soc_9 <= 29.391585056
-BuildingLoad_hour_0: charge_0 - discharge_0 <= 100
-BuildingLoad_hour_1: charge_1 - discharge_1 <= 100
-BuildingLoad_hour_10: charge_10 - discharge_10 <= 100
-BuildingLoad_hour_11: charge_11 - discharge_11 <= 100
-BuildingLoad_hour_12: charge_12 - discharge_12 <= 100
-BuildingLoad_hour_13: charge_13 - discharge_13 <= 100
-BuildingLoad_hour_14: charge_14 - discharge_14 <= 100
-BuildingLoad_hour_15: charge_15 - discharge_15 <= 100
-BuildingLoad_hour_16: charge_16 - discharge_16 <= 100
-BuildingLoad_hour_17: charge_17 - discharge_17 <= 100
-BuildingLoad_hour_18: charge_18 - discharge_18 <= 100
-BuildingLoad_hour_19: charge_19 - discharge_19 <= 100
-BuildingLoad_hour_2: charge_2 - discharge_2 <= 100
-BuildingLoad_hour_20: charge_20 - discharge_20 <= 100
-BuildingLoad_hour_21: charge_21 - discharge_21 <= 100
-BuildingLoad_hour_22: charge_22 - discharge_22 <= 100
-BuildingLoad_hour_23: charge_23 - discharge_23 <= 100
-BuildingLoad_hour_3: charge_3 - discharge_3 <= 100
-BuildingLoad_hour_4: charge_4 - discharge_4 <= 100
-BuildingLoad_hour_5: charge_5 - discharge_5 <= 100
-BuildingLoad_hour_6: charge_6 - discharge_6 <= 100
-BuildingLoad_hour_7: charge_7 - discharge_7 <= 100
-BuildingLoad_hour_8: charge_8 - discharge_8 <= 100
-BuildingLoad_hour_9: charge_9 - discharge_9 <= 100
+Batt_SoCseg_0_0: 15.3968533272 Batt_segBin_0_0 + soc_0 <= 20.0159093254
+Batt_SoCseg_0_1: 15.3968533272 Batt_segBin_0_1 + soc_0 <= 24.6349653235
+Batt_SoCseg_0_2: 15.3968533272 Batt_segBin_0_2 + soc_0 <= 29.3939927156
+Batt_SoCseg_10_0: 15.3968533272 Batt_segBin_10_0 + soc_10 <= 20.0159093254
+Batt_SoCseg_10_1: 15.3968533272 Batt_segBin_10_1 + soc_10 <= 24.6349653235
+Batt_SoCseg_10_2: 15.3968533272 Batt_segBin_10_2 + soc_10 <= 29.3939927156
+Batt_SoCseg_11_0: 15.3968533272 Batt_segBin_11_0 + soc_11 <= 20.0159093254
+Batt_SoCseg_11_1: 15.3968533272 Batt_segBin_11_1 + soc_11 <= 24.6349653235
+Batt_SoCseg_11_2: 15.3968533272 Batt_segBin_11_2 + soc_11 <= 29.3939927156
+Batt_SoCseg_12_0: 15.3968533272 Batt_segBin_12_0 + soc_12 <= 20.0159093254
+Batt_SoCseg_12_1: 15.3968533272 Batt_segBin_12_1 + soc_12 <= 24.6349653235
+Batt_SoCseg_12_2: 15.3968533272 Batt_segBin_12_2 + soc_12 <= 29.3939927156
+Batt_SoCseg_13_0: 15.3968533272 Batt_segBin_13_0 + soc_13 <= 20.0159093254
+Batt_SoCseg_13_1: 15.3968533272 Batt_segBin_13_1 + soc_13 <= 24.6349653235
+Batt_SoCseg_13_2: 15.3968533272 Batt_segBin_13_2 + soc_13 <= 29.3939927156
+Batt_SoCseg_14_0: 15.3968533272 Batt_segBin_14_0 + soc_14 <= 20.0159093254
+Batt_SoCseg_14_1: 15.3968533272 Batt_segBin_14_1 + soc_14 <= 24.6349653235
+Batt_SoCseg_14_2: 15.3968533272 Batt_segBin_14_2 + soc_14 <= 29.3939927156
+Batt_SoCseg_15_0: 15.3968533272 Batt_segBin_15_0 + soc_15 <= 20.0159093254
+Batt_SoCseg_15_1: 15.3968533272 Batt_segBin_15_1 + soc_15 <= 24.6349653235
+Batt_SoCseg_15_2: 15.3968533272 Batt_segBin_15_2 + soc_15 <= 29.3939927156
+Batt_SoCseg_16_0: 15.3968533272 Batt_segBin_16_0 + soc_16 <= 20.0159093254
+Batt_SoCseg_16_1: 15.3968533272 Batt_segBin_16_1 + soc_16 <= 24.6349653235
+Batt_SoCseg_16_2: 15.3968533272 Batt_segBin_16_2 + soc_16 <= 29.3939927156
+Batt_SoCseg_17_0: 15.3968533272 Batt_segBin_17_0 + soc_17 <= 20.0159093254
+Batt_SoCseg_17_1: 15.3968533272 Batt_segBin_17_1 + soc_17 <= 24.6349653235
+Batt_SoCseg_17_2: 15.3968533272 Batt_segBin_17_2 + soc_17 <= 29.3939927156
+Batt_SoCseg_18_0: 15.3968533272 Batt_segBin_18_0 + soc_18 <= 20.0159093254
+Batt_SoCseg_18_1: 15.3968533272 Batt_segBin_18_1 + soc_18 <= 24.6349653235
+Batt_SoCseg_18_2: 15.3968533272 Batt_segBin_18_2 + soc_18 <= 29.3939927156
+Batt_SoCseg_19_0: 15.3968533272 Batt_segBin_19_0 + soc_19 <= 20.0159093254
+Batt_SoCseg_19_1: 15.3968533272 Batt_segBin_19_1 + soc_19 <= 24.6349653235
+Batt_SoCseg_19_2: 15.3968533272 Batt_segBin_19_2 + soc_19 <= 29.3939927156
+Batt_SoCseg_1_0: 15.3968533272 Batt_segBin_1_0 + soc_1 <= 20.0159093254
+Batt_SoCseg_1_1: 15.3968533272 Batt_segBin_1_1 + soc_1 <= 24.6349653235
+Batt_SoCseg_1_2: 15.3968533272 Batt_segBin_1_2 + soc_1 <= 29.3939927156
+Batt_SoCseg_20_0: 15.3968533272 Batt_segBin_20_0 + soc_20 <= 20.0159093254
+Batt_SoCseg_20_1: 15.3968533272 Batt_segBin_20_1 + soc_20 <= 24.6349653235
+Batt_SoCseg_20_2: 15.3968533272 Batt_segBin_20_2 + soc_20 <= 29.3939927156
+Batt_SoCseg_21_0: 15.3968533272 Batt_segBin_21_0 + soc_21 <= 20.0159093254
+Batt_SoCseg_21_1: 15.3968533272 Batt_segBin_21_1 + soc_21 <= 24.6349653235
+Batt_SoCseg_21_2: 15.3968533272 Batt_segBin_21_2 + soc_21 <= 29.3939927156
+Batt_SoCseg_22_0: 15.3968533272 Batt_segBin_22_0 + soc_22 <= 20.0159093254
+Batt_SoCseg_22_1: 15.3968533272 Batt_segBin_22_1 + soc_22 <= 24.6349653235
+Batt_SoCseg_22_2: 15.3968533272 Batt_segBin_22_2 + soc_22 <= 29.3939927156
+Batt_SoCseg_23_0: 15.3968533272 Batt_segBin_23_0 + soc_23 <= 20.0159093254
+Batt_SoCseg_23_1: 15.3968533272 Batt_segBin_23_1 + soc_23 <= 24.6349653235
+Batt_SoCseg_23_2: 15.3968533272 Batt_segBin_23_2 + soc_23 <= 29.3939927156
+Batt_SoCseg_2_0: 15.3968533272 Batt_segBin_2_0 + soc_2 <= 20.0159093254
+Batt_SoCseg_2_1: 15.3968533272 Batt_segBin_2_1 + soc_2 <= 24.6349653235
+Batt_SoCseg_2_2: 15.3968533272 Batt_segBin_2_2 + soc_2 <= 29.3939927156
+Batt_SoCseg_3_0: 15.3968533272 Batt_segBin_3_0 + soc_3 <= 20.0159093254
+Batt_SoCseg_3_1: 15.3968533272 Batt_segBin_3_1 + soc_3 <= 24.6349653235
+Batt_SoCseg_3_2: 15.3968533272 Batt_segBin_3_2 + soc_3 <= 29.3939927156
+Batt_SoCseg_4_0: 15.3968533272 Batt_segBin_4_0 + soc_4 <= 20.0159093254
+Batt_SoCseg_4_1: 15.3968533272 Batt_segBin_4_1 + soc_4 <= 24.6349653235
+Batt_SoCseg_4_2: 15.3968533272 Batt_segBin_4_2 + soc_4 <= 29.3939927156
+Batt_SoCseg_5_0: 15.3968533272 Batt_segBin_5_0 + soc_5 <= 20.0159093254
+Batt_SoCseg_5_1: 15.3968533272 Batt_segBin_5_1 + soc_5 <= 24.6349653235
+Batt_SoCseg_5_2: 15.3968533272 Batt_segBin_5_2 + soc_5 <= 29.3939927156
+Batt_SoCseg_6_0: 15.3968533272 Batt_segBin_6_0 + soc_6 <= 20.0159093254
+Batt_SoCseg_6_1: 15.3968533272 Batt_segBin_6_1 + soc_6 <= 24.6349653235
+Batt_SoCseg_6_2: 15.3968533272 Batt_segBin_6_2 + soc_6 <= 29.3939927156
+Batt_SoCseg_7_0: 15.3968533272 Batt_segBin_7_0 + soc_7 <= 20.0159093254
+Batt_SoCseg_7_1: 15.3968533272 Batt_segBin_7_1 + soc_7 <= 24.6349653235
+Batt_SoCseg_7_2: 15.3968533272 Batt_segBin_7_2 + soc_7 <= 29.3939927156
+Batt_SoCseg_8_0: 15.3968533272 Batt_segBin_8_0 + soc_8 <= 20.0159093254
+Batt_SoCseg_8_1: 15.3968533272 Batt_segBin_8_1 + soc_8 <= 24.6349653235
+Batt_SoCseg_8_2: 15.3968533272 Batt_segBin_8_2 + soc_8 <= 29.3939927156
+Batt_SoCseg_9_0: 15.3968533272 Batt_segBin_9_0 + soc_9 <= 20.0159093254
+Batt_SoCseg_9_1: 15.3968533272 Batt_segBin_9_1 + soc_9 <= 24.6349653235
+Batt_SoCseg_9_2: 15.3968533272 Batt_segBin_9_2 + soc_9 <= 29.3939927156
+BuildingLoad_hour_0: charge_0 - discharge_0 <= 130
+BuildingLoad_hour_1: charge_1 - discharge_1 <= 130
+BuildingLoad_hour_10: charge_10 - discharge_10 <= 130
+BuildingLoad_hour_11: charge_11 - discharge_11 <= 130
+BuildingLoad_hour_12: charge_12 - discharge_12 <= 130
+BuildingLoad_hour_13: charge_13 - discharge_13 <= 130
+BuildingLoad_hour_14: charge_14 - discharge_14 <= 130
+BuildingLoad_hour_15: charge_15 - discharge_15 <= 130
+BuildingLoad_hour_16: charge_16 - discharge_16 <= 130
+BuildingLoad_hour_17: charge_17 - discharge_17 <= 130
+BuildingLoad_hour_18: charge_18 - discharge_18 <= 130
+BuildingLoad_hour_19: charge_19 - discharge_19 <= 130
+BuildingLoad_hour_2: charge_2 - discharge_2 <= 130
+BuildingLoad_hour_20: charge_20 - discharge_20 <= 130
+BuildingLoad_hour_21: charge_21 - discharge_21 <= 130
+BuildingLoad_hour_22: charge_22 - discharge_22 <= 130
+BuildingLoad_hour_23: charge_23 - discharge_23 <= 130
+BuildingLoad_hour_3: charge_3 - discharge_3 <= 130
+BuildingLoad_hour_4: charge_4 - discharge_4 <= 130
+BuildingLoad_hour_5: charge_5 - discharge_5 <= 130
+BuildingLoad_hour_6: charge_6 - discharge_6 <= 130
+BuildingLoad_hour_7: charge_7 - discharge_7 <= 130
+BuildingLoad_hour_8: charge_8 - discharge_8 <= 130
+BuildingLoad_hour_9: charge_9 - discharge_9 <= 130
 Bounds
  Batt_chargeEff_0 <= 1
  Batt_chargeEff_1 <= 1
@@ -708,30 +708,30 @@ Bounds
  Batt_dischargeEff_7 <= 1
  Batt_dischargeEff_8 <= 1
  Batt_dischargeEff_9 <= 1
- 0.6 <= soc_0 <= 13.9959928838
- 0.6 <= soc_1 <= 13.9959928838
- 0.6 <= soc_10 <= 13.9959928838
- 0.6 <= soc_11 <= 13.9959928838
- 0.6 <= soc_12 <= 13.9959928838
- 0.6 <= soc_13 <= 13.9959928838
- 0.6 <= soc_14 <= 13.9959928838
- 0.6 <= soc_15 <= 13.9959928838
- 0.6 <= soc_16 <= 13.9959928838
- 0.6 <= soc_17 <= 13.9959928838
- 0.6 <= soc_18 <= 13.9959928838
- 0.6 <= soc_19 <= 13.9959928838
- 0.6 <= soc_2 <= 13.9959928838
- 0.6 <= soc_20 <= 13.9959928838
- 0.6 <= soc_21 <= 13.9959928838
- 0.6 <= soc_22 <= 13.9959928838
- 0.6 <= soc_23 <= 13.9959928838
- 0.6 <= soc_3 <= 13.9959928838
- 0.6 <= soc_4 <= 13.9959928838
- 0.6 <= soc_5 <= 13.9959928838
- 0.6 <= soc_6 <= 13.9959928838
- 0.6 <= soc_7 <= 13.9959928838
- 0.6 <= soc_8 <= 13.9959928838
- 0.6 <= soc_9 <= 13.9959928838
+ 0.6 <= soc_0 <= 13.9971393884
+ 0.6 <= soc_1 <= 13.9971393884
+ 0.6 <= soc_10 <= 13.9971393884
+ 0.6 <= soc_11 <= 13.9971393884
+ 0.6 <= soc_12 <= 13.9971393884
+ 0.6 <= soc_13 <= 13.9971393884
+ 0.6 <= soc_14 <= 13.9971393884
+ 0.6 <= soc_15 <= 13.9971393884
+ 0.6 <= soc_16 <= 13.9971393884
+ 0.6 <= soc_17 <= 13.9971393884
+ 0.6 <= soc_18 <= 13.9971393884
+ 0.6 <= soc_19 <= 13.9971393884
+ 0.6 <= soc_2 <= 13.9971393884
+ 0.6 <= soc_20 <= 13.9971393884
+ 0.6 <= soc_21 <= 13.9971393884
+ 0.6 <= soc_22 <= 13.9971393884
+ 0.6 <= soc_23 <= 13.9971393884
+ 0.6 <= soc_3 <= 13.9971393884
+ 0.6 <= soc_4 <= 13.9971393884
+ 0.6 <= soc_5 <= 13.9971393884
+ 0.6 <= soc_6 <= 13.9971393884
+ 0.6 <= soc_7 <= 13.9971393884
+ 0.6 <= soc_8 <= 13.9971393884
+ 0.6 <= soc_9 <= 13.9971393884
 Binaries
 Batt_segBin_0_0
 Batt_segBin_0_1

@@ -1,0 +1,97 @@
+
+\documentclass[a4paper,12pt,english]{report}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{acro}
+\usepackage{titlepic}
+\usepackage[absolute]{textpos}
+\graphicspath{{images/}} %configuring the graphicx package
+\usepackage{page}
+\usepackage{enumitem}
+%\usepackage{siunitx}
+\usepackage{adjustbox}
+
+\usepackage[style=numeric]{biblatex}
+\addbibresource{ref.bib} %Import the bibliography
+%
+% These commands need to be defined in order to produce a correct and personalized document
+%
+\newcommand{\shortdoctitle}{EngD's Thesis}
+\newcommand{\doctitle}{Designing an Agent‑Based Probabilistic Energy Management System for Building‑Level Optimisation under Dynamic Pricing}
+
+\newcommand{\me}{Kenneth Mwandingi}
+\newcommand{\keywords}{energy management system, dynamic pricing, machine learning, optimization, MILP}
+% \newcommand{\version}{EMPTY version}
+%\newcommand{\datemonthYear}{Date Month 202X}
+\newcommand{\firstCommitteeMember}{}
+\author{\me}
+
+% Declare all your acronyms here, you can call them using \ac latter, or \acl and acs\ for explicitly using the long and the short version. 
+
+\DeclareAcronym{EMS}{short=EMS, long=Energy Management System}
+\DeclareAcronym{MILP}{short=MILP, long=Mixed-Integer Linear Programming}
+\DeclareAcronym{PV}{short=PV, long=Photovoltaic}
+\DeclareAcronym{SoC}{short=SoC, long=State of Charge}
+\DeclareAcronym{EV}{short=EV, long=Electric Vehicle}
+
+
+
+
+\begin{document}
+%\pagenumbering{roman}
+\include{02_title_page}
+
+\clearemptydoublepage
+\input{03_report_information}
+
+\newpage
+\input{chapters/executivesummary.tex}
+\clearemptydoublepage
+
+\tableofcontents
+\newpage
+%\clearemptydoublepage
+
+\listoffigures
+\newpage
+%\clearemptydoublepage
+
+\listoftables
+\newpage
+
+\input{chapters/abbreviations.tex}
+\newpage
+
+%\clearemptydoublepage
+\newcommand{\research}{Research in energy optimization and probabilistic modeling}
+\newcommand{\moo}{Develop and implement multi-objective optimization algorithms for energy management}
+\newcommand{\probabilistic}{Explore and implement probabilistic modeling for user behavior}
+\newcommand{\dashboard}{Assess the impact on cost savings and user comfort using a Dashboard}
+\newcommand{\usecase}{Identify use cases in Dutch and Curaçao markets}
+\newcommand{\package}{Implement a modular agent-based EMS system}
+
+\setcounter{page}{0}
+\pagenumbering{arabic}
+
+\input{chapters/01_introduction.tex}
+\input{chapters/02_context.tex}
+\input{chapters/03_definition.tex}
+\input{chapters/04_detailing_project_goal.tex}
+% \input{chapters/literature.tex}
+%\input{chapters/methodology.tex}
+%\input{chapters/experimentaldesign.tex}
+%\input{chapters/dataset.tex}
+%\input{chapters/results.tex}
+%\input{chapters/deliverables.tex}
+%\input{chapters/recommendations}
+
+
+\begingroup
+\sloppy
+\printbibliography
+\endgroup
+%\printbibliography
+
+\appendix
+\input{chapters/appendix.tex} 
+
+\end{document}

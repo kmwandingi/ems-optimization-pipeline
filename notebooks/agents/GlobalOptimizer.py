@@ -4,8 +4,11 @@ import logging
 import datetime
 from datetime import timedelta
 from typing import Dict, List, Tuple, Any, Optional
-from pulp import (LpProblem, LpVariable, LpStatus,
+from pulp import (LpProblem, LpVariable, LpStatus, value as pulp_value,
                   LpMinimize, lpSum, PULP_CBC_CMD)
+
+# Import solver configuration from config
+from utils.config import MILP_SOLVER_PARAMS
 
 from agents.ProbabilityModelAgent import ProbabilityModelAgent
 from agents.WeatherAgent import WeatherAgent
@@ -602,16 +605,16 @@ class GlobalOptimizer:
                                         pv_peak = max(0.1, -pv_data.min())  # Avoid divide-by-zero
                                         pv_ratio = pv_generation / pv_peak  # 0-1 ratio of current to peak
                                         
-                                        # MODIFIED DISCOUNT CALCULATION: Make discount less dependent on price differential
-                                        # and more directly tied to PV generation to improve PV utilization
+                                        # Create an even stronger PV discount that scales with both PV availability 
+                                        # and the absolute price level
                                         
                                         # Get the base price and the minimum price in the day
                                         base_price = prices_24[target]
                                         min_price = min(prices_24)
                                         
-                                        # Calculate a more substantial discount based on absolute pricing advantage
-                                        # plus a fixed incentive, rather than relative to export price
-                                        discount = (base_price - min_price + 0.05) * pv_ratio * PV_WEIGHT
+                                        # Enhanced discount calculation - creates a stronger incentive by using
+                                        # both the absolute price and PV availability
+                                        discount = (base_price - min_price + 0.1) * pv_ratio * PV_WEIGHT
                                         
                                         # Apply discount to make PV hours more attractive
                                         eff_price = prices_24[target] - discount
@@ -787,8 +790,19 @@ class GlobalOptimizer:
                                 for h in range(-max_shift, max_shift+1):
                                     shift_key = (d_idx, t, h)
                                     if shift_key in x and 0 <= t+h < n_hours:
-                                        var_val = x[shift_key].varValue or 0.0
-                                        if var_val > 0.001:  # Only count meaningful shifts
+                                        # Accumulate the shifts and actual load at the target hour
+                                        # Critical fix: use pulp_value to handle variable elimination properly
+                                        var_raw = pulp_value(x[shift_key])
+                                        if var_raw is None:
+                                            # Variable was eliminated by solver - shouldn't happen with presolve off
+                                            continue
+                                        var_val = float(var_raw)
+                                        
+                                        # Get threshold from config or use default
+                                        threshold = MILP_SOLVER_PARAMS.get("var_value_threshold", 1e-6)
+                                        
+                                        if var_val > threshold:  # Filter out numerical noise
+                                            optimized_24[t + h] += var_val * consumption_24[t]
                                             shifts_applied += 1
                                             target_hour = t + h
                                             opt_value = var_val * consumption_24[t]
@@ -1456,13 +1470,19 @@ class GlobalOptimizer:
         
         # 6) Solve
         print("Solving centralized MILP...")
-        solver = PULP_CBC_CMD(msg=False, timeLimit=300, presolve='on', cuts='on')
+        # Use configuration from config.py
+        solver = PULP_CBC_CMD(
+            msg=MILP_SOLVER_PARAMS.get("show_solver_output", False),
+            timeLimit=MILP_SOLVER_PARAMS.get("time_limit", 300),
+            presolve=MILP_SOLVER_PARAMS.get("presolve", "off"),  # Critical for large cluster MILPs
+            cuts=MILP_SOLVER_PARAMS.get("enable_cuts", "on")
+        )
         prob.solve(solver)
         
         # Get the solver's objective value directly
-        from pulp import value
-        solver_objective = value(prob.objective) if prob.status == 1 else None
-        print(f"Solver objective value: {solver_objective}")
+        from pulp import value as pulp_value
+        solver_objective = pulp_value(prob.objective) if prob.status == 1 else None
+        print(f"Solver status: {LpStatus[prob.status]}, objective value: {solver_objective}")
         
         if LpStatus[prob.status] != 'Optimal':
             print(f"MILP not optimal ({LpStatus[prob.status]})")

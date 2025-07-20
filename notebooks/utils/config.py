@@ -98,7 +98,7 @@ BATTERY_TUNING_PARAMETERS = [
 # --------------------------
 # PV_WEIGHT = 1.0 means "self-consuming PV is worth as much as exporting it is bad"
 # Values > 1.0 make the optimizer more strongly prefer PV self-consumption over any tariff spread
-PV_WEIGHT = 1000.0
+PV_WEIGHT = 2.5
 
 # --------------------------
 # Flexible Device Parameters
@@ -127,7 +127,6 @@ FLEXIBLE_DEVICE_PARAMS = {
 # Grid & Building Parameters
 # --------------------------
 GRID_PARAMS = {
-    "max_building_load": 100.0,      # kW, maximum total load for the building
     "max_import": 50.0,             # kW, maximum import from grid
     "max_export": 20.0,             # kW, maximum export to grid
     "import_price": 0.25,           # fallback or default import price
@@ -143,6 +142,18 @@ GLOBAL_OPTIMIZER_PARAMS = {
     "online_iterations": 3,
     "monte_carlo_num_simulations": 10,
     "monte_carlo_z_alpha": 1.645
+}
+
+# --------------------------
+# MILP Solver Parameters
+# --------------------------
+MILP_SOLVER_PARAMS = {
+    # Critical settings for preventing the variable elimination issue in large MILPs
+    "presolve": "off",      # 'off' prevents variable elimination in large cluster optimizations
+    "show_solver_output": True,  # Set to True for debugging large clusters
+    "time_limit": 300,      # Solver time limit in seconds
+    "enable_cuts": "on",    # Enable cutting planes for faster convergence
+    "var_value_threshold": 1e-6  # Threshold to filter out numerical noise (1 Wh)
 }
 
 # --------------------------

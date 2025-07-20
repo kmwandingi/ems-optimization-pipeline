@@ -212,6 +212,7 @@ def calculate_proper_baseline_metrics(info, day):
                 pv_utilization=pv_util,pv_consumed=pv_cons,
                 hourly_consumption=cons,hourly_pv=pv,prices=price,
                 day_df=df,total_import=imp,total_export=exp)
+
 def run_fixed_decentralized_optimization(agents, baseline_data):
     """Run REAL decentralized optimization - each device optimizes independently WITH battery."""
     
@@ -554,7 +555,7 @@ def main():
     for building_id in available_buildings:
         try:
             # Analyze building data structure with minimum 10 days for publication
-            building_info = analyze_building_data(building_id, min_days=10)
+            building_info = analyze_building_data(building_id, min_days=5)
             
             if not building_info:
                 print(f"❌ {building_id} - insufficient data")

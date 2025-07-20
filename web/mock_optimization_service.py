@@ -87,14 +87,15 @@ class MockOptimizationService:
         self._max_history_length = 20
         
         # Learning rate for PMF updates (higher = faster adaptation)
-        self.learning_rate = 0.5
+        self.learning_rate = 0.15
         
-    def next_day(self, building_id: str, device_constraints: dict) -> tuple:
+    def next_day(self, building_id: str, device_constraints: dict, baseline_usage: dict) -> tuple:
         """Generate a schedule for the next day that aligns with price variations
         
         Args:
             building_id: Building ID
             device_constraints: Dictionary of device constraints
+            baseline_usage: Dictionary of device baseline usage
             
         Returns:
             Tuple of (schedule_dict, price_curve)
@@ -160,6 +161,9 @@ class MockOptimizationService:
             # Select from the cheapest 40% of options to add some randomness while favoring cheap hours
             # If few options, just take the cheapest
             cheap_options = sorted_starts[:max(1, len(sorted_starts) // 3 + 1)]
+            
+            # The optimizer's goal is to find the cheapest feasible time.
+            # We select from the cheapest 33% of options to add some variability while strongly favoring low prices.
             start_hour = random.choice(cheap_options)
             
             device_schedule = [0.0] * 24
@@ -218,12 +222,26 @@ class MockOptimizationService:
         return devices, mock_optimizer, has_pv
     
     def update_with_actuals(self, date_str: str, actual_usage: Dict[str, List[float]]) -> None:
-        """Update the model with actual usage
-        
+        """Update the model with actual usage and save it to a file.
+
         Args:
             date_str: Date string in ISO format
             actual_usage: Dictionary of device names to actual usage arrays
         """
+        # Ensure a directory for schedules and actuals exists
+        schedules_dir = Path("schedules")
+        schedules_dir.mkdir(exist_ok=True)
+
+        # Save the actual usage to a corresponding JSON file
+        actuals_file = schedules_dir / f"{date_str}_actuals.json"
+        try:
+            with open(actuals_file, "w") as f:
+                import json
+                json.dump(actual_usage, f, indent=2)
+            print(f"Successfully saved actuals to {actuals_file}")
+        except Exception as e:
+            print(f"Error saving actuals to {actuals_file}: {e}")
+
         # Store the actuals for reference
         self._last_actuals = actual_usage
         
@@ -252,8 +270,7 @@ class MockOptimizationService:
                 total = sum(block_sums) + 0.001  # Small offset to avoid division by zero
                 
                 for block_sum in block_sums:
-                    # Ensure a minimum probability even for unused blocks
-                    prob = max(0.05, block_sum / total)
+                    prob = block_sum / total
                     new_probs.append(prob)
                 
                 # Normalize again to ensure sum is 1
@@ -289,40 +306,60 @@ class MockOptimizationService:
                 print(f"Updated PMF for {device}")
             else:
                 print(f"No usage detected for {device}, PMF not updated")
-    
+
     def get_device_pmf(self, device_name: str) -> Dict[str, List]:
         """Get the probability mass function for a device.
-        
+
         Args:
             device_name: Device name
-            
+
         Returns:
             Dict with time_blocks, current_probabilities, and pmf_history
         """
-        # Use stored PMF if available
-        if device_name in self._device_pmfs:
+        # Get PMF history. This is the source of truth for the latest PMF.
+        pmf_history = self._pmf_history.get(device_name, [])
+
+        # The current PMF is the most recent entry in the history.
+        # If history is empty, fall back to the stored PMF or a default.
+        if pmf_history:
+            current_pmf = pmf_history[-1]
+        elif device_name in self._device_pmfs:
             current_pmf = self._device_pmfs[device_name]
-        # Otherwise use default if available
         elif device_name in self._default_pmfs:
             current_pmf = self._default_pmfs[device_name]
-        # Otherwise use generic default
         else:
+            # Generic default if no history and no specific default exists
             current_pmf = [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.15, 0.2, 0.15]
-        
+
+        # Ensure history is not empty for the chart by adding the current PMF if needed.
+        if not pmf_history:
+            pmf_history = [current_pmf.copy()]
+
         # Create time blocks ("00-02", "02-04", etc.)
         time_blocks = [f"{i:02d}-{i+2:02d}" for i in range(0, 24, 2)]
-        
-        # Get PMF history or initialize with empty list
-        pmf_history = self._pmf_history.get(device_name, [])
-        
-        # If no history yet, add default as first point (to avoid empty charts)
-        if not pmf_history and device_name in self._default_pmfs:
-            pmf_history = [self._default_pmfs[device_name].copy()]
-        elif not pmf_history:
-            pmf_history = [current_pmf.copy()]
-            
+
         return {
             "time_blocks": time_blocks,
             "current_probabilities": current_pmf,
             "pmf_history": pmf_history
         }
+
+    def initialize_pmf_with_baseline(self, device_name: str, baseline_hour: int):
+        """Initialize a device's PMF with a strong peak at the user's typical start hour."""
+        # Create a new PMF with a strong peak at the baseline hour
+        # The distribution is a simple peak, not a sophisticated model
+        new_pmf = [0.01] * 12  # Base probability for all 2-hour blocks
+        block_index = baseline_hour // 2
+        new_pmf[block_index] = 0.89 # Strong peak for the selected block
+
+        # Normalize to ensure it sums to 1
+        total = sum(new_pmf)
+        new_pmf = [p / total for p in new_pmf]
+
+        # Set this as the current PMF for the device
+        self._device_pmfs[device_name] = new_pmf
+
+        # Also add it to the history, so get_device_pmf will use it immediately
+        if device_name not in self._pmf_history:
+            self._pmf_history[device_name] = []
+        self._pmf_history[device_name].append(new_pmf)
