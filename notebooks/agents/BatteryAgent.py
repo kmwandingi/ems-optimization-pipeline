@@ -402,8 +402,7 @@ class BatteryAgent:
                     charge_incentive = arbitrage_scale * (1.0 - norm_price) * charge[t]
                     discharge_incentive = arbitrage_scale * norm_price * discharge[t]
                     
-                    cost_terms.append(-charge_incentive)  # Negative cost = incentive to charge at low prices
-                    cost_terms.append(-discharge_incentive)  # Negative cost = incentive to discharge at high prices
+                    # Removed artificial incentives - keep only real economic costs
                 else:
                     # For standard and phases optimization
                     # 1. Direct price-based incentive (1.2 multiplier prioritizes discharge at high prices)
@@ -418,8 +417,7 @@ class BatteryAgent:
                     charge_incentive = arbitrage_scale * (1.0 - norm_price) * charge[t]
                     discharge_incentive = arbitrage_scale * norm_price * discharge[t]
                     
-                    cost_terms.append(-charge_incentive)
-                    cost_terms.append(-discharge_incentive)
+                    # Removed artificial incentives - keep only real economic costs
             
             # Enhanced arbitrage strategy with more sophisticated constraints
             if force_arbitrage:
@@ -451,9 +449,7 @@ class BatteryAgent:
                         prob += charge[t] <= battery_state['max_charge_rate'] * should_charge_t, f"{prefix}ChargeEnableVLow_{t}"
                         prob += charge[t] >= 0.1 * battery_state['max_charge_rate'] * should_charge_t, f"{prefix}MinChargeVLow_{t}"
                         
-                        # Add significant incentive in objective function
-                        charge_bonus = -10.0 * should_charge_t  # Large negative cost = incentive to charge
-                        cost_terms.append(charge_bonus)
+                        # Removed artificial charge bonus - let price arbitrage drive decisions
                 
                 # 4. Encourage discharging during very high price periods
                 for t in range(n_periods):
@@ -466,9 +462,7 @@ class BatteryAgent:
                         prob += discharge[t] <= battery_state['max_discharge_rate'] * should_discharge_t, f"{prefix}DischargeEnableVHigh_{t}"
                         prob += discharge[t] >= 0.1 * battery_state['max_discharge_rate'] * should_discharge_t, f"{prefix}MinDischargeVHigh_{t}"
                         
-                        # Add significant incentive in objective function
-                        discharge_bonus = -10.0 * should_discharge_t  # Large negative cost = incentive to discharge
-                        cost_terms.append(discharge_bonus)
+                        # Removed artificial discharge bonus - let price arbitrage drive decisions
                 
                 # 5. Safety constraint: ensure sufficient capacity for discharging
                 for t in range(1, n_periods):
@@ -561,10 +555,7 @@ class BatteryAgent:
                                 # Prevent discharging if charging
                                 prob += discharge[t] <= battery_state['max_discharge_rate'] * (1 - should_charge), f"{prefix}NoDischargeIfCharging_{t}"
                                 
-                                # Add incentive to charge when price is low
-                                price_ratio = min(1.0, prices[t] / avg_price)
-                                charge_incentive = -5.0 * (1.0 - price_ratio) * battery_state['max_charge_rate'] * should_charge
-                                cost_terms.append(charge_incentive)
+                                # Removed artificial charge incentive - let price arbitrage drive decisions
                     
                     # RULE 2: If battery is already charging, prevent additional operations
                     elif planned_charge > 0.001:

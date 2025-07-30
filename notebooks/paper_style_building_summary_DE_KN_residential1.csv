@@ -1,0 +1,2 @@
+Building,No. of Loads,Baseline Load (kWh),Rule-Based Load (kWh),Cost-Opt Load (kWh),Balanced Load (kWh),Baseline Cost (€),Rule-Based Cost (€),Cost-Opt Cost (€),Balanced Cost (€),% Cost Red. - Rule-Based,% Cost Red. - Cost-Opt,% Cost Red. - Balanced,PV Used - Baseline (kWh),PV Used - Rule-Based (kWh),PV Used - Cost-Opt (kWh),PV Used - Balanced (kWh),Baseline PAR,Rule-Based PAR,Cost-Opt PAR,Balanced PAR
+DE_KN_residential1,5,545.41,545.41,545.41,545.41,18.76,18.76,18.76,18.76,0.0,0.0,0.0,100.0,100.0,100.0,100.0,3.2,3.2,3.2,3.2

@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kennethmwandingi/ems/mlflow_runs/796639997512492754/3fd0b0fe184f4c66ac75f35777be951e/artifacts
+end_time: 1753434459817
+entry_point_name: ''
+experiment_id: '796639997512492754'
+lifecycle_stage: active
+run_id: 3fd0b0fe184f4c66ac75f35777be951e
+run_name: lr_optimization_DE_KN_residential1_washer_20250725_1107
+run_uuid: 3fd0b0fe184f4c66ac75f35777be951e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1753434459600
+status: 3
+tags: []
+user_id: '20235149'

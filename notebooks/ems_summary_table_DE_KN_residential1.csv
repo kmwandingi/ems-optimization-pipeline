@@ -1,0 +1,5 @@
+Strategy,Load (kWh),Net Load (kWh),Cost (€),Cost Savings (%),PV Self-Cons. (%),PAR
+Baseline,545.41,546.42,18.76,0.0,100.0,3.2
+Rule-Based,545.41,546.42,18.76,0.0,100.0,3.2
+Cost-Optimized,545.41,546.42,18.76,0.0,100.0,3.2
+Balanced,545.41,546.42,18.76,0.0,100.0,3.2

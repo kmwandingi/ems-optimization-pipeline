@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kennethmwandingi/ems/mlflow_runs/776354157073111220/89fb87fe6d73459aa820e9742c041143/artifacts
+end_time: 1753274042517
+entry_point_name: ''
+experiment_id: '776354157073111220'
+lifecycle_stage: active
+run_id: 89fb87fe6d73459aa820e9742c041143
+run_name: learning_DE_KN_residential1_phases_20250723_1434
+run_uuid: 89fb87fe6d73459aa820e9742c041143
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1753274042338
+status: 3
+tags: []
+user_id: '20235149'

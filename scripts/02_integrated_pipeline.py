@@ -160,6 +160,20 @@ def initialize_probability_agent():
     
     # MANDATORY: Use ProbabilityModelAgent with actual priors
     con = common.get_con()
+    
+    # Register the probability file view using cross-platform path
+    import os
+    from pathlib import Path
+    
+    # Find the project root directory
+    script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    project_root = script_dir.parent  # Go up one level from scripts/ folder
+    prob_file = project_root / 'notebooks' / 'probabilities' / 'device_hourly_probabilities.parquet'
+    
+    # Register the view with DuckDB using OS-agnostic path
+    con.execute(f"CREATE OR REPLACE VIEW device_hourly_probabilities AS SELECT * FROM '{prob_file}'")
+    
+    # MANDATORY: Use ProbabilityModelAgent with actual priors
     priors_df = con.execute("SELECT * FROM device_hourly_probabilities").df()
     prob_agent = ProbabilityModelAgent(prob_dist_df=priors_df)
     
@@ -224,7 +238,7 @@ def initialize_agents(building_id, con, view_name, battery_enabled=True, ev_enab
         print("✓ PVAgent connected to DuckDB for real-time queries")
     
     # Grid Agent
-    grid_agent = GridAgent(**GRID_PARAMS)
+    grid_agent = GridAgent(params=GRID_PARAMS)
     print("✓ Initialized GridAgent")
     
     return battery_agent, ev_agent, pv_agent, grid_agent

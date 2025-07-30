@@ -1,0 +1,29 @@
+This is LuaTeX, Version 1.17.0 (MiKTeX 23.10) (format=dvilualatex 2025.7.24)  24 JUL 2025 10:07
+ restricted system commands enabled.
+**d:/Kenneth - TU Eindhoven\Jads\Graduation Project 2024-2025\ems_project\ems-o
+ptimization-pipeline\notebooks\report\report_1\main.tex
+(d:/Kenneth
+LaTeX2e <2023-06-01> patch level 1
+L3 programming layer <2023-08-29>
+Lua module: luaotfload 2023-08-31 3.26 Lua based OpenType font support
+Lua module: lualibs 2023-07-13 2.76 ConTeXt Lua standard libraries.
+Lua module: lualibs-extended 2023-07-13 2.76 ConTeXt Lua libraries -- extended c
+ollection.
+luaotfload | conf : Root cache directory is "C:/Users/20235149/AppData/Local/MiK
+TeX/luatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2023-08-19.lua" from kpse-res
+olved path "C:/Program Files/MiKTeX/tex/luatex/luaotfload/fontloader-2023-08-19.
+lua".
+Lua-only attribute luaotfload@noligature = 1
+luaotfload | init : Context OpenType loader version 3.133
+Inserting `luaotfload.node_processor' in `pre_linebreak_filter'.
+Inserting `luaotfload.node_processor' in `hpack_filter'.
+Inserting `luaotfload.glyph_stream' in `glyph_stream_provider'.
+Inserting `luaotfload.define_font' in `define_font'.
+luaotfload | load : FATAL ERROR
+luaotfload | load :   × Failed to load "luaotfload" module "database".
+luaotfload | load :   × Error message:
+luaotfload | load :     × "...les/MiKTeX/tex/luatex/luaotfload/luaotfload-datab
+ase.lua:204: module 'lua-uni-case' not found:".
+luaotfload | load :     × "no field package.preload['lua-uni-case']".
+luaotfload | load :     × "[kpse lua searcher] file not found: 'lua-uni-case'".

@@ -37,7 +37,19 @@ except ImportError:  # fallback when `helper` is imported without package contex
 
 # Default parameters for system components
 BATTERY_PARAMS = {
-    "max_charge_rate": 3.0,
+    "capacity": 15.0,
+    "max_charge_rate": 5.0,
+    "max_discharge_rate": 5.0,
+    "initial_soc": 8.0,
+    "soc_min": 0.6,
+    "soc_max": 14.0,
+    "degradation_rate": 0.00001,
+    "temperature_coefficient": 1.0,
+    "max_ramp_rate": 1.0,
+    "efficiency_charge": 0.95,
+    "efficiency_discharge": 0.95
+}
+
 # ──────────────────────────────────────────────────────────────────────────
 #  COLOUR & TEXT HELPERS
 # ──────────────────────────────────────────────────────────────────────────
@@ -96,15 +108,6 @@ class ColorManager:
 
 # Create a global color manager for the script
 g_color_mgr = ColorManager()
-    "max_discharge_rate": 3.0,
-    "initial_soc": 7.0,
-    "soc_min": 1.0,
-    "soc_max": 10.0,
-    "capacity": 10.0,
-    "degradation_rate": 0.001,
-    "efficiency_charge": 0.95,
-    "efficiency_discharge": 0.95
-}
 
 EV_PARAMS = {
     "capacity": 60.0,

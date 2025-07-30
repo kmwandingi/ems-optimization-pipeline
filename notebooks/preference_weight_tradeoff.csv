@@ -1,0 +1,5 @@
+Building,Pref. Weight,Label,Cost (€),Δ€ vs w=0,%Δ vs w=0,Net Import (kWh),PV Used (kWh),PAR (net import)
+DE_KN_residential6,0.0,No Preference,-2.736,0.0,0.0,13.896,9.197,7.642
+DE_KN_residential6,5.0,Low Preference,-2.736,0.0,0.0,13.896,9.197,7.642
+DE_KN_residential6,15.0,Medium Preference,-2.736,0.0,0.0,13.896,9.197,7.642
+DE_KN_residential6,25.0,High Preference,-2.736,0.0,0.0,13.896,9.197,7.642

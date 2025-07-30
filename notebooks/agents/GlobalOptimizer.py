@@ -4,16 +4,13 @@ import logging
 import datetime
 from datetime import timedelta
 from typing import Dict, List, Tuple, Any, Optional
-from pulp import (LpProblem, LpVariable, LpStatus, value as pulp_value,
+from pulp import (LpProblem, LpVariable, LpStatus,
                   LpMinimize, lpSum, PULP_CBC_CMD)
-
-# Import solver configuration from config
-from utils.config import MILP_SOLVER_PARAMS
 
 from agents.ProbabilityModelAgent import ProbabilityModelAgent
 from agents.WeatherAgent import WeatherAgent
 import time
-from notebooks.utils.config import PV_WEIGHT
+from utils.config import PV_WEIGHT
 from agents.FlexibleDeviceAgent import FlexibleDevice, calculate_preference_penalty
 from agents.GlobalConnectionLayer import GlobalConnectionLayer
 from pulp import LpProblem, LpVariable, lpSum, LpMinimize, PULP_CBC_CMD, LpStatus, LpContinuous
@@ -462,7 +459,10 @@ class GlobalOptimizer:
                 continue
 
             # Export price is determined by a factor from the config, reflecting a realistic scenario
-            export_price = [p * self.grid_agent.export_price_factor for p in day_prices]
+            export_factor = 0.8  # Default export factor if grid_agent is None
+            if self.grid_agent is not None and hasattr(self.grid_agent, 'export_price_factor'):
+                export_factor = self.grid_agent.export_price_factor
+            export_price = [p * export_factor for p in day_prices]
 
             # --- Battery Variables ---
             # Create battery variables if battery_state is provided
@@ -575,10 +575,10 @@ class GlobalOptimizer:
                 max_shift = dev.max_shift_hours
                 
                 # IMPORTANT: Check if there's price variation in this day
-                price_range = np.max(prices_24) - np.min(prices_24) if len(prices_24) > 0 else 0
-                if price_range <= 0.0001:  # Effectively no price variation
-                    print(f"    WARNING: No price variation for {dev.device_name} on {day_val}, skipping optimization")
-                    continue
+                # price_range = np.max(prices_24) - np.min(prices_24) if len(prices_24) > 0 else 0
+                # if price_range <= 0.0001:  # Effectively no price variation
+                #     print(f"    WARNING: No price variation for {dev.device_name} on {day_val}, skipping optimization")
+                #     continue
                 
                 # Create shifting variables x[d_idx, t, h]
                 for t in range(n_hours):
@@ -605,16 +605,16 @@ class GlobalOptimizer:
                                         pv_peak = max(0.1, -pv_data.min())  # Avoid divide-by-zero
                                         pv_ratio = pv_generation / pv_peak  # 0-1 ratio of current to peak
                                         
-                                        # Create an even stronger PV discount that scales with both PV availability 
-                                        # and the absolute price level
+                                        # MODIFIED DISCOUNT CALCULATION: Make discount less dependent on price differential
+                                        # and more directly tied to PV generation to improve PV utilization
                                         
                                         # Get the base price and the minimum price in the day
                                         base_price = prices_24[target]
                                         min_price = min(prices_24)
                                         
-                                        # Enhanced discount calculation - creates a stronger incentive by using
-                                        # both the absolute price and PV availability
-                                        discount = (base_price - min_price + 0.1) * pv_ratio * PV_WEIGHT
+                                        # Calculate a more substantial discount based on absolute pricing advantage
+                                        # plus a fixed incentive, rather than relative to export price
+                                        discount = (base_price - min_price + 0.05) * pv_ratio * PV_WEIGHT
                                         
                                         # Apply discount to make PV hours more attractive
                                         eff_price = prices_24[target] - discount
@@ -790,19 +790,8 @@ class GlobalOptimizer:
                                 for h in range(-max_shift, max_shift+1):
                                     shift_key = (d_idx, t, h)
                                     if shift_key in x and 0 <= t+h < n_hours:
-                                        # Accumulate the shifts and actual load at the target hour
-                                        # Critical fix: use pulp_value to handle variable elimination properly
-                                        var_raw = pulp_value(x[shift_key])
-                                        if var_raw is None:
-                                            # Variable was eliminated by solver - shouldn't happen with presolve off
-                                            continue
-                                        var_val = float(var_raw)
-                                        
-                                        # Get threshold from config or use default
-                                        threshold = MILP_SOLVER_PARAMS.get("var_value_threshold", 1e-6)
-                                        
-                                        if var_val > threshold:  # Filter out numerical noise
-                                            optimized_24[t + h] += var_val * consumption_24[t]
+                                        var_val = x[shift_key].varValue or 0.0
+                                        if var_val > 0.001:  # Only count meaningful shifts
                                             shifts_applied += 1
                                             target_hour = t + h
                                             opt_value = var_val * consumption_24[t]
@@ -1470,19 +1459,13 @@ class GlobalOptimizer:
         
         # 6) Solve
         print("Solving centralized MILP...")
-        # Use configuration from config.py
-        solver = PULP_CBC_CMD(
-            msg=MILP_SOLVER_PARAMS.get("show_solver_output", False),
-            timeLimit=MILP_SOLVER_PARAMS.get("time_limit", 300),
-            presolve=MILP_SOLVER_PARAMS.get("presolve", "off"),  # Critical for large cluster MILPs
-            cuts=MILP_SOLVER_PARAMS.get("enable_cuts", "on")
-        )
+        solver = PULP_CBC_CMD(msg=False, timeLimit=300, presolve='on', cuts='on')
         prob.solve(solver)
         
         # Get the solver's objective value directly
-        from pulp import value as pulp_value
-        solver_objective = pulp_value(prob.objective) if prob.status == 1 else None
-        print(f"Solver status: {LpStatus[prob.status]}, objective value: {solver_objective}")
+        from pulp import value
+        solver_objective = value(prob.objective) if prob.status == 1 else None
+        print(f"Solver objective value: {solver_objective}")
         
         if LpStatus[prob.status] != 'Optimal':
             print(f"MILP not optimal ({LpStatus[prob.status]})")

@@ -30,7 +30,11 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Add notebooks directory to path for agent imports
-sys.path.append(str(Path.cwd() / "notebooks"))
+# Use absolute path to ensure imports work regardless of where script is run from
+script_dir = Path(__file__).parent.absolute()
+project_root = script_dir.parent
+sys.path.append(str(project_root))
+sys.path.append(str(project_root / "notebooks"))
 
 # Import agent classes
 try:
@@ -51,11 +55,11 @@ except ImportError as e:
 
 # Import common utilities and device_specs
 import common
-sys.path.append(str(Path.cwd() / "notebooks" / "utils"))
+sys.path.append(str(project_root / "notebooks" / "utils"))
 from device_specs import device_specs
 
 # Import MLflow tracking (NON-INTRUSIVE)
-sys.path.append(str(Path.cwd() / "utils"))
+sys.path.append(str(project_root / "utils"))
 try:
     from mlflow_tracker import EMS_OptimizationTracker
     MLFLOW_AVAILABLE = True
@@ -111,9 +115,8 @@ def setup_duckdb_connection(building_id):
     """
     print(f"📊 Setting up DuckDB connection for {building_id}...")
     
-    # MANDATORY: Use DuckDB data access layer
-    con = common.get_con()
-    view_name = f"{building_id}_processed_data"
+    # MANDATORY: Use DuckDB data access layer with building_id to register the view
+    con, view_name = common.get_con(building_id)
     
     # Validate data exists and get metadata
     row_count = con.execute(f"SELECT COUNT(*) as count FROM {view_name}").df()['count'][0]

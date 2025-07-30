@@ -1,0 +1,23 @@
+{
+  "2015-05-22": {
+    "individual": {
+      "DE_KN_residential1": {
+        "building_id": "DE_KN_residential1",
+        "day": "2015-05-22",
+        "original_cost": 0.28238935,
+        "optimized_cost": 0.018860000000000002,
+        "savings": 0.26352935,
+        "savings_pct": 93.32127787397081
+      },
+      "DE_KN_residential2": {
+        "building_id": "DE_KN_residential2",
+        "day": "2015-05-22",
+        "original_cost": 0.0899973599999999,
+        "optimized_cost": 0.018860000000000002,
+        "savings": 0.0711373599999999,
+        "savings_pct": 79.0438297301165
+      }
+    },
+    "coordinated": null
+  }
+}

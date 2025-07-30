@@ -1,0 +1,2 @@
+Building,No. of Loads,Non‑Sched Load (kWh),Sched‑Only Load (kWh),Sched‑Batt Load (kWh),Non‑Sched Cost (€),Sched‑Only Cost (€),Sched‑Batt Cost (€),% Cost Red. – Sched‑Only,% Cost Red. – Sched‑Batt,PV Used – Non‑Sched (kWh),PV Used – Sched‑Only (kWh),PV Used – Sched‑Batt (kWh),Non‑Sched PAR,Sched‑Only PAR,Sched‑Batt PAR,Infeasibility Hits,Solve Time [s]
+DE_KN_residential1 + DE_KN_residential2 + DE_KN_residential3,16,31878.56,34058.76,30607.96,1059.08,1168.63,900.61,-10.34,14.96,0.0,0.0,-28682.25,15.95,15.62,11.17,0,11280.52

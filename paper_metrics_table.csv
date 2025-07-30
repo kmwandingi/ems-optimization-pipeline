@@ -1,0 +1,4 @@
+Building,kwh_baseline,kwh_schedonly,kwh_schedbatt,cost_baseline,cost_schedonly,cost_schedbatt,cost_red_schedonly,cost_red_schedbatt,pv_used_baseline,pv_used_schedonly,pv_used_schedbatt,par_baseline,par_schedonly,par_schedbatt,validation_passed,validation_issues
+DE_KN_residential1,6.85,5.53,5.53,-6.04,-5.85,-5.85,3.11,3.11,24.43,33.04,33.04,5.7,2.56,2.56,True,['CRITICAL: Cost increased with scheduling: -6.04 -> -5.85']
+DE_KN_residential2,27.09,0.68,0.68,1.34,0.0,0.0,99.78,99.78,0.0,0.0,0.0,7.09,3.95,3.96,True,['CRITICAL: PAR increased with battery: 3.95 -> 3.96']
+DE_KN_residential3,53.57,54.68,51.41,1.51,0.08,0.07,94.56,95.3,17.88,10.11,13.38,4.58,2.03,2.34,False,"['CRITICAL: Grid energy increased with scheduling: 53.57 -> 54.68', 'CRITICAL: PV usage decreased with scheduling: 17.88 -> 10.11', 'CRITICAL: PAR increased with battery: 2.03 -> 2.34']"
