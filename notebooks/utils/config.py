@@ -98,8 +98,7 @@ BATTERY_TUNING_PARAMETERS = [
 # --------------------------
 # PV_WEIGHT = 1.0 means "self-consuming PV is worth as much as exporting it is bad"
 # Values > 1.0 make the optimizer more strongly prefer PV self-consumption over any tariff spread
-PV_WEIGHT = 1.2  # Default value to encourage PV self-consumption
-PV_WEIGHT = 2.5
+PV_WEIGHT = 20
 
 # --------------------------
 # Flexible Device Parameters

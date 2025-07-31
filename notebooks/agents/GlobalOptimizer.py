@@ -464,6 +464,35 @@ class GlobalOptimizer:
                 export_factor = self.grid_agent.export_price_factor
             export_price = [p * export_factor for p in day_prices]
 
+            # ╔═══════════════════════════════════════════════════════════════════════════╗
+            # ║ REFACTORED: Calculate PV-adjusted prices once for both battery & devices ║
+            # ╚═══════════════════════════════════════════════════════════════════════════╝
+            
+            # Create PV-adjusted price array that will be used by both battery and devices
+            pv_adjusted_prices = day_prices.copy()
+            
+            if pv_data is not None:
+                print("Calculating PV price adjustments for optimization...")
+                for target in range(len(day_prices)):
+                    if target < len(pv_data):
+                        pv_generation = abs(pv_data[target])  # Convert to positive value
+                        
+                        # If we have significant PV generation, apply discount
+                        if pv_generation > 0.001:  # Minimum threshold
+                            pv_peak = max(0.1, -pv_data.min())  # Avoid divide-by-zero
+                            pv_ratio = pv_generation / pv_peak  # 0-1 ratio of current to peak
+                            
+                            # Calculate discount using existing logic
+                            base_price = day_prices[target]
+                            min_price = min(day_prices)
+                            discount = (base_price - min_price + 0.05) * pv_ratio * PV_WEIGHT
+                            
+                            # Apply discount to make PV hours more attractive
+                            pv_adjusted_prices[target] = day_prices[target] - discount
+                            
+                            if pv_generation > 1.0:  # Log significant PV hours
+                                print(f"  Hour {target}: PV={pv_generation:.1f}kW, Price: {day_prices[target]:.3f} → {pv_adjusted_prices[target]:.3f} (discount: {discount:.3f})")
+
             # --- Battery Variables ---
             # Create battery variables if battery_state is provided
             if battery_state is not None:
@@ -486,7 +515,7 @@ class GlobalOptimizer:
                         charge=charge,
                         discharge=discharge,
                         soc=soc,
-                        prices=day_prices,
+                        prices=pv_adjusted_prices,  # ← Use shared PV-adjusted prices!
                         y=y,
                         cost_terms=cost_terms,
                         force_arbitrage=False,
@@ -593,32 +622,8 @@ class GlobalOptimizer:
                                 # Store the key for later reference
                                 shift_key = (d_idx, t, h)
                                 
-                                # Initialize with regular price
-                                eff_price = prices_24[target]
-                                
-                                # Apply a strong discount during PV generation hours
-                                if pv_data is not None and target < len(pv_data):
-                                    pv_generation = abs(pv_data[target])  # Convert to positive value
-                                    
-                                    # If we have significant PV generation, apply discount
-                                    if pv_generation > 0.001:  # Minimum threshold
-                                        pv_peak = max(0.1, -pv_data.min())  # Avoid divide-by-zero
-                                        pv_ratio = pv_generation / pv_peak  # 0-1 ratio of current to peak
-                                        
-                                        # MODIFIED DISCOUNT CALCULATION: Make discount less dependent on price differential
-                                        # and more directly tied to PV generation to improve PV utilization
-                                        
-                                        # Get the base price and the minimum price in the day
-                                        base_price = prices_24[target]
-                                        min_price = min(prices_24)
-                                        
-                                        # Calculate a more substantial discount based on absolute pricing advantage
-                                        # plus a fixed incentive, rather than relative to export price
-                                        discount = (base_price - min_price + 0.05) * pv_ratio * PV_WEIGHT
-                                        
-                                        # Apply discount to make PV hours more attractive
-                                        eff_price = prices_24[target] - discount
-                                # -----------------------------------------------------------------
+                                # Use shared PV-adjusted prices (calculated once above)
+                                eff_price = pv_adjusted_prices[target]
                                 
                                 # CRITICAL FIX: Use effective price that accounts for PV availability
                                 # This incentivizes shifting to PV generation hours

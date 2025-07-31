@@ -1,0 +1,2 @@
+Building,No. of Loads,Non-Sched Load (kWh),Sched-Only Load (kWh),Sched-Batt Load (kWh),Non-Sched Cost (€),Sched-Only Cost (€),Sched-Batt Cost (€),% Cost Red. – Sched-Only,% Cost Red. – Sched-Batt,Non-Sched PAR,Sched-Only PAR,Sched-Batt PAR,Infeasibility Hits,Solve Time [s]
+DE_KN_residential4 + DE_KN_residential5 + DE_KN_residential6,15,354.28,377.25,377.25,12.8,14.67,19.18,-14.59,-49.83,8.99,9.0,9.0,0,10.1
